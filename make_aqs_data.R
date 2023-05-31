@@ -76,15 +76,16 @@ d <-
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
+library(s2)
+sf_use_s2(TRUE)
+
 aqs <-
   d |>
   purrr::list_rbind() |>
   mutate(across(c(state, county, site, pollutant), as.factor)) |>
   nest_by(state, county, site, lat, lon, pollutant) |>
-  st_as_sf(coords = c("lon", "lat"), crs = 4326) |>
-  st_transform(5072)
-
-aqs$h3_7 <- h3::geo_to_h3(aqs, 7)
+  ungroup() |>
+  mutate(geography = s2_geog_point(lon, lat))
 
 us <-
   tigris::states(year = 2020) |>
@@ -94,18 +95,15 @@ us <-
     "American Samoa", "Puerto Rico",
     "Alaska", "Hawaii"
   )) |>
-  st_union() |>
-  st_transform(5072)
+  st_as_s2() |>
+  s2::s2_union_agg()
 
-aqs <- aqs[as.vector(st_intersects(aqs, us, sparse = FALSE)), ]
+aqs <- aqs[s2_intersects(aqs$geography, us), ]
 
-mapview::mapview(select(aqs, -data), zcol = "pollutant")
+aqs <-
+  aqs |>
+  mutate(s2 = as_s2_cell(geography)) |>
+  select(-geography)
 
 dir.create("data", showWarnings = FALSE)
-saveRDS(aqs, "data/aqs.rds")
-
-## aqs |>
-##   ## st_drop_geometry() |>
-##   arrow::write_parquet("aqs.parquet")
-
-## arrow::read_parquet("aqs.parquet")
+arrow::write_parquet(aqs, "data/aqs.parquet")
