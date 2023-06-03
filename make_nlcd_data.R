@@ -2,6 +2,8 @@ library(dplyr)
 library(s2)
 library(s3)
 
+# TODO add ability to select layer based on year column in input data
+
 options("s3.download_folder" = fs::path_wd("s3_downloads"))
 data_dir <- fs::path_wd("data")
 
@@ -62,21 +64,3 @@ d_terra <-
 d <- d |>
   mutate(nlcd_pct_impervious = terra::extract(impervious_raster, d_terra, fun = mean, ID = FALSE)$Layer_1,
          nlcd_pct_treecanopy = terra::extract(treecanopy_raster, d_terra, fun = mean, ID = FALSE)$Layer_1)
-
-d <- d |>
-  mutate(nlcd_pct_impervious = terra::extract(impervious_raster, d_terra, fun = mean, ID = FALSE)$Layer_1)
-
-d |>
-  select(starts_with("nlcd_")) |>
-  summary()
-
-library(ggplot2)
-
-ggplot(d, aes(nlcd_pct_impervious)) +
-  geom_histogram()
-
-ggplot(d, aes(nlcd_pct_treecanopy)) +
-  geom_histogram()
-
-ggplot(d, aes(nlcd_pct_impervious, nlcd_pct_treecanopy)) +
-  geom_point()
