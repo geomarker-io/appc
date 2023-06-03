@@ -8,6 +8,8 @@
   
 - s2 instead: https://r-spatial.github.io/s2/index.html
 
+- https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs for NO2, EVI, AOD
+
 - [ ] AQS average daily monitoring stations
   - [ ] convolution layers of AQS data over time harmonized to h3
   - [ ] derived data: coordinates, day of year, etc.
