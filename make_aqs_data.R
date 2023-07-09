@@ -84,10 +84,17 @@ aqs <-
   purrr::list_rbind() |>
   mutate(across(c(state, county, site, pollutant), as.factor)) |>
   nest_by(state, county, site, lat, lon, pollutant) |>
-  # TODO don't nest by pollutant; keep that inside to reduce number of "unique" locations
   ungroup() |>
   mutate(geography = s2_geog_point(lon, lat))
 
+aqs <-
+  aqs |>
+  mutate(
+    dates = purrr::map(aqs$data, "date"),
+    conc = purrr::map(aqs$data, "conc")
+  ) |>
+  select(-data)
+    
 us <-
   tigris::states(year = 2020) |>
   filter(!NAME %in% c(
