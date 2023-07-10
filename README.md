@@ -12,7 +12,7 @@ Instead of creating a spatiotemporal grid of predictors, create prediction model
 - [x] NLCD `pct_imperviousness` and `pct_treecanopy`
 - [ ] satellite based measures of aerosol, NO2, VI (AWS S3 COGs)
   - https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs
-- [ ] NARR
+- [x] NARR
 - [ ] PRISM climate data (precipitation, mean temperature, max temperature, min temperature, VPD max, VPD min) ??
 - [ ] PRISM elevation data @ 800 m resolution https://prism.oregonstate.edu/normals/
 - [ ] National Emissions Inventory
