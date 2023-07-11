@@ -73,5 +73,4 @@ for (nv in names(narr_sds)) {
   message("        ... ✓ complete")
 }
 
-dir.create("data", showWarnings = FALSE)
 arrow::write_parquet(d, "data/narr.parquet")
