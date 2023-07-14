@@ -10,10 +10,13 @@ dir.create(download_dir, showWarnings = FALSE)
 # years avail: 2019, 2016, 2013, 2011, 2008, 2006, 2004, 2001
 download_impervious <- function(yr = 2019) {
   nlcd_file_path <- fs::path(download_dir, glue::glue("nlcd_impervious_{yr}.tif"))
-  if (file.exists(nlcd_file_path)) return(nlcd_file_path)
+  if (file.exists(nlcd_file_path)) {
+    return(nlcd_file_path)
+  }
   withr::with_tempdir({
     download.file(glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_{yr}_impervious_l48_20210604.zip"),
-                  destfile = glue::glue("nlcd_impervious_{yr}.zip"))
+      destfile = glue::glue("nlcd_impervious_{yr}.zip")
+    )
     unzip(glue::glue("nlcd_impervious_{yr}.zip"))
     system2(
       "gdal_translate",
@@ -36,10 +39,13 @@ names(impervious_raster) <- impervious_years
 # years avail: 2021 - 2011, annually
 download_treecanopy <- function(yr = 2019) {
   nlcd_file_path <- fs::path(download_dir, glue::glue("nlcd_treecanopy_{yr}.tif"))
-  if (file.exists(nlcd_file_path)) return(nlcd_file_path)
+  if (file.exists(nlcd_file_path)) {
+    return(nlcd_file_path)
+  }
   withr::with_tempdir({
     download.file(glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_tcc_CONUS_{yr}_v2021-4.zip"),
-                  destfile = glue::glue("nlcd_treecanopy_{yr}.zip"))
+      destfile = glue::glue("nlcd_treecanopy_{yr}.zip")
+    )
     unzip(glue::glue("nlcd_treecanopy_{yr}.zip"))
     system2(
       "gdal_translate",

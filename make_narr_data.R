@@ -12,17 +12,19 @@ d <- arrow::read_parquet("data/aqs.parquet")
 # download NARR raster
 # https://psl.noaa.gov/data/gridded/data.narr.html
 download_narr <- function(narr_var, narr_year) {
-  narr_file_path <- fs::path(download_dir,
-                             glue::glue("narr_{narr_var}_{narr_year}.nc"))
+  narr_file_path <- fs::path(
+    download_dir,
+    glue::glue("narr_{narr_var}_{narr_year}.nc")
+  )
   if (file.exists(narr_file_path)) {
     return(narr_file_path)
   }
   message(glue::glue("downloading {narr_year} {narr_var}..."))
   glue::glue("https://downloads.psl.noaa.gov",
-             "Datasets", "NARR", "Dailies", "monolevel",
-             "{narr_var}.{narr_year}.nc",
-             .sep = "/"
-             ) |>
+    "Datasets", "NARR", "Dailies", "monolevel",
+    "{narr_var}.{narr_year}.nc",
+    .sep = "/"
+  ) |>
     download.file(destfile = narr_file_path)
   return(narr_file_path)
 }
@@ -43,7 +45,7 @@ narr_sds <-
     tidyr::expand_grid(
       narr_var = x,
       narr_year = as.character(narr_years),
-      ) |>
+    ) |>
       pmap_chr(download_narr) |>
       rast()
   }) |>
@@ -59,17 +61,18 @@ d_vect <-
   vect(crs = "epsg:4326") |>
   project(narr_sds)
 
-d$narr_cell <- terra::cells(narr_sds[["air.2m"]], d_vect)[ , "cell"]
+d$narr_cell <- terra::cells(narr_sds[["air.2m"]], d_vect)[, "cell"]
 
 for (nv in names(narr_sds)) {
-  message("extracting ", nv," ...")
+  message("extracting ", nv, " ...")
   narr_rstr <- narr_sds[[nv]]
   names(narr_rstr) <- as.Date(time(narr_rstr))
   xx <- terra::extract(narr_rstr, d$narr_cell)
   d[[nv]] <-
     imap(d$dates,
-         \(x, idx) unlist(xx[idx, as.character(x)]),
-         .progress = "extracting dates")
+      \(x, idx) unlist(xx[idx, as.character(x)]),
+      .progress = "extracting dates"
+    )
   message("        ... ✓ complete")
 }
 

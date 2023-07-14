@@ -1,6 +1,9 @@
 library(dplyr)
 library(tidyr)
 library(sf)
+library(s2)
+sf_use_s2(TRUE)
+
 
 # get all the files on the page and the date they were last updated:
 ## readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")
@@ -72,12 +75,11 @@ get_daily_aqs <- function(pollutant, year = "2021") {
 d <-
   tidyr::expand_grid(
     pollutant = c("pm25", "ozone", "no2"),
-    year = 2000:{as.integer(format(Sys.Date(), "%Y")) - 1}
+    year = 2000:{
+      as.integer(format(Sys.Date(), "%Y")) - 1
+    }
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
-
-library(s2)
-sf_use_s2(TRUE)
 
 aqs <-
   d |>
@@ -94,7 +96,7 @@ aqs <-
     conc = purrr::map(aqs$data, "conc")
   ) |>
   select(-data)
-    
+
 us <-
   tigris::states(year = 2020) |>
   filter(!NAME %in% c(
