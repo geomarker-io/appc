@@ -86,4 +86,6 @@ d[["pct_treecanopy"]] <- map(1:nrow(d), \(.row) rlang::set_names(unlist(xx[.row,
 xx <- terra::extract(impervious_raster, d_vect, fun = mean, ID = FALSE)
 d[["pct_imperviousness"]] <- map(1:nrow(d), \(.row) rlang::set_names(unlist(xx[.row, ]), names(xx)))
 
-arrow::write_parquet(d, "data/nlcd.parquet")
+d |>
+  select(-s2_geometry) |>
+  arrow::write_parquet("data/nlcd.parquet")
