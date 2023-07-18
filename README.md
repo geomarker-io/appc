@@ -12,8 +12,9 @@ Instead of creating a spatiotemporal grid of predictors, create prediction model
   - [ ] derived data: coordinates, day of year, etc.
 - [x] NARR
 - [x] NLCD `pct_imperviousness` and `pct_treecanopy`
+- [ ] [elevation](https://www.usgs.gov/news/technical-announcement/usgs-digital-elevation-models-dem-switching-new-distribution-format) 
 - [ ] National Emissions Inventory
-- [ ] AOD (AWS COGs don't have complete temporal coverage)
+- [ ] AOD ([AWS COGs](https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs#AOD) don't have complete temporal coverage)
 - [ ] PRISM climate data (precipitation, mean temperature, max temperature, min temperature, VPD max, VPD min) ??
 - [ ] PRISM elevation data @ 800 m resolution https://prism.oregonstate.edu/normals/
 - [ ] fire inventory from NCAR https://www2.acom.ucar.edu/modeling/finn-fire-inventory-ncar
