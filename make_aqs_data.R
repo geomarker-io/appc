@@ -47,7 +47,7 @@ get_daily_aqs <- function(pollutant, year = "2021") {
     quiet = TRUE
   )
   unzipped_file_name <- gsub(pattern = ".zip", ".csv", file_name, fixed = TRUE)
-  on.exit(unlink(unzipped_file_name))
+  on.exit(unlink(unzipped_file_name), add = TRUE)
   unzip(file_name)
   d_in <- readr::read_csv(unzipped_file_name, show_col_types = FALSE)
   if (pollutant_code %in% c("88101", "88502")) {
@@ -75,7 +75,7 @@ get_daily_aqs <- function(pollutant, year = "2021") {
 d <-
   tidyr::expand_grid(
     pollutant = c("pm25", "ozone", "no2"),
-    year = 2000:{
+    year = 2010:{
       as.integer(format(Sys.Date(), "%Y")) - 1
     }
   ) |>
@@ -106,7 +106,7 @@ us <-
     "Alaska", "Hawaii"
   )) |>
   st_as_s2() |>
-  s2::s2_union_agg()
+  s2_union_agg()
 
 aqs <- aqs[s2_intersects(aqs$geography, us), ]
 
@@ -114,6 +114,9 @@ aqs <-
   aqs |>
   mutate(s2 = as_s2_cell(geography)) |>
   select(-geography)
+
+# remove weird site that has same location as another site and overlapping sampling dates for pm25
+aqs <- filter(aqs, ! {s2 == as_s2_cell("87d8b28839a9b4a1") & site == "9010"})
 
 dir.create("data", showWarnings = FALSE)
 arrow::write_parquet(aqs, "data/aqs.parquet")
