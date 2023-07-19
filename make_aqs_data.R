@@ -20,8 +20,8 @@ sf_use_s2(TRUE)
 #' a sample duration of "24 HOURS".
 #' All pollutants measurements are removed if the observation percent
 #' for the sampling period is less than 75.
-#' When a pollutant is measured by more than one device at the same site, the average measurement
-#' is returned, ensuring unique measurements for each pollutant-location-day.
+#' When a pollutant is measured by more than one device on the same day at the same
+#' s2 location, the average measurement is returned, ensuring unique measurements for each pollutant-location-day
 #'
 #' Note: Historical measurements are subject to change and the EPA AQS website only stores
 #' the latest versions.  Since this function always downloads the latest data from EPA AQS,
@@ -57,17 +57,15 @@ get_daily_aqs <- function(pollutant, year = "2021") {
     d_in |>
     filter(`Observation Percent` >= 75) |>
     transmute(
-      ## id = paste(`State Code`, `County Code`, `Site Num`, sep = "-"),
-      state = `State Code`,
-      county = `County Code`,
-      site = `Site Num`,
+      site = paste(`State Code`, `County Code`, `Site Num`, sep = "-"),
       lat = Latitude,
       lon = Longitude,
       conc = `Arithmetic Mean`,
       date = `Date Local`,
       pollutant = pollutant
     ) |>
-    group_by(state, county, site, lat, lon, date, pollutant) |>
+    mutate(s2 = as_s2_cell(s2_geog_point(lon, lat))) |>
+    group_by(s2, date, pollutant) |>
     summarise(conc = mean(conc, na.rm = TRUE), .groups = "drop")
   return(d_out)
 }
@@ -84,10 +82,12 @@ d <-
 aqs <-
   d |>
   purrr::list_rbind() |>
+  mutate(geography = s2_geog_point(lon, lat)) |>
+  mutate(s2 = as_s2_cell(geography)) |>
+  select(-geography)
   mutate(across(c(state, county, site, pollutant), as.factor)) |>
   nest_by(state, county, site, lat, lon, pollutant) |>
   ungroup() |>
-  mutate(geography = s2_geog_point(lon, lat))
 
 aqs <-
   aqs |>
@@ -114,9 +114,6 @@ aqs <-
   aqs |>
   mutate(s2 = as_s2_cell(geography)) |>
   select(-geography)
-
-# remove weird site that has same location as another site and overlapping sampling dates for pm25
-aqs <- filter(aqs, ! {s2 == as_s2_cell("87d8b28839a9b4a1") & site == "9010"})
 
 dir.create("data", showWarnings = FALSE)
 arrow::write_parquet(aqs, "data/aqs.parquet")
