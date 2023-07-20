@@ -9,7 +9,7 @@ Instead of creating a spatiotemporal grid of predictors, create prediction model
 
 - [x] AQS average daily monitoring stations
   - [ ] convolution layers of AQS data??
-  - [ ] derived data: coordinates, day of year, etc.
+  - [x] derived data: coordinates, day of year, etc.
 - [x] NARR
 - [x] NLCD `pct_imperviousness` and `pct_treecanopy`
 - [ ] [elevation](https://www.usgs.gov/news/technical-announcement/usgs-digital-elevation-models-dem-switching-new-distribution-format) 
