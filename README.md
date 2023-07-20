@@ -1,9 +1,9 @@
 # Air Pollution Prediction Commons
 
-- daily
-  - 2010 - current
-- s2 https://r-spatial.github.io/s2/index.html
-
+- Contiguous United States
+- daily, 2016 - 2022, but updated semi-annually at a ? lag
+  - pickup off of other models and be more useful for recent EHR and registry data
+  - low-latency exposure estimates for major air pollutants are a recognized need
 
 Instead of creating a spatiotemporal grid of predictors, create prediction model for set of input points and reuse code to derive features and predict on new input data.
 

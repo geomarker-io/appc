@@ -1,9 +1,6 @@
 library(dplyr)
 library(tidyr)
-library(sf)
 library(s2)
-sf_use_s2(TRUE)
-
 
 # get all the files on the page and the date they were last updated:
 ## readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")
@@ -73,21 +70,16 @@ get_daily_aqs <- function(pollutant, year = "2021") {
 d <-
   tidyr::expand_grid(
     pollutant = c("pm25", "ozone", "no2"),
-    year = 2010:{
-      as.integer(format(Sys.Date(), "%Y")) - 1
-    }
+    year = 2016:2022
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
 aqs <-
   d |>
   purrr::list_rbind() |>
-  mutate(geography = s2_geog_point(lon, lat)) |>
-  mutate(s2 = as_s2_cell(geography)) |>
-  select(-geography)
-  mutate(across(c(state, county, site, pollutant), as.factor)) |>
-  nest_by(state, county, site, lat, lon, pollutant) |>
-  ungroup() |>
+  mutate(across(c(pollutant), as.factor)) |>
+  nest_by(s2, pollutant) |>
+  ungroup()
 
 aqs <-
   aqs |>
@@ -95,7 +87,8 @@ aqs <-
     dates = purrr::map(aqs$data, "date"),
     conc = purrr::map(aqs$data, "conc")
   ) |>
-  select(-data)
+  select(-data) |>
+  mutate(s2_geometry = as_s2_geography(s2_cell_to_lnglat(s2)))
 
 us <-
   tigris::states(year = 2020) |>
@@ -105,15 +98,13 @@ us <-
     "American Samoa", "Puerto Rico",
     "Alaska", "Hawaii"
   )) |>
-  st_as_s2() |>
+  sf::st_as_s2() |>
   s2_union_agg()
-
-aqs <- aqs[s2_intersects(aqs$geography, us), ]
 
 aqs <-
   aqs |>
-  mutate(s2 = as_s2_cell(geography)) |>
-  select(-geography)
+  filter(s2_intersects(s2_geometry, us)) |>
+  select(-s2_geometry)
 
 dir.create("data", showWarnings = FALSE)
 arrow::write_parquet(aqs, "data/aqs.parquet")

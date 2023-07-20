@@ -30,7 +30,8 @@ download_impervious <- function(yr = 2019) {
   return(nlcd_file_path)
 }
 
-impervious_years <- c(2019, 2016, 2013, 2011)
+# TODO switch to increasing order and change number in model script; see below about year names
+impervious_years <- c(2019, 2016)
 impervious_raster <-
   map_chr(impervious_years, download_impervious) |>
   rast()
@@ -60,7 +61,7 @@ download_treecanopy <- function(yr = 2019) {
   return(nlcd_file_path)
 }
 
-treecanopy_years <- 2011:2021
+treecanopy_years <- 2016:2021
 treecanopy_raster <-
   map_chr(treecanopy_years, download_treecanopy) |>
   rast()
@@ -81,11 +82,12 @@ d_vect <-
 
 # extract mean for each location as named vectors,
 # where the year corresponds to the NLCD year
-xx <- terra::extract(treecanopy_raster, d_vect, fun = mean, ID = FALSE)
-d[["pct_treecanopy"]] <- map(1:nrow(d), \(.row) rlang::set_names(unlist(xx[.row, ]), names(xx)))
-xx <- terra::extract(impervious_raster, d_vect, fun = mean, ID = FALSE)
-d[["pct_imperviousness"]] <- map(1:nrow(d), \(.row) rlang::set_names(unlist(xx[.row, ]), names(xx)))
+xx_tcp <- terra::extract(treecanopy_raster, d_vect, fun = mean, ID = FALSE)
+d[["pct_treecanopy"]] <- map(1:nrow(d), \(.row) rlang::set_names(unlist(xx_tcp[.row, ]), names(xx_tcp)))
+xx_imp <- terra::extract(impervious_raster, d_vect, fun = mean, ID = FALSE)
+d[["pct_imperviousness"]] <- map(1:nrow(d), \(.row) rlang::set_names(unlist(xx_imp[.row, ]), names(xx_imp)))
 
+# TODO names don't make it back in using parquet files; how to specify which years are which here?
 d |>
   select(-s2_geometry) |>
   arrow::write_parquet("data/nlcd.parquet")

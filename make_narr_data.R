@@ -36,7 +36,7 @@ narr_vars <- c(
   "uwnd.10m", "vwnd.10m"
 )
 
-narr_years <- 2000:2022
+narr_years <- 2016:2022
 
 # create NARR subdataset, using download_dir, set above
 # if already downloaded, files will be reused instead of redownloaded
