@@ -32,9 +32,13 @@ grf <-
     tune.parameters = "none"
   )
 
-median(abs(grf$predictions - grf$Y.orig))
-cor.test(grf$predictions, grf$Y.orig)
+dir.create("model", showWarnings = FALSE)
+saveRDS(grf, "model/rf_pm.rds")
 
+message("LOLO MAE: ", round(median(abs(grf$predictions - grf$Y.orig)), 3))
+message("LOLO cor: ", round(cor.test(grf$predictions, grf$Y.orig)$estimate, 3))
+
+message("variable importance:")
 tibble(var_imp = round(variable_importance(grf), 3),
        variable = names(select(d_train, all_of(pred_names)))) |>
   arrange(desc(var_imp)) |>
