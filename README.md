@@ -12,9 +12,16 @@ Instead of creating a spatiotemporal grid of predictors, create prediction model
   - [x] derived data: coordinates, day of year, etc.
 - [x] NARR
 - [x] NLCD `pct_imperviousness` and `pct_treecanopy`
-- [ ] [elevation](https://www.usgs.gov/news/technical-announcement/usgs-digital-elevation-models-dem-switching-new-distribution-format) 
+- [x] PRISM elevation data @ 800 m resolution https://prism.oregonstate.edu/normals/
 - [ ] National Emissions Inventory
-- [ ] AOD ([AWS COGs](https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs#AOD) don't have complete temporal coverage)
-- [ ] PRISM climate data (precipitation, mean temperature, max temperature, min temperature, VPD max, VPD min) ??
-- [ ] PRISM elevation data @ 800 m resolution https://prism.oregonstate.edu/normals/
 - [ ] fire inventory from NCAR https://www2.acom.ucar.edu/modeling/finn-fire-inventory-ncar
+- [ ] AOD ([AWS COGs](https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs#AOD) don't have complete temporal coverage)
+
+
+has monitoring gotten better?  (older pub saw better performance in later years) is this why this simple model looks good -- just 2016 - current?
+
+exposure assessment code (must be in R package, but geocoding can be outside R)
+
+make the entire training pipeline an R package?  then same functions used for prediction data too... (intermediate data functions would be good covariates / other geomarkers to use as well)
+
+test users for deriving exposure estimates: Clara, Kelly, Yang, Stephen

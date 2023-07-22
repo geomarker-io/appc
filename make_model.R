@@ -1,4 +1,4 @@
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 library(grf)
 
 d_train <-
@@ -11,7 +11,7 @@ pred_names <-
     "air.2m", "hpbl", "acpcp", "rhum.2m",
     "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
     "pct_treecanopy", "pct_imperviousness",
-    "elevation")
+    "elevation", "elevation_sd")
 
 grf <-
   regression_forest(
