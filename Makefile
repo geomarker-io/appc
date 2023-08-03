@@ -1,4 +1,6 @@
-all: model/rf_pm.rds
+all: data train
+data: data/train.parquet
+train: model/rf_pm.rds
 
 data/aqs.parquet:
 	Rscript make_aqs_data.R
@@ -14,6 +16,10 @@ data/nlcd.parquet: data/aqs.parquet
 
 data/tract.parquet: data/aqs.parquet make_tract_id.R
 	Rscript make_tract_id.R
+
+data/smoke.parquet: data/tract.parquet make_smoke_data.R
+	Rscript make_smoke_data.R
+
 data/train.parquet: data/aqs.parquet data/elevation.parquet data/narr.parquet data/nlcd.parquet
 	Rscript make_model_train_data.R
 
