@@ -4,7 +4,7 @@ library(terra)
 library(purrr)
 
 options(timeout = 3000)
-download_dir <- fs::path_wd("nlcd_downloads")
+download_dir <- fs::path_wd("data-raw/nlcd_downloads")
 dir.create(download_dir, showWarnings = FALSE)
 
 # years avail: 2019, 2016, 2013, 2011, 2008, 2006, 2004, 2001
