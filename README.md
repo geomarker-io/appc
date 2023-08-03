@@ -13,6 +13,8 @@ Instead of creating a spatiotemporal grid of predictors, create prediction model
 - [x] NARR
 - [x] NLCD `pct_imperviousness` and `pct_treecanopy`
 - [x] PRISM elevation data @ 800 m resolution https://prism.oregonstate.edu/normals/
+- [x] census tract identifier
+- [.] PM smoke census tract product
 - [ ] National Emissions Inventory
 - [ ] fire inventory from NCAR https://www2.acom.ucar.edu/modeling/finn-fire-inventory-ncar
 - [ ] AOD ([AWS COGs](https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs#AOD) don't have complete temporal coverage)
