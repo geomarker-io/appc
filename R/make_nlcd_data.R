@@ -3,30 +3,27 @@ library(s2)
 library(terra)
 library(purrr)
 
-options(timeout = 3000)
-download_dir <- fs::path_wd("data-raw/nlcd_downloads")
-dir.create(download_dir, showWarnings = FALSE)
+dir.create(tools::R_user_dir("s3", "data"), showWarnings = FALSE, recursive = TRUE)
 
-# years avail: 2019, 2016, 2013, 2011, 2008, 2006, 2004, 2001
-download_impervious <- function(yr = 2019) {
-  nlcd_file_path <- fs::path(download_dir, glue::glue("nlcd_impervious_{yr}.tif"))
+#' get path to NLCD impervious raster file (download and convert if necessary)
+#' years avail: 2019, 2016, 2013, 2011, 2008, 2006, 2004, 2001
+get_impervious <- function(yr = 2019) {
+  nlcd_file_path <- fs::path(tools::R_user_dir("s3", "data"), glue::glue("nlcd_impervious_{yr}.tif"))
   if (file.exists(nlcd_file_path)) {
     return(nlcd_file_path)
   }
-  withr::with_tempdir({
-    download.file(glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_{yr}_impervious_l48_20210604.zip"),
-      destfile = glue::glue("nlcd_impervious_{yr}.zip")
-    )
-    unzip(glue::glue("nlcd_impervious_{yr}.zip"))
-    system2(
-      "gdal_translate",
-      c(
-        "-of COG",
-        glue::glue("nlcd_{yr}_impervious_l48_20210604.img"),
-        shQuote(fs::path(download_dir, glue::glue("nlcd_impervious_{yr}.tif")))
-      )
-    )
-  })
+  message(glue::glue("downloading {yr} NLCD impervious raster"))
+  nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_impervious_{yr}.zip"))
+  glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_{yr}_impervious_l48_20210604.zip") |>
+    httr::GET(httr::write_disk(nlcd_zip_path), httr::progress(), overwrite = TRUE)
+  nlcd_raw_paths <- unzip(nlcd_zip_path, exdir = tempdir())
+  message(glue::glue("converting {yr} NLCD impervious raster"))
+  system2(
+    "gdal_translate",
+    c("-of COG",
+      grep(".img", nlcd_raw_paths, fixed = TRUE, value = TRUE),
+      shQuote(nlcd_file_path))
+  )
   return(nlcd_file_path)
 }
 
@@ -37,29 +34,29 @@ impervious_raster <-
   rast()
 names(impervious_raster) <- impervious_years
 
+#' get path to NLCD treecanopy raster file (download and convert if necessary)
 # years avail: 2021 - 2011, annually
-download_treecanopy <- function(yr = 2019) {
-  nlcd_file_path <- fs::path(download_dir, glue::glue("nlcd_treecanopy_{yr}.tif"))
+get_treecanopy <- function(yr = 2019) {
+  nlcd_file_path <- fs::path(tools::R_user_dir("s3", "data"), glue::glue("nlcd_treecanopy_{yr}.tif"))
   if (file.exists(nlcd_file_path)) {
     return(nlcd_file_path)
   }
-  withr::with_tempdir({
-    download.file(glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_tcc_CONUS_{yr}_v2021-4.zip"),
-      destfile = glue::glue("nlcd_treecanopy_{yr}.zip")
-    )
-    unzip(glue::glue("nlcd_treecanopy_{yr}.zip"))
-    system2(
-      "gdal_translate",
-      c(
-        "-of COG",
-        "-co BIGTIFF=YES",
-        glue::glue("nlcd_tcc_conus_{yr}_v2021-4.tif"),
-        shQuote(fs::path(download_dir, glue::glue("nlcd_treecanopy_{yr}.tif")))
-      )
-    )
-  })
+  message(glue::glue("downloading {yr} NLCD treecanopy raster"))
+  nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_treecanopy_{yr}.zip"))
+  glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_tcc_CONUS_{yr}_v2021-4.zip") |>
+    httr::GET(httr::write_disk(nlcd_zip_path), httr::progress(), overwrite = TRUE)
+  nlcd_raw_paths <- unzip(nlcd_zip_path, exdir = tempdir())
+  message(glue::glue("converting {yr} NLCD treecanopy raster"))
+  system2(
+    "gdal_translate",
+    c("-of COG",
+      "-co BIGTIFF=YES",
+      grep(".tif$", nlcd_raw_paths, value = TRUE),
+      shQuote(nlcd_file_path))
+  )
   return(nlcd_file_path)
 }
+
 
 treecanopy_years <- 2016:2021
 treecanopy_raster <-
