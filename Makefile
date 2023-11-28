@@ -20,7 +20,10 @@ data/tract.parquet: data/aqs.parquet make_tract_id.R
 data/smoke.parquet: data/tract.parquet make_smoke_data.R
 	Rscript make_smoke_data.R
 
-data/train.parquet: data/aqs.parquet data/elevation.parquet data/narr.parquet data/nlcd.parquet
+data/nei.parquet: data/aqs.parquet make_nei_data.R
+	Rscript make_nei_data.R
+
+data/train.parquet: data/aqs.parquet data/elevation.parquet data/narr.parquet data/nlcd.parquet data/nei.parquet
 	Rscript make_model_train_data.R
 
 model/rf_pm.rds: data/train.parquet

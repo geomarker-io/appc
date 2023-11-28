@@ -1,6 +1,8 @@
 library(dplyr, warn.conflicts = FALSE)
 library(s2)
 
+# TODO join in NEI data
+
 d <-
   arrow::read_parquet("data/aqs.parquet") |>
   select(pollutant, dates, conc, s2)
