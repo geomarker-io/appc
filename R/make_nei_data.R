@@ -50,5 +50,5 @@ d$nei_pm25_id2w <- purrr::map_dbl(1:nrow(d), summarize_emissions, .progress = "s
 # TODO add non-point sources
 
 d |>
-  select(s2, nei_pm25_id2w) |>
+  select(s2, pollutant, nei_pm25_id2w) |>
   arrow::write_parquet("data/nei.parquet")

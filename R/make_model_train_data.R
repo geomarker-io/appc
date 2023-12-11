@@ -1,11 +1,14 @@
 library(dplyr, warn.conflicts = FALSE)
 library(s2)
 
-# TODO join in NEI data
-
 d <-
   arrow::read_parquet("data/aqs.parquet") |>
   select(pollutant, dates, conc, s2)
+
+d_nei <-
+  arrow::read_parquet("data/nei.parquet")
+
+d <- left_join(d, d_nei, by = c("s2", "pollutant"))
 
 d_narr <-
   arrow::read_parquet("data/narr.parquet") |>
@@ -27,18 +30,9 @@ d_elevation <- arrow::read_parquet("data/elevation.parquet")
 
 d <- left_join(d, d_elevation, by = "s2", relationship = "many-to-many")
 
-d_5072_coords <-
-  d |>
-  mutate(
-    lat = as.matrix(s2_cell_to_lnglat(s2))[, "y"],
-    lon = as.matrix(s2_cell_to_lnglat(s2))[, "x"]
-  ) |>
-  terra::vect(crs = "epsg:4326") |>
-  terra::project("epsg:5072") |>
-  terra::crds()
-
-d$x <- d_5072_coords[ , "x"]
-d$y <- d_5072_coords[ , "y"]
+d <- d |>
+  mutate(x = s2_x(s2_cell_to_lnglat(s2)),
+         y = s2_y(s2_cell_to_lnglat(s2)))
 
 d_train <-
   d |>

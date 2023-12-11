@@ -8,6 +8,7 @@ d_train <-
 pred_names <-
   c("x", "y", "doy",
     ## "year",
+    "nei_pm25_id2w",
     "air.2m", "hpbl", "acpcp", "rhum.2m",
     "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
     "pct_treecanopy", "pct_imperviousness",
