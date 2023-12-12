@@ -1,7 +1,3 @@
-all: data train
-data: data/train.parquet
-train: model/rf_pm.rds
-
 data/aqs.parquet: R/make_aqs_data.R
 	Rscript R/make_aqs_data.R
 
@@ -28,6 +24,3 @@ data/traffic.parquet: data/aqs.parquet R/make_traffic_data.R
 
 data/train.parquet: data/aqs.parquet data/elevation.parquet data/narr.parquet data/nlcd.parquet data/nei.parquet data/traffic.parquet R/make_model_train_data.R
 	Rscript R/make_model_train_data.R
-
-model/rf_pm.rds: data/train.parquet R/make_model.R
-	Rscript R/make_model.R
