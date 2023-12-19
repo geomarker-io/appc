@@ -1,26 +1,26 @@
-data/aqs.parquet: R/make_aqs_data.R
-	Rscript R/make_aqs_data.R
+data/aqs.parquet: R/aqs.R
+	Rscript R/aqs.R
 
-data/elevation.parquet: data/aqs.parquet R/make_elevation_data.R
-	Rscript R/make_elevation_data.R
+data/elevation.parquet: data/aqs.parquet R/elevation.R
+	Rscript R/elevation.R
 
-data/narr.parquet: data/aqs.parquet R/make_narr_data.R
-	Rscript R/make_narr_data.R
+data/narr.parquet: data/aqs.parquet R/narr.R
+	Rscript R/narr.R
 
-data/nlcd.parquet: data/aqs.parquet R/make_nlcd_data.R
-	Rscript R/make_nlcd_data.R
+data/nlcd.parquet: data/aqs.parquet R/nlcd.R
+	Rscript R/nlcd.R
 
-data/tract.parquet: data/aqs.parquet R/make_tract_id.R
-	Rscript R/make_tract_id.R
+data/tract.parquet: data/aqs.parquet R/tract.R
+	Rscript R/tract.R
 
-data/smoke.parquet: data/tract.parquet R/make_smoke_data.R
-	Rscript R/make_smoke_data.R
+data/smoke.parquet: data/tract.parquet R/smoke.R
+	Rscript R/smoke.R
 
-data/nei.parquet: data/aqs.parquet R/make_nei_data.R
-	Rscript R/make_nei_data.R
+data/nei.parquet: data/aqs.parquet R/nei.R
+	Rscript R/nei.R
 
-data/traffic.parquet: data/aqs.parquet R/make_traffic_data.R
-	Rscript R/make_traffic_data.R
+data/traffic.parquet: data/aqs.parquet R/traffic.R
+	Rscript R/traffic.R
 
 data/train.parquet: data/aqs.parquet data/elevation.parquet data/narr.parquet data/nlcd.parquet data/nei.parquet data/traffic.parquet R/make_model_train_data.R
 	Rscript R/make_model_train_data.R
