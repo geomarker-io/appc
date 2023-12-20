@@ -1,14 +1,11 @@
-library(dplyr)
-
-# from: https://github.com/echolab-stanford/daily-10km-smokePM and
-# https://pubmed.ncbi.nlm.nih.gov/36134580/
-# accessed on 2023-08-02
-# note that any census tract - date combination implicitly missing has a value of zero
-download_smoke_pm <- function(){
-  smoke_file_path <- "data-raw/smoke.parquet"
-  if (file.exists(smoke_file_path)) {
-    return(smoke_file_path)
-  }
+#' installs smoke pm data into user's data directory for the `appc` package
+#' 
+#' note that any census tract - date combination implicitly missing has a value of zero
+#' @references https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/
+#' @return path to elevation raster
+install_smoke_pm_data <- function() {
+  dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.parquet")
+  if (file.exists(dest_file)) return(dest_file)
   tf <- tempfile()
   httr::GET("https://www.dropbox.com/sh/atmtfc54zuknnob/AAA7AVRQP-GoIMHpxlvfN7RBa?dl=1",
             httr::write_disk(tf),
@@ -22,20 +19,22 @@ download_smoke_pm <- function(){
     rename(census_tract_id_2010 = GEOID,
            smoke_pm = smokePM_pred) |>
     filter(date > as.Date("2015-12-31"))
-  arrow::write_parquet(d_smoke, smoke_file_path)
-  return(smoke_file_path)
+  arrow::write_parquet(d_smoke, dest_file)
+  return(dest_file)
 }
 
-d_smoke <- arrow::read_parquet(download_smoke_pm())
+
+library(dplyr)
 
 d_tract <- arrow::read_parquet("data/tract.parquet")
+d_smoke <- arrow::read_parquet(install_smoke_pm_data())
 
 d <-
   arrow::read_parquet("data/aqs.parquet") |>
   tidyr::unnest(cols = c(dates, conc)) |>
   rename(date = dates) |>
   distinct(s2, date) |>
-  left_join(d_tract, by = "s2")
+  left_join(d_tract, by = "s2", relationship = "many-to-many")
 
 left_join(d, d_smoke, by = c("census_tract_id_2010", "date")) |>
   tidyr::replace_na(list(smoke_pm = 0)) |>

@@ -4,17 +4,17 @@ data/aqs.parquet: R/aqs.R
 data/elevation.parquet: data/aqs.parquet R/elevation.R
 	Rscript R/elevation.R
 
-data/narr.parquet: data/aqs.parquet R/narr.R
-	Rscript R/narr.R
-
-data/nlcd.parquet: data/aqs.parquet R/nlcd.R
-	Rscript R/nlcd.R
-
 data/tract.parquet: data/aqs.parquet R/tract.R
 	Rscript R/tract.R
 
 data/smoke.parquet: data/tract.parquet R/smoke.R
 	Rscript R/smoke.R
+
+data/narr.parquet: data/aqs.parquet R/narr.R
+	Rscript R/narr.R
+
+data/nlcd.parquet: data/aqs.parquet R/nlcd.R
+	Rscript R/nlcd.R
 
 data/nei.parquet: data/aqs.parquet R/nei.R
 	Rscript R/nei.R
