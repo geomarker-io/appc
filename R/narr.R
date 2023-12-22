@@ -53,19 +53,19 @@ get_narr_data <- function(x, dates, narr_var) {
 }
 
 library(dplyr, warn.conflicts = FALSE)
-## library(purrr)
 
 d <-
   arrow::read_parquet("data/aqs.parquet") |>
   select(s2, dates)
 
-d$air.2m <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "air.2m")
-d$hpbl <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "hpbl")
-d$acpcp <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "acpcp")
-d$rhum.2m <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "rhum.2m")
-d$vis <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "vis")
-d$pres.sfc <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "pres.sfc")
-d$uwnd.10m <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "uwnd.10m")
-d$vwnd.10m <- get_narr_data(x = d$s2, dates = d$dates, narr_var = "vwnd.10m")
+my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
+d$air.2m <- my_narr("air.2m")
+d$hpbl <- my_narr("hpbl")
+d$acpcp <- my_narr("acpcp")
+d$rhum.2m <- my_narr("rhum.2m")
+d$vis <- my_narr("vis")
+d$pres.sfc <- my_narr("pres.sfc")
+d$uwnd.10m <- my_narr("uwnd.10m")
+d$vwnd.10m <- my_narr("vwnd.10m")
 
 arrow::write_parquet(d, "data/narr.parquet")
