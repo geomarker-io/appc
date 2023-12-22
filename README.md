@@ -30,6 +30,6 @@ test users for deriving exposure estimates: Clara, Kelly, Yang, Stephen
 
 ### air pollution predictor functions
 
-`install_{geomarker}_data()` functions (e.g., `install_smoke_data()`, `install_elevation_data()`) downloads geomarker data files directly from the provider and stores them as harmonized files in the R user data directory for the `appc` package.  This allows for reference of the geomarker data files across R sessions and projects.
+`install_{geomarker}_data()` functions (e.g., `install_smoke_data()`, `install_elevation_data()`) downloads geomarker data files directly from the provider and stores them as harmonized files in the R user data directory for the `appc` package.  This allows for reference of the geomarker data files across R sessions and projects. These functions are utilized automatically by the geomarker assessment functions, but can be called without input data to install the geomarker data ahead of time, if external internet access is not possible after input data is added. *Note that some of the install functions require a system installation of `gdal`
 
 `get_{geomarker}_summary()` functions (e.g., `get_narr_data()`, `get_census_tract_id()` take a vector of `s2` geographic cell identifers and a list of date vectors. Each item in the list of date vectors corresponds to one of the `s2` cell identifiers in the vector and can contain multiple dates.

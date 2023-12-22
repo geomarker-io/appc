@@ -85,24 +85,21 @@ get_treecanopy_summary <- function(x, year, fun = mean, buffer = 400) {
   setNames(xx, as.character(x_vect$s2))[as.character(x)]
   }
 
-library(dplyr, warn.conflicts = FALSE)
-## library(s2)
-## library(terra)
-## library(purrr)
-
 d <- arrow::read_parquet("data/aqs.parquet")
-## x = d$s2
-## year = "2019"
 
 d$treecanopy_2019 <- get_treecanopy_summary(d$s2, year = "2019")
 d$impervious_2019 <- get_impervious_summary(d$s2, year = "2019")
 
 d$treecanopy_2016 <- get_treecanopy_summary(d$s2, year = "2016")
+
+# TODO run all of these
 d$treecanopy_2017 <- get_treecanopy_summary(d$s2, year = "2017")
 d$treecanopy_2018 <- get_treecanopy_summary(d$s2, year = "2018")
 d$treecanopy_2020 <- get_treecanopy_summary(d$s2, year = "2020")
 d$treecanopy_2021 <- get_treecanopy_summary(d$s2, year = "2021")
 d$impervious_2016 <- get_impervious_summary(d$s2, year = "2016")
+
+# TODO way to nest these into list of vectors, with each vector element named by the year it represents?
 
 arrow::write_parquet(d, "data/nlcd.parquet")
 
