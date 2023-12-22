@@ -1,79 +1,71 @@
-library(dplyr, warn.conflicts = FALSE)
-library(s2)
-library(terra)
-library(purrr)
-
-options(timeout = 300)
-download_dir <- fs::path_wd("narr_downloads")
-dir.create(download_dir, showWarnings = FALSE)
-
-d <- arrow::read_parquet("data/aqs.parquet")
-
-# download NARR raster
-# https://psl.noaa.gov/data/gridded/data.narr.html
-download_narr <- function(narr_var, narr_year) {
-  narr_file_path <- fs::path(
-    download_dir,
-    glue::glue("narr_{narr_var}_{narr_year}.nc")
-  )
-  if (file.exists(narr_file_path)) {
-    return(narr_file_path)
+#' installs NARR raster data into user's data directory for the `appc` package
+#' @param narr_var a character string that is the name of a NARR variable
+#' @param narr_year a character string that is the year for the NARR data
+#' @references https://psl.noaa.gov/data/gridded/data.narr.html
+install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
+                              narr_year = as.character(2016:2022)) {
+  narr_var <- rlang::arg_match(narr_var)
+  narr_year <- rlang::arg_match(narr_year)
+  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("narr_{narr_var}_{narr_year}.nc"))
+  if (file.exists(dest_file)) {
+    return(dest_file)
   }
-  message(glue::glue("downloading {narr_year} {narr_var}..."))
+  message(glue::glue("downloading {narr_year} {narr_var}:"))
   glue::glue("https://downloads.psl.noaa.gov",
     "Datasets", "NARR", "Dailies", "monolevel",
     "{narr_var}.{narr_year}.nc",
     .sep = "/"
   ) |>
-    download.file(destfile = narr_file_path)
-  return(narr_file_path)
+    download.file(destfile = dest_file)
+  return(dest_file)
 }
 
-narr_vars <- c(
-  "air.2m", "hpbl",
-  "acpcp", "rhum.2m",
-  "vis", "pres.sfc",
-  "uwnd.10m", "vwnd.10m"
-)
-
-narr_years <- 2016:2022
-
-# create NARR subdataset, using download_dir, set above
-# if already downloaded, files will be reused instead of redownloaded
-narr_sds <-
-  map(narr_vars, \(x) {
-    tidyr::expand_grid(
-      narr_var = x,
-      narr_year = as.character(narr_years),
-    ) |>
-      pmap_chr(download_narr) |>
-      rast()
-  }) |>
-  sds()
-names(narr_sds) <- narr_vars
-
-d_vect <-
-  d |>
-  mutate(
-    lat = as.matrix(s2_cell_to_lnglat(s2))[, "y"],
-    lon = as.matrix(s2_cell_to_lnglat(s2))[, "x"]
-  ) |>
-  vect(crs = "epsg:4326") |>
-  project(narr_sds)
-
-d$narr_cell <- terra::cells(narr_sds[["air.2m"]], d_vect)[, "cell"]
-
-for (nv in names(narr_sds)) {
-  message("extracting ", nv, " ...")
-  narr_rstr <- narr_sds[[nv]]
-  names(narr_rstr) <- as.Date(time(narr_rstr))
-  xx <- terra::extract(narr_rstr, d$narr_cell)
-  d[[nv]] <-
-    imap(d$dates,
-      \(x, idx) unlist(xx[idx, as.character(x)]),
-      .progress = "extracting dates"
-    )
-  message("        ... ✓ complete")
+#' get narr data for a spatiotemporal location
+#' @param x a vector of s2 cell identifers (`s2_cell` object)
+#' @param dates a list of date vectors for the NARR data, must be the same length as `x`
+#' @param narr_var a character string that is the name of a NARR variable
+#' @references https://psl.noaa.gov/data/gridded/data.narr.html
+#' @return a list of numeric vectors of NARR values (the same length as `x` and `dates`)
+get_narr_data <- function(x, dates, narr_var) {
+  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  narr_raster <-
+    dates |>
+    unlist() |>
+    as.Date() |>
+    unique() |>
+    format("%Y") |>
+    unique() |>
+    purrr::map_chr(\(.) install_narr_data(narr_var = narr_var, narr_year = .)) |>
+    purrr::map(terra::rast) |>
+    purrr::reduce(c)
+  names(narr_raster) <- as.Date(terra::time(narr_raster))
+  x_vect <-
+    s2::s2_cell_to_lnglat(x) |>
+    as.data.frame() |>
+    terra::vect(geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84") |>
+    terra::project(narr_raster)
+  narr_cells <- terra::cells(narr_raster[[1]], x_vect)[, "cell"]
+  xx <- terra::extract(narr_raster, narr_cells)
+  purrr::imap(d$dates,
+    \(x, idx) unlist(xx[idx, as.character(x)]),
+    .progress = paste0("calculating ", narr_var)
+  )
 }
+
+library(dplyr, warn.conflicts = FALSE)
+
+d <-
+  arrow::read_parquet("data/aqs.parquet") |>
+  select(s2, dates)
+
+my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
+d$air.2m <- my_narr("air.2m")
+d$hpbl <- my_narr("hpbl")
+d$acpcp <- my_narr("acpcp")
+d$rhum.2m <- my_narr("rhum.2m")
+d$vis <- my_narr("vis")
+d$pres.sfc <- my_narr("pres.sfc")
+d$uwnd.10m <- my_narr("uwnd.10m")
+d$vwnd.10m <- my_narr("vwnd.10m")
 
 arrow::write_parquet(d, "data/narr.parquet")
