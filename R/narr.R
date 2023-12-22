@@ -1,15 +1,14 @@
 #' installs NARR raster data into user's data directory for the `appc` package
 #' @param narr_var a character string that is the name of a NARR variable
 #' @param narr_year a character string that is the year for the NARR data
+#' @return path to NARR raster data
 #' @references https://psl.noaa.gov/data/gridded/data.narr.html
 install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
                               narr_year = as.character(2016:2022)) {
   narr_var <- rlang::arg_match(narr_var)
   narr_year <- rlang::arg_match(narr_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("narr_{narr_var}_{narr_year}.nc"))
-  if (file.exists(dest_file)) {
-    return(dest_file)
-  }
+  if (file.exists(dest_file)) return(dest_file)
   message(glue::glue("downloading {narr_year} {narr_var}:"))
   glue::glue("https://downloads.psl.noaa.gov",
     "Datasets", "NARR", "Dailies", "monolevel",
