@@ -5,30 +5,17 @@ d <-
   arrow::read_parquet("data/aqs.parquet") |>
   select(pollutant, date = dates, conc, s2)
 
-d_nei <-
-  arrow::read_parquet("data/nei.parquet")
+arrow::read_parquet("data/nei.parquet")
+arrow::read_parquet("data/traffic.parquet")
+arrow::read_parquet("data/nlcd.parquet")
+arrow::read_parquet("data/elevation.parquet")
 
-d <- left_join(d, d_nei, by = c("s2", "pollutant"))
+paste0("data/", c("nei", "traffic", "nlcd", "elevation"), ".parquet") |>
+  purrr::map(arrow::read_parquet) |>
+  purrr::reduce(left_join, by = "s2", .init = d)
 
-d_aadt <-
-  arrow::read_parquet("data/traffic.parquet")
+# TODO pick the right annual vintages for predictors for each date
 
-d <- left_join(d, d_aadt, by = c("s2", "pollutant"))
-
-d_nlcd <-
-  arrow::read_parquet("data/nlcd.parquet") |>
-  select(pollutant, s2, pct_treecanopy, pct_imperviousness)
-
-d <- left_join(d, d_nlcd, by = c("s2", "pollutant"))
-
-# TODO choose years in nlcd data based on calendar year; right now, see examples below for 2019
-d <- d |>
-  mutate(pct_treecanopy = round(purrr::map_dbl(pct_treecanopy, \(.) purrr::pluck(., 4, .default = NA))), # e.g., 2019
-         pct_imperviousness = round(purrr::map_dbl(pct_imperviousness, \(.) purrr::pluck(., 1, .default = NA)))) # e.g., 2019
-
-d_elevation <- arrow::read_parquet("data/elevation.parquet")
-
-d <- left_join(d, d_elevation, by = "s2", relationship = "many-to-many")
 
 d <- d |>
   mutate(x = s2_x(s2_cell_to_lnglat(s2)),
