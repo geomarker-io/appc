@@ -44,10 +44,8 @@ get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", 
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   nei_data <- arrow::read_parquet(install_nei_point_data(year = year))
   pollutant_code <- rlang::arg_match(pollutant_code)
-
   message("intersecting nei point sources")
-  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = 1000)
-
+  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
   summarize_emissions <- function(i) {
     nei_data[withins[[i]], ] |>
       dplyr::filter(pollutant_code == pollutant_code) |>
@@ -58,19 +56,20 @@ get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", 
       dplyr::summarize(nei_pm25_id2w = sum(total_emissions / dist_to_point^2)) |>
       as.double()
   }
-
   nei_pollutant_id2w <- purrr::map_dbl(1:length(withins), summarize_emissions, .progress = "summarizing intersected nei point sources")
   return(nei_pollutant_id2w)
 }
 
 d <-
-  arrow::read_parquet("data/aqs.parquet") |>
+  readRDS("data/aqs.rds") |>
   dplyr::distinct(s2)
 
-d$nei_2020_pm25_1000 <- get_nei_point_summary(d$s2, "2020")
-d$nei_2017_pm25_1000 <- get_nei_point_summary(d$s2, "2017")
-
+nei_years <- c("2017", "2020")
+d$nei_point_id2w_1000 <-
+  purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
+  setNames(nei_years) |>
+  purrr::list_transpose()
 
 # TODO add non-point sources
 
-arrow::write_parquet(d, "data/nei.parquet")
+saveRDS(d, "data/nei.rds")

@@ -1,16 +1,3 @@
-library(s2)
-library(dplyr, warn.conflicts = FALSE)
-
-d <-
-  arrow::read_parquet("data/aqs.parquet") |>
-  select(s2)
-
-d$census_tract_id_2019 <- get_census_tract_id(d$s2, year = 2019)
-d$census_tract_id_2020 <- get_census_tract_id(d$s2, year = 2020)
-d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010)
-
-arrow::write_parquet(d, "data/tract.parquet")
-
 # TODO create function to return column name for tracts and states based on input year and replace ifelse statements in the functions
 # create lookup table for the GEOID column based on year (for tracts and states??)
 
@@ -78,3 +65,15 @@ get_census_tract_id <- function(x, year) {
   the_tracts[as.character(x)]
 }
 
+library(s2)
+
+d <-
+  readRDS("data/aqs.rds") |>
+  dplyr::select(s2)
+
+# don't get it twisted
+d$census_tract_id_2019 <- get_census_tract_id(d$s2, year = 2019)
+d$census_tract_id_2020 <- get_census_tract_id(d$s2, year = 2020)
+d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010)
+
+saveRDS(d, "data/tract.rds")

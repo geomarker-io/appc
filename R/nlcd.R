@@ -72,7 +72,7 @@ get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, b
 }
   
 d <-
-  arrow::read_parquet("data/aqs.parquet") |>
+  readRDS("data/aqs.rds") |>
   dplyr::distinct(s2)
 
 impervious_years <- c("2016", "2019")
@@ -89,5 +89,5 @@ d$treecanopy_400 <-
   setNames(treecanopy_years) |>
   purrr::list_transpose()
 
-arrow::write_parquet(d, "data/nlcd.parquet")
+saveRDS(d, "data/nlcd.rds")
 

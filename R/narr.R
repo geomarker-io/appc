@@ -54,7 +54,7 @@ get_narr_data <- function(x, dates, narr_var) {
 library(dplyr, warn.conflicts = FALSE)
 
 d <-
-  arrow::read_parquet("data/aqs.parquet") |>
+  readRDS("data/aqs.rds") |>
   select(s2, dates)
 
 my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
@@ -67,4 +67,4 @@ d$pres.sfc <- my_narr("pres.sfc")
 d$uwnd.10m <- my_narr("uwnd.10m")
 d$vwnd.10m <- my_narr("vwnd.10m")
 
-arrow::write_parquet(d, "data/narr.parquet")
+saveRDS(d, "data/narr.rds")

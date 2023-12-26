@@ -26,11 +26,11 @@ install_smoke_pm_data <- function() {
 
 library(dplyr)
 
-d_tract <- arrow::read_parquet("data/tract.parquet")
+d_tract <- readRDS("data/tract.rds")
 d_smoke <- arrow::read_parquet(install_smoke_pm_data())
 
 d <-
-  arrow::read_parquet("data/aqs.parquet") |>
+  readRDS("data/aqs.rds") |>
   tidyr::unnest(cols = c(dates, conc)) |>
   rename(date = dates) |>
   distinct(s2, date) |>
@@ -38,4 +38,4 @@ d <-
 
 left_join(d, d_smoke, by = c("census_tract_id_2010", "date")) |>
   tidyr::replace_na(list(smoke_pm = 0)) |>
-  arrow::write_parquet("data/smoke.parquet")
+  saveRDS("data/smoke.rds")

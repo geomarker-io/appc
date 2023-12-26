@@ -107,4 +107,4 @@ aqs <-
   select(-s2_geometry)
 
 dir.create("data", showWarnings = FALSE)
-arrow::write_parquet(aqs, "data/aqs.parquet")
+saveRDS(aqs, "data/aqs.rds")

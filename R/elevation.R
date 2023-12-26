@@ -36,10 +36,10 @@ get_elevation_summary <- function(x, fun = median, buffer = 800) {
 }
 
 d <-
-  arrow::read_parquet("data/aqs.parquet") |>
+  readRDS("data/aqs.rds") |>
   dplyr::distinct(s2)
 
 d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = median, buffer = 800)
 d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = sd, buffer = 800)
 
-arrow::write_parquet(d, "data/elevation.parquet")
+saveRDS(d, "data/elevation.rds")

@@ -89,11 +89,10 @@ get_traffic_summary <- function(x, buffer = 400) {
 
 library(dplyr)
 
-# TODO redo without distinct pollutant
 d <-
-  arrow::read_parquet("data/aqs.parquet") |>
+  readRDS("data/aqs.rds") |>
   dplyr::distinct(s2)
 
 out <- dplyr::bind_cols(d, get_traffic_summary(d$s2))
 
-arrow::write_parquet(out, "data/traffic.parquet")
+saveRDS(out, "data/traffic.rds")
