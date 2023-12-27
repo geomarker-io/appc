@@ -1,46 +1,57 @@
 library(dplyr, warn.conflicts = FALSE)
 library(grf)
 
+message("loading training data...")
 d_train <-
-  arrow::read_parquet("data/train.parquet") |>
+  readRDS("data/train.rds") |>
   filter(pollutant == "pm25", year == 2022)
 
 pred_names <-
-  c("x", "y", "doy",
+  c("x", "y",
+    "doy",
     ## "year",
-    "nei_pm25_id2w",
-    "air.2m", "hpbl", "acpcp", "rhum.2m",
-    "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
-    "pct_treecanopy", "pct_imperviousness",
-    "elevation", "elevation_sd")
+    "elevation_median_800", "elevation_sd_800",
+    ## "aadt_m_truck", "aadt_m_nontruck",
+    "nei_point_id2w_1000",
+    ## "smoke",
+    "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")
 
+message("training GRF...")
 grf <-
   regression_forest(
     X = select(d_train, all_of(pred_names)),
     Y = d_train$conc,
     seed = 224,
     num.threads = parallel::detectCores(),
-    compute.oob.predictions = TRUE,
+    num.trees = 100,
+    ## compute.oob.predictions = TRUE,
+    honesty = FALSE,
+    ## tune.parameters = "all",
+    ## tune.num.trees = 50,
+    ## tune.num.reps = 100,
+    ## tune.num.draws = 1000,
+    tune.parameters = "none",
+    ## mtry = 17, # default effectively uses ncol(X)
     sample.fraction = 0.5,
-    num.trees = 1000,
-    ## mtry = 14,
-    min.node.size = 5, # 1?
+    min.node.size = 5,
     alpha = 0.05,
     imbalance.penalty = 0,
-    honesty = FALSE,
     clusters = as.factor(d_train$s2),
-    equalize.cluster.weights = FALSE,
-    tune.parameters = "none"
+    equalize.cluster.weights = FALSE
   )
+
+message("tuning output:")
+
+grf$tuning.output
 
 dir.create("model", showWarnings = FALSE)
 saveRDS(grf, "model/rf_pm.rds")
 
+message("saved model/rf_pm.rds (", fs::file_info("model/rf_pm.rds")$size, ")")
 message("LOLO MAE: ", round(median(abs(grf$predictions - grf$Y.orig)), 3))
-message("LOLO cor: ", round(cor.test(grf$predictions, grf$Y.orig)$estimate, 3))
+message("LOLO cor: ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3))
 
-message("variable importance:")
-tibble(var_imp = round(variable_importance(grf), 3),
+tibble(importance = round(variable_importance(grf), 3),
        variable = names(select(d_train, all_of(pred_names)))) |>
-  arrange(desc(var_imp)) |>
+  arrange(desc(importance)) |>
   knitr::kable()

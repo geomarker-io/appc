@@ -24,3 +24,6 @@ data/traffic.rds: data/aqs.rds R/traffic.R
 
 data/train.rds: data/aqs.rds data/elevation.rds data/narr.rds data/nlcd.rds data/nei.rds data/traffic.rds R/train.R
 	Rscript R/train.R
+
+model/rf_pm.rds: data/train.rds model/make_model.R
+	Rscript model/make_model.R
