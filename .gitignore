@@ -4,3 +4,4 @@
 /nlcd_downloads/
 /PRISM_us_dem_800m_bil/
 /data-raw/
+/model/*.rds
