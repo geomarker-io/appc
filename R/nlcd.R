@@ -62,11 +62,12 @@ get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, b
   x_vect <-
     tibble::tibble(
       s2 = unique(x),
-      s2_geography = s2::s2_buffer_cells(s2::s2_cell_to_lnglat(s2), distance = buffer)
+      s2_geography = s2::s2_cell_to_lnglat(s2)
     ) |>
     sf::st_as_sf() |>
     terra::vect() |>
-    terra::project(the_raster)
+    terra::project(the_raster) |>
+    terra::buffer(buffer)
   xx <- terra::extract(the_raster, x_vect, fun = mean, ID = FALSE)$Layer_1
   setNames(xx, as.character(x_vect$s2))[as.character(x)]
 }
