@@ -1,5 +1,23 @@
 # Air Pollution Prediction Commons
 
+## things to be done
+
+- [ ] add small section about just and using it to run commands in the repository
+- [ ] add separate models for other pollutants
+  - alter NEI emissions predictors for these pollutants?
+- [ ] add "convolution layers" of AQS data
+- [ ] create Rmd report for cross validation figures, tables
+  - include prediction tests for random locations and tests (but with fixed seed)
+  - test for reasonable prediction magnitude, mean and var of preds across time and space
+  - describe differences between test predictions for different model releases
+- [ ] add just target for downloading/installing required geomarker data sources (w/o running any geomarker assessment code)
+- [ ] translate to a runnable 'thing' (SALT? GHA?)
+- [ ] build user prediction tools, API
+  - add data tests for prediction outputs (reasonable prediction magnitude?)
+  - version the api and prediction tool with {appc}
+
+## coverage
+
 - Contiguous United States
 - daily, 2016 - 2022, but updated semi-annually at a ? lag
   - pickup off of other models and be more useful for recent EHR and registry data
@@ -8,14 +26,14 @@
 Instead of creating a spatiotemporal grid of predictors, create prediction model for set of input points and reuse code to derive features and predict on new input data.
 
 - [x] AQS average daily monitoring stations
-  - [ ] convolution layers of AQS data??
+  - [ ] convolution layers of AQS data
   - [x] derived data: coordinates, day of year, etc.
 - [x] NARR
 - [x] NLCD `pct_imperviousness` and `pct_treecanopy`
 - [x] PRISM elevation data @ 800 m resolution https://prism.oregonstate.edu/normals/
 - [x] census tract identifier
 - [x] PM smoke census tract product
-- [ ] National Emissions Inventory
+- [x] National Emissions Inventory
 - [ ] fire inventory from NCAR https://www2.acom.ucar.edu/modeling/finn-fire-inventory-ncar ??
 - [ ] AOD ([AWS COGs](https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs#AOD) don't have complete temporal coverage)
 
