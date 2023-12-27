@@ -40,6 +40,7 @@ d <-
   dplyr::distinct(s2)
 
 d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = median, buffer = 800)
+
 d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = sd, buffer = 800)
 
 saveRDS(d, "data/elevation.rds")

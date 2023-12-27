@@ -24,9 +24,11 @@ install_smoke_pm_data <- function() {
 }
 
 
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 
-d_tract <- readRDS("data/tract.rds")
+d_tract <-
+  readRDS("data/tract.rds") |>
+  select(s2, census_tract_id_2010)
 d_smoke <- arrow::read_parquet(install_smoke_pm_data())
 
 d <-
@@ -38,4 +40,5 @@ d <-
 
 left_join(d, d_smoke, by = c("census_tract_id_2010", "date")) |>
   tidyr::replace_na(list(smoke_pm = 0)) |>
+  select(-census_tract_id_2010) |>
   saveRDS("data/smoke.rds")

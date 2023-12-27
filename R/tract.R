@@ -47,12 +47,13 @@ get_census_tract_id <- function(x, year) {
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
   d <-
     d |>
-    dplyr::mutate(state_tracts = purrr::map(state, \(.) s2_tracts(state = ., year = year), .progress = "(down)loading tracts")) |>
+    dplyr::mutate(state_tracts = purrr::map(state, \(.) s2_tracts(state = ., year = year),
+                                            .progress = paste0("(down)loading ", year, " tracts"))) |>
     dplyr::mutate(census_tract_id =
                     purrr::map2(
                       data, state_tracts,
                       \(d, st) st[s2::s2_closest_feature(d$s2_geography, st$s2_geography), geoid_col_name, drop = TRUE],
-                      .progress = "intersecting tracts"
+                      .progress = paste0("intersecting ", year, " tracts")
                     ))
   the_tracts <-
     d |>

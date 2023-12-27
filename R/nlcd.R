@@ -71,7 +71,7 @@ get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, b
   xx <- terra::extract(the_raster, x_vect, fun = mean, ID = FALSE)$Layer_1
   setNames(xx, as.character(x_vect$s2))[as.character(x)]
 }
-  
+
 d <-
   readRDS("data/aqs.rds") |>
   dplyr::distinct(s2)

@@ -44,7 +44,7 @@ get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", 
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   nei_data <- arrow::read_parquet(install_nei_point_data(year = year))
   pollutant_code <- rlang::arg_match(pollutant_code)
-  message("intersecting nei point sources")
+  message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
   summarize_emissions <- function(i) {
     nei_data[withins[[i]], ] |>
@@ -56,7 +56,7 @@ get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", 
       dplyr::summarize(nei_pm25_id2w = sum(total_emissions / dist_to_point^2)) |>
       as.double()
   }
-  nei_pollutant_id2w <- purrr::map_dbl(1:length(withins), summarize_emissions, .progress = "summarizing intersected nei point sources")
+  nei_pollutant_id2w <- purrr::map_dbl(1:length(withins), summarize_emissions, .progress = "summarizing intersections")
   return(nei_pollutant_id2w)
 }
 

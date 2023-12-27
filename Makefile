@@ -22,5 +22,5 @@ data/nei.rds: data/aqs.rds R/nei.R
 data/traffic.rds: data/aqs.rds R/traffic.R
 	Rscript R/traffic.R
 
-data/train.rds: data/aqs.rds data/elevation.rds data/narr.rds data/nlcd.rds data/nei.rds data/traffic.rds R/make_model_train_data.R
-	Rscript R/make_model_train_data.R
+data/train.rds: data/aqs.rds data/elevation.rds data/narr.rds data/nlcd.rds data/nei.rds data/traffic.rds R/train.R
+	Rscript R/train.R

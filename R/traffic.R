@@ -87,7 +87,7 @@ get_traffic_summary <- function(x, buffer = 400) {
   return(output)
 }
 
-library(dplyr)
+library(dplyr, warn.conflicts = TRUE)
 
 d <-
   readRDS("data/aqs.rds") |>
