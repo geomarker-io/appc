@@ -24,6 +24,7 @@ pin_file <- function(url, overwrite = FALSE, progress = interactive()) {
     if (progress) message("Using existing file at ", dest_file)
     return(invisible(dest_file))
   }
+  # TODO get file size from header and interactively ask user if downloading a file of this size is OK
   the_req <- httr2::request(url)
   if (progress) the_req <- httr2::req_progress(the_req, type = "down")
   response <- httr2::req_perform(the_req, path = dest_file)

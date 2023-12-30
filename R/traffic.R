@@ -1,90 +1,80 @@
 #' installs traffic data into user's data directory for the `appc` package
 #' @references https://www.fhwa.dot.gov/policyinformation/hpms.cfm
+#' @references https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about
+#' @references https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf
+# AADT: Annual Average Daily Traffic
+# AADT_SINGLE_UNIT: Single Unit Truck and Bus AADT
+# AADT_COMBINATION: Combination Truck AADT
 install_traffic <- function() {
-  # TODO other years???
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hpms_2017.gpkg")
-  if (file.exists(dest_file)) return(dest_file)
+  out_path <- fs::path(tools::R_user_dir("appc", "data"), "hpms_f123_aadt", ext = "rds")
+  if (file.exists(out_path)) {
+    return(out_path)
+  }
   message("downloading HPMS data")
-  tf <- tempfile(fileext = ".zip")
+  dest_path <- tempfile(fileext = ".gdb.zip")
   httr::GET(
-    "https://www.fhwa.dot.gov/policyinformation/hpms/shapefiles/nationalarterial2017.zip",
-    httr::write_disk(tf, overwrite = TRUE),
+    "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data",
+    httr::write_disk(dest_path, overwrite = TRUE),
     httr::progress()
   )
-  the_files <- unzip(tf, exdir = tempdir())
-  message("converting HPMS data")
-  system2(
-    "ogr2ogr",
-    c(
-      "-f GPKG",
-      "-skipfailures",
-      "-makevalid",
-      "-progress",
-      "-select Route_ID,AADT,AADT_SINGL,AADT_COMBI",
-      shQuote(dest_file),
-      grep(".shp$", the_files, value = TRUE),
-      "-nlt MULTILINESTRING",
-      "National_Arterial2017"
-    )
-  )
-  return(hpms_file_path)
+  hpms_states <-
+    sf::st_layers(dsn = dest_path)$name |>
+    strsplit("_", fixed = TRUE) |>
+    purrr::map_chr(3)
+  extract_F123_AADT <- function(state) {
+    out <-
+      sf::st_read(
+        dsn = dest_path,
+        query = glue::glue("SELECT F_SYSTEM, AADT, AADT_SINGLE_UNIT, AADT_COMBINATION",
+          "FROM HPMS_FULL_{state}_2020",
+          "WHERE F_SYSTEM IN ('1', '2', '3')",
+          .sep = " "
+        ),
+        quiet = TRUE
+      ) |>
+      sf::st_zm() |>
+      dplyr::mutate(s2_geography = s2::as_s2_geography(Shape)) |>
+      sf::st_drop_geometry() |>
+      tibble::as_tibble()
+    out$length <- s2::s2_length(out$s2_geography)
+    out$s2_centroid <- purrr::map_vec(out$s2_geography, \(x) s2::as_s2_cell(s2::s2_centroid(x)), .ptype = s2::s2_cell())
+    out$s2_geography <- NULL
+    return(out)
+  }
+  hpms_pa_aadt <- purrr::map(hpms_states, extract_F123_AADT, .progress = "extracting state F123 AADT files")
+  out <- dplyr::bind_rows(hpms_pa_aadt)
+  saveRDS(out, out_path)
+  return(out_path)
 }
 
 
 #' get traffic summary data
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param buffer distance from s2 cell (in meters) to summarize data
-#' @return a data.frame with one row for each s2 cell in `x` and one numeric column per traffic summaries
-#' @details The `aadt_m_truck` is calculated as the sum of total average
-#' annual daily truck-meters (AADT m) within 400 m of the s2 cell. Similarly,
-#' `aadt_m_nontruck` is calculated by subtracting the summary measure for all
-#' trucks from the summary measure for all traffic.
+#' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates 
+#' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
 get_traffic_summary <- function(x, buffer = 400) {
-  d_aadt <-
-    install_traffic() |>
-    sf::st_read() |>
-    dplyr::transmute(route_id = Route_ID,
-                     s2_geography = s2::as_s2_geography(geom),
-                     aadt_total = AADT,
-                     aadt_truck = AADT_SINGL + AADT_COMBI) |>
-    tibble::as_tibble() |>
-    dplyr::select(-geom)
-  # TODO, it would be fast to breakup the aadt geometries by s2 level 3 ahead of time during the install??
-  # parentize to map over intersection with aadt geometry
-  d <-
-    tibble::tibble(s2 = unique(x)) |>
-    dplyr::mutate(s2_geography = s2::as_s2_geography(s2::s2_cell_to_lnglat(s2))) |>
-    dplyr::nest_by(s2_4 = s2::s2_cell_parent(s2, level = 4)) |>
-    dplyr::ungroup()
-  subset_within <- function(chnk, distance = 400) {
-    x_aadt_intersection <- 
-      s2::s2_intersects_box(x = d_aadt$s2_geography,
-                        lng1 = min(s2::s2_x(chnk$s2_geography)),
-                        lat1 = min(s2::s2_y(chnk$s2_geography)),
-                        lng2 = max(s2::s2_x(chnk$s2_geography)),
-                        lat2 = max(s2::s2_y(chnk$s2_geography)))
-    s2::s2_dwithin_matrix(chnk$s2_geography, dplyr::filter(d_aadt, x_aadt_intersection)$s2_geography, distance = distance)
+  aadt_data <-
+    readRDS(install_traffic()) |>
+    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2, level = 15)) |>
+    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
+                     truck_aadt_m = sum(truck_aadt_m))
+  ## sqrt(median(s2::s2_cell_area(aadt_data$s2_parent)))
+  # s2 level 16 are 130 m sq
+  # s2 level 15 are 260 m sq
+  # s2 level 14 are 521 m sq
+  xx <- unique(x)
+  message("intersecting with AADT data using level 15 s2 approximation ( ~ 260 m sq)")
+  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
+  summarize_traffic <- function(i) {
+    aadt_data[withins[[i]], ] |>
+    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
+                     truck_aadt_m = sum(truck_aadt_m)) |>
+      as.list()
   }
-  d$withins <- purrr::map(d$data, subset_within, .progress = "intersecting with AADT")
-  d <- d |> tidyr::unnest(cols = c(data, withins))
-  # summarize intersecting data using within integers
-  summarize_traffic <- function(x_withins) {
-    d_aadt[x_withins, ] |>
-      dplyr::summarize(
-        aadt_m_truck = sum(s2::s2_length(s2_geography) * aadt_truck),
-        aadt_m_nontruck = sum(s2::s2_length(s2_geography) * (aadt_total - aadt_truck))
-      )
-  }
-  d$aadt <- purrr::map(d$withins, summarize_traffic, .progress = "summarizing traffic")
-  traffic_summaries <-
-    d |>
-    dplyr::select(s2, aadt) |>
-    tidyr::unnest(cols = c(aadt))
-  output <-
-    tibble::tibble(s2 = x) |>
-    dplyr::left_join(traffic_summaries, by = "s2") |>
-    select(-s2)
-  return(output)
+  withins_aadt <- purrr::map(1:length(withins), summarize_traffic, .progress = "summarizing AADT")
+  names(withins_aadt) <- xx
+  return(withins_aadt[as.character(x)])
 }
 
 library(dplyr, warn.conflicts = TRUE)
@@ -93,6 +83,8 @@ d <-
   readRDS("data/aqs.rds") |>
   dplyr::distinct(s2)
 
-out <- dplyr::bind_cols(d, get_traffic_summary(d$s2))
+out_400 <- get_traffic_summary(d$s2, buffer = 400)
+d$total_aadt_m_400 <- purrr::map_dbl(out_400, "total_aadt_m")
+d$truck_aadt_m_400 <- purrr::map_dbl(out_400, "truck_aadt_m")
 
-saveRDS(out, "data/traffic.rds")
+saveRDS(d, "data/traffic.rds")

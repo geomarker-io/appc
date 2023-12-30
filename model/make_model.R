@@ -4,14 +4,14 @@ library(grf)
 message("loading training data...")
 d_train <-
   readRDS("data/train.rds") |>
-  filter(pollutant == "pm25", year == 2022)
+  filter(pollutant == "pm25")
 
 pred_names <-
   c("x", "y",
     "doy",
-    ## "year",
+    "year",
     "elevation_median_800", "elevation_sd_800",
-    ## "aadt_m_truck", "aadt_m_nontruck",
+    "total_aadt_m_400", "truck_aadt_m_400",
     "nei_point_id2w_1000",
     ## "smoke",
     "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")

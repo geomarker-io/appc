@@ -37,6 +37,7 @@ d <- left_join(d, d_narr, by = c("s2", "date"), relationship = "many-to-many")
 d <- left_join(d, readRDS("data/smoke.rds"), by = c("s2", "date"), relationship = "many-to-many")
 
 d$year <- as.numeric(format(d$date, "%Y"))
+# month?
 d$doy <- as.numeric(format(d$date, "%j"))
 
 saveRDS(d, "data/train.rds")
