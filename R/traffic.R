@@ -2,9 +2,7 @@
 #' @references https://www.fhwa.dot.gov/policyinformation/hpms.cfm
 #' @references https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about
 #' @references https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf
-# AADT: Annual Average Daily Traffic
-# AADT_SINGLE_UNIT: Single Unit Truck and Bus AADT
-# AADT_COMBINATION: Combination Truck AADT
+#' @export
 install_traffic <- function() {
   out_path <- fs::path(tools::R_user_dir("appc", "data"), "hpms_f123_aadt", ext = "rds")
   if (file.exists(out_path)) {
@@ -53,6 +51,7 @@ install_traffic <- function() {
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates 
 #' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
+#' @export
 get_traffic_summary <- function(x, buffer = 400) {
   aadt_data <-
     readRDS(install_traffic()) |>
@@ -76,15 +75,3 @@ get_traffic_summary <- function(x, buffer = 400) {
   names(withins_aadt) <- xx
   return(withins_aadt[as.character(x)])
 }
-
-library(dplyr, warn.conflicts = TRUE)
-
-d <-
-  readRDS("data/aqs.rds") |>
-  dplyr::distinct(s2)
-
-out_400 <- get_traffic_summary(d$s2, buffer = 400)
-d$total_aadt_m_400 <- purrr::map_dbl(out_400, "total_aadt_m")
-d$truck_aadt_m_400 <- purrr::map_dbl(out_400, "truck_aadt_m")
-
-saveRDS(d, "data/traffic.rds")

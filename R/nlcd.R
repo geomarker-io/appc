@@ -1,6 +1,7 @@
 #' installs NLCD impervious raster data into user's data directory for the `appc` package
 #' @param year a character string that is the year of the data
 #' @return path to impervious raster data
+#' @export
 install_impervious <- function(year = as.character(c(2019, 2016, 2013, 2011, 2008, 2004, 2001))) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nlcd_impervious_{year}.tif"))
@@ -23,6 +24,7 @@ install_impervious <- function(year = as.character(c(2019, 2016, 2013, 2011, 200
 #' installs NLCD treecanopy raster data into user's data directory for the `appc` package
 #' @param year a character string that is the year of the data
 #' @return path to treecanopy raster data
+#' @export
 install_treecanopy <- function(year = as.character(2021:2011)) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nlcd_treecanopy_{year}.tif"))
@@ -46,11 +48,12 @@ install_treecanopy <- function(year = as.character(2021:2011)) {
 
 #' get mean NLCD values buffered around a point
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
-#' @param product
+#' @param product get the "impervious" or "treecanopy" summary?
 #' @param year a character string that is the year of the impervious or treecanopy data;
 #' note that each product has different available years
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a vector of mean impervious or treecanopy values (the same length as `x`)
+#' @export
 get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, buffer = 400) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   product <- rlang::arg_match(product)
@@ -71,24 +74,3 @@ get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, b
   xx <- terra::extract(the_raster, x_vect, fun = mean, ID = FALSE)$Layer_1
   setNames(xx, as.character(x_vect$s2))[as.character(x)]
 }
-
-d <-
-  readRDS("data/aqs.rds") |>
-  dplyr::distinct(s2)
-
-impervious_years <- c("2016", "2019")
-purrr::walk(impervious_years, install_impervious)
-d$impervious_400 <-
-  purrr::map(c("2016", "2019"), \(x) get_nlcd_summary(d$s2, product = "impervious", year = x, buffer = 400)) |>
-  setNames(impervious_years) |>
-  purrr::list_transpose()
-
-treecanopy_years <- as.character(2021:2016)
-purrr::walk(treecanopy_years, install_treecanopy)
-d$treecanopy_400 <-
-  purrr::map(treecanopy_years, \(x) get_nlcd_summary(d$s2, product = "treecanopy", year = x, buffer = 400)) |>
-  setNames(treecanopy_years) |>
-  purrr::list_transpose()
-
-saveRDS(d, "data/nlcd.rds")
-

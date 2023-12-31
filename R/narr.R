@@ -3,6 +3,7 @@
 #' @param narr_year a character string that is the year for the NARR data
 #' @return path to NARR raster data
 #' @references https://psl.noaa.gov/data/gridded/data.narr.html
+#' @export
 install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
                               narr_year = as.character(2016:2022)) {
   narr_var <- rlang::arg_match(narr_var)
@@ -25,6 +26,7 @@ install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m",
 #' @param narr_var a character string that is the name of a NARR variable
 #' @references https://psl.noaa.gov/data/gridded/data.narr.html
 #' @return a list of numeric vectors of NARR values (the same length as `x` and `dates`)
+#' @export
 get_narr_data <- function(x, dates, narr_var) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   narr_raster <-
@@ -50,21 +52,3 @@ get_narr_data <- function(x, dates, narr_var) {
     .progress = paste0("calculating ", narr_var)
   )
 }
-
-library(dplyr, warn.conflicts = FALSE)
-
-d <-
-  readRDS("data/aqs.rds") |>
-  select(s2, dates)
-
-my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
-d$air.2m <- my_narr("air.2m")
-d$hpbl <- my_narr("hpbl")
-d$acpcp <- my_narr("acpcp")
-d$rhum.2m <- my_narr("rhum.2m")
-d$vis <- my_narr("vis")
-d$pres.sfc <- my_narr("pres.sfc")
-d$uwnd.10m <- my_narr("uwnd.10m")
-d$vwnd.10m <- my_narr("vwnd.10m")
-
-saveRDS(d, "data/narr.rds")

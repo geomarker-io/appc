@@ -1,10 +1,3 @@
-library(dplyr, warn.conflicts = FALSE)
-library(tidyr)
-library(s2)
-
-# get all the files on the page and the date they were last updated:
-## readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")
-
 #' Get daily AQS concentrations
 #'
 #' Pre-generated daily summary files are downloaded from the EPA AQS website
@@ -28,8 +21,8 @@ library(s2)
 #' get_daily_aqs("ozone", "2021")
 #' get_daily_aqs("no2", "2021")
 #' @export
-get_daily_aqs <- function(pollutant, year = "2021") {
-  stopifnot(pollutant %in% c("pm25", "ozone", "no2"))
+get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") {
+  pollutant <- rlang::arg_match(pollutant)
   pollutant_code <-
     c(
       "pm25" = "88101",
@@ -67,44 +60,5 @@ get_daily_aqs <- function(pollutant, year = "2021") {
   return(d_out)
 }
 
-d <-
-  tidyr::expand_grid(
-    pollutant = c("pm25", "ozone", "no2"),
-    year = 2016:2022
-  ) |>
-  purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
-
-aqs <-
-  d |>
-  purrr::list_rbind() |>
-  mutate(across(c(pollutant), as.factor)) |>
-  nest_by(s2, pollutant) |>
-  ungroup()
-
-aqs <-
-  aqs |>
-  mutate(
-    dates = purrr::map(aqs$data, "date"),
-    conc = purrr::map(aqs$data, "conc")
-  ) |>
-  select(-data) |>
-  mutate(s2_geometry = as_s2_geography(s2_cell_to_lnglat(s2)))
-
-us <-
-  tigris::states(year = 2020) |>
-  filter(!NAME %in% c(
-    "United States Virgin Islands",
-    "Guam", "Commonwealth of the Northern Mariana Islands",
-    "American Samoa", "Puerto Rico",
-    "Alaska", "Hawaii"
-  )) |>
-  sf::st_as_s2() |>
-  s2_union_agg()
-
-aqs <-
-  aqs |>
-  filter(s2_intersects(s2_geometry, us)) |>
-  select(-s2_geometry)
-
-dir.create("data", showWarnings = FALSE)
-saveRDS(aqs, "data/aqs.rds")
+# get all the files on the page and the date they were last updated:
+## readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")

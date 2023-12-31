@@ -12,7 +12,6 @@
 #' Sys.setenv("R_USER_DATA_DIR" = tempdir())
 #' pin_file("https://geomarker.s3-us-east-2.amazonaws.com/nlcd_cog/nlcd_imperviousdesc_2019.tif")
 #' }
-#' @export
 pin_file <- function(url, overwrite = FALSE, progress = interactive()) {
   file_path <- httr2::url_parse(url)$path
   if (is.null(file_path)) {
@@ -28,6 +27,6 @@ pin_file <- function(url, overwrite = FALSE, progress = interactive()) {
   the_req <- httr2::request(url)
   if (progress) the_req <- httr2::req_progress(the_req, type = "down")
   response <- httr2::req_perform(the_req, path = dest_file)
-  message("✓ saved to: ", dest_file)
+  message("saved to: ", dest_file)
   return(invisible(dest_file))
 }

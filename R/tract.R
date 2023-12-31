@@ -1,12 +1,7 @@
-# TODO create function to return column name for tracts and states based on input year and replace ifelse statements in the functions
-# create lookup table for the GEOID column based on year (for tracts and states??)
-
-## purrr::map(2013:2022, \(.) {
-##   grep("GEOID", names(tigris::tracts("OH", "Hamilton", cb = TRUE, year = .)), fixed = TRUE, value = TRUE)
-## }) |>
-##   suppressWarnings() |>
-##   suppressMessages()
-
+#' Get states geographic boundaries
+#' @param state character string of state number or abbreviation
+#' @param year numeric data year passed to tigris to get tract boundaries
+#' @export
 s2_states <- function(year) {
   stopifnot(year %in% c(1990, 2000, 2010:2022))
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
@@ -17,6 +12,13 @@ s2_states <- function(year) {
     dplyr::select(-geometry)
 }
 
+#' Get census tract geographic boundaries
+#' @param state character string of state number or abbreviation
+#' @param year numeric data year passed to tigris to get tract boundaries
+#' @return a tibble of tracts with a s2_geography column
+#' @export
+#' @examples
+#' s2_tracts("OH", 2022)
 s2_tracts <- function(state,  year) {
   stopifnot(year %in% as.character(c(1990, 2000, 2010:2022)))
   tigris::tracts(state = state, year = year, progress_bar = FALSE, keep_zipped_shapefile = TRUE) |>
@@ -25,14 +27,14 @@ s2_tracts <- function(state,  year) {
     dplyr::select(-geometry)
 }
 
-#' returns census tract identifier of *the closest* census tract
+#' Get census tract identifier of *the closest* census tract
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param year a numeric data year passed to tigris to get state and tract boundaries
 #' @details `tigris::tracts()` powers this, so set `options(tigris_use_cache = TRUE)`
-#' to benefit from its caching
-#'
-#' TODO add documentation on year
-#' according to https://github.com/walkerke/tigris available years for tracts and states are 1990, 2000, 2010 - 2022
+#' to benefit from its caching.
+#' According to <https://github.com/walkerke/tigris>, available years for tracts
+#' and states are 1990, 2000, 2010 - 2022
+#' @export
 get_census_tract_id <- function(x, year) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))
@@ -65,16 +67,3 @@ get_census_tract_id <- function(x, year) {
     tibble::deframe()
   the_tracts[as.character(x)]
 }
-
-library(s2)
-
-d <-
-  readRDS("data/aqs.rds") |>
-  dplyr::select(s2)
-
-# don't get it twisted
-d$census_tract_id_2019 <- get_census_tract_id(d$s2, year = 2019)
-d$census_tract_id_2020 <- get_census_tract_id(d$s2, year = 2020)
-d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010)
-
-saveRDS(d, "data/tract.rds")

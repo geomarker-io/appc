@@ -3,6 +3,7 @@
 #' note that any census tract - date combination implicitly missing has a value of zero
 #' @references https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/
 #' @return path to elevation raster
+#' @export
 install_smoke_pm_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.parquet")
   if (file.exists(dest_file)) return(dest_file)
@@ -22,23 +23,3 @@ install_smoke_pm_data <- function() {
   arrow::write_parquet(d_smoke, dest_file)
   return(dest_file)
 }
-
-
-library(dplyr, warn.conflicts = FALSE)
-
-d_tract <-
-  readRDS("data/tract.rds") |>
-  select(s2, census_tract_id_2010)
-d_smoke <- arrow::read_parquet(install_smoke_pm_data())
-
-d <-
-  readRDS("data/aqs.rds") |>
-  tidyr::unnest(cols = c(dates, conc)) |>
-  rename(date = dates) |>
-  distinct(s2, date) |>
-  left_join(d_tract, by = "s2", relationship = "many-to-many")
-
-left_join(d, d_smoke, by = c("census_tract_id_2010", "date")) |>
-  tidyr::replace_na(list(smoke_pm = 0)) |>
-  select(-census_tract_id_2010) |>
-  saveRDS("data/smoke.rds")

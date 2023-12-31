@@ -5,6 +5,7 @@
 #' with a pollutant code of `EC`, `OC`, `SO4`, `NO3`, `PMFINE`, or `PM25-PRI`.
 #' Latitude and longitude are encoded as an s2 vector, column names are cleaned,
 #' and rows with missing values (including total emissions or emissions units) are excluded.
+#' @export
 install_nei_point_data <- function(year = as.character(c(2020, 2017))) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nei_{year}.parquet"))
@@ -40,6 +41,7 @@ install_nei_point_data <- function(year = as.character(c(2020, 2017))) {
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a vector (the same length as `x`) of the sum of all point emissions within the buffer distance weighted
 #' by the inverse of the distance squared to each emission point
+#' @export
 get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   nei_data <- arrow::read_parquet(install_nei_point_data(year = year))
@@ -60,16 +62,3 @@ get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", 
   return(nei_pollutant_id2w)
 }
 
-d <-
-  readRDS("data/aqs.rds") |>
-  dplyr::distinct(s2)
-
-nei_years <- c("2017", "2020")
-d$nei_point_id2w_1000 <-
-  purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
-  setNames(nei_years) |>
-  purrr::list_transpose()
-
-# TODO add non-point sources
-
-saveRDS(d, "data/nei.rds")

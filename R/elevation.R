@@ -1,5 +1,6 @@
 #' installs elevation data into user's data directory for the `appc` package
 #' @return path to elevation raster
+#' @export
 install_elevation_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "PRISM_us_dem_800m_bil.bil")
   if (fs::file_exists(dest_file)) return(dest_file)
@@ -16,6 +17,7 @@ install_elevation_data <- function() {
 #' @param fun function to summarize extracted data
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a numeric vector of elevation summaries, the same length as `x`
+#' @export
 get_elevation_summary <- function(x, fun = median, buffer = 800) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   elevation_raster <- terra::rast(install_elevation_data())
@@ -34,13 +36,3 @@ get_elevation_summary <- function(x, fun = median, buffer = 800) {
   elevations[as.character(x)] |>
     as.numeric()
 }
-
-d <-
-  readRDS("data/aqs.rds") |>
-  dplyr::distinct(s2)
-
-d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = median, buffer = 800)
-
-d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = sd, buffer = 800)
-
-saveRDS(d, "data/elevation.rds")

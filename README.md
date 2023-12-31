@@ -38,6 +38,7 @@ Instead of creating a spatiotemporal grid of predictors, create prediction model
 - [x] National Emissions Inventory
 - [ ] fire inventory from NCAR https://www2.acom.ucar.edu/modeling/finn-fire-inventory-ncar ??
 - [ ] AOD ([AWS COGs](https://www.earthdata.nasa.gov/engage/cloud-optimized-geotiffs#AOD) don't have complete temporal coverage)
+- [ ] non-point sources from NEI?
 
 
 has monitoring gotten better?  (older pub saw better performance in later years) is this why this simple model looks good -- just 2016 - current?
