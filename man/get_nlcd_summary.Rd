@@ -12,7 +12,7 @@ get_nlcd_summary(
 )
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (`s2_cell` object)}
+\item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{product}{get the "impervious" or "treecanopy" summary?}
 
@@ -22,7 +22,7 @@ note that each product has different available years}
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
 }
 \value{
-a vector of mean impervious or treecanopy values (the same length as `x`)
+a vector of mean impervious or treecanopy values (the same length as \code{x})
 }
 \description{
 get mean NLCD values buffered around a point

@@ -2,7 +2,7 @@
 % Please edit documentation in R/elevation.R
 \name{install_elevation_data}
 \alias{install_elevation_data}
-\title{installs elevation data into user's data directory for the `appc` package}
+\title{installs elevation data into user's data directory for the \code{appc} package}
 \usage{
 install_elevation_data()
 }
@@ -10,5 +10,5 @@ install_elevation_data()
 path to elevation raster
 }
 \description{
-installs elevation data into user's data directory for the `appc` package
+installs elevation data into user's data directory for the \code{appc} package
 }

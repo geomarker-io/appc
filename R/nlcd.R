@@ -10,7 +10,7 @@ install_impervious <- function(year = as.character(c(2019, 2016, 2013, 2011, 200
   nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_impervious_{year}.zip"))
   glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_{year}_impervious_l48_20210604.zip") |>
     httr::GET(httr::write_disk(nlcd_zip_path, overwrite = TRUE), httr::progress())
-  nlcd_raw_paths <- unzip(nlcd_zip_path, exdir = tempdir())
+  nlcd_raw_paths <- utils::unzip(nlcd_zip_path, exdir = tempdir())
   message(glue::glue("converting {year} NLCD impervious raster"))
   system2(
     "gdal_translate",
@@ -33,7 +33,7 @@ install_treecanopy <- function(year = as.character(2021:2011)) {
   nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_treecanopy_{year}.zip"))
   glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_tcc_CONUS_{year}_v2021-4.zip") |>
     httr::GET(httr::write_disk(nlcd_zip_path), httr::progress(), overwrite = TRUE)
-  nlcd_raw_paths <- unzip(nlcd_zip_path, exdir = tempdir())
+  nlcd_raw_paths <- utils::unzip(nlcd_zip_path, exdir = tempdir())
   message(glue::glue("converting {year} NLCD treecanopy raster"))
   system2(
     "gdal_translate",
@@ -72,5 +72,5 @@ get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, b
     terra::project(the_raster) |>
     terra::buffer(buffer)
   xx <- terra::extract(the_raster, x_vect, fun = mean, ID = FALSE)$Layer_1
-  setNames(xx, as.character(x_vect$s2))[as.character(x)]
+  stats::setNames(xx, as.character(x_vect$s2))[as.character(x)]
 }

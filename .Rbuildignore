@@ -1,0 +1,7 @@
+^LICENSE\.md$
+inst/training_data.rds
+model/rf_pm.rds
+justfile
+model
+^\.github$
+^codecov\.yml$

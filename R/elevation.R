@@ -7,8 +7,8 @@ install_elevation_data <- function() {
   elevation_zip <- tempfile("elevation", fileext = ".zip")
   paste0("https://prism.oregonstate.edu/fetchData.php",
          "?type=bil&kind=normals&spatial=800m&elem=dem&temporal=annual") |>
-    download.file(destfile = elevation_zip)
-  unzip(elevation_zip, exdir = tools::R_user_dir("appc", "data"))
+    utils::download.file(destfile = elevation_zip)
+  utils::unzip(elevation_zip, exdir = tools::R_user_dir("appc", "data"))
   return(dest_file)
 }
 
@@ -18,7 +18,7 @@ install_elevation_data <- function() {
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a numeric vector of elevation summaries, the same length as `x`
 #' @export
-get_elevation_summary <- function(x, fun = median, buffer = 800) {
+get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   elevation_raster <- terra::rast(install_elevation_data())
   x_vect <-
@@ -32,7 +32,7 @@ get_elevation_summary <- function(x, fun = median, buffer = 800) {
   elevations <-
     terra::extract(elevation_raster, x_vect, fun = fun)$PRISM_us_dem_800m_bil |>
     as.list() |>
-    setNames(x_vect$s2)
+    stats::setNames(x_vect$s2)
   elevations[as.character(x)] |>
     as.numeric()
 }

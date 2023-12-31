@@ -12,14 +12,16 @@ install_smoke_pm_data <- function() {
             httr::write_disk(tf),
             httr::progress())
   d_smoke <-
-    unz(tf, grep(".csv", unzip(tf, list = TRUE)$Name, value = TRUE)) |>
+    unz(tf, grep(".csv", utils::unzip(tf, list = TRUE)$Name, value = TRUE)) |>
     readr::read_csv(
       col_types = list("GEOID" = readr::col_character(),
                        "date" = readr::col_date(format = "%Y%m%d"),
                        "smokePM_pred" = readr::col_double())) |>
-    rename(census_tract_id_2010 = GEOID,
+    dplyr::rename(census_tract_id_2010 = GEOID,
            smoke_pm = smokePM_pred) |>
-    filter(date > as.Date("2015-12-31"))
+    dplyr::filter(date > as.Date("2015-12-31"))
   arrow::write_parquet(d_smoke, dest_file)
   return(dest_file)
 }
+
+utils::globalVariables(c("GEOID", "smokePM_pred"))

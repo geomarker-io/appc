@@ -16,7 +16,7 @@ install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m",
     "{narr_var}.{narr_year}.nc",
     .sep = "/"
   ) |>
-    download.file(destfile = dest_file)
+    utils::download.file(destfile = dest_file)
   return(dest_file)
 }
 
@@ -52,3 +52,5 @@ get_narr_data <- function(x, dates, narr_var) {
     .progress = paste0("calculating ", narr_var)
   )
 }
+
+utils::globalVariables(c("d"))

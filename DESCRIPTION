@@ -1,8 +1,14 @@
 Package: appc
 Title: Air Pollution Predictor Commons
 Version: 0.1.0
+Authors@R: 
+    person("Cole", "Brokamp", , "cole@colebrokamp.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0289-3151"))
 URL: https://github.com/geomarker-io/appc
-R.version: 4.3.1
+Description: Functions for geomarker assessment for s2 locations and dates. These are used to train and predict daily ambient air pollution concentrations across the contiguous US 2016 - 2022.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
 Imports: 
     dplyr,
     tidyr,
@@ -14,10 +20,10 @@ Imports:
     sf,
     arrow,
     terra,
-    knitr,
     fs,
     httr,
+    httr2,
     rlang,
     tibble,
-    grf
+    scales
 RoxygenNote: 7.2.3

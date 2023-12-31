@@ -12,7 +12,7 @@ get_closest_year(date, years)
 \item{years}{vector of characters (or numerics) representing years to choose from}
 }
 \value{
-a character vector of the closest year in `years` for each date in `date`
+a character vector of the closest year in \code{years} for each date in \code{date}
 }
 \description{
 get the closest years to a vector of dates

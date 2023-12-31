@@ -2,12 +2,12 @@
 % Please edit documentation in R/traffic.R
 \name{install_traffic}
 \alias{install_traffic}
-\title{installs traffic data into user's data directory for the `appc` package}
+\title{installs traffic data into user's data directory for the \code{appc} package}
 \usage{
 install_traffic()
 }
 \description{
-installs traffic data into user's data directory for the `appc` package
+installs traffic data into user's data directory for the \code{appc} package
 }
 \references{
 https://www.fhwa.dot.gov/policyinformation/hpms.cfm

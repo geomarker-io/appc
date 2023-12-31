@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlcd.R
 \name{install_treecanopy}
 \alias{install_treecanopy}
-\title{installs NLCD treecanopy raster data into user's data directory for the `appc` package}
+\title{installs NLCD treecanopy raster data into user's data directory for the \code{appc} package}
 \usage{
 install_treecanopy(year = as.character(2021:2011))
 }
@@ -13,5 +13,5 @@ install_treecanopy(year = as.character(2021:2011))
 path to treecanopy raster data
 }
 \description{
-installs NLCD treecanopy raster data into user's data directory for the `appc` package
+installs NLCD treecanopy raster data into user's data directory for the \code{appc} package
 }

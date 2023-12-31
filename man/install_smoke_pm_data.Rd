@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoke.R
 \name{install_smoke_pm_data}
 \alias{install_smoke_pm_data}
-\title{installs smoke pm data into user's data directory for the `appc` package}
+\title{installs smoke pm data into user's data directory for the \code{appc} package}
 \usage{
 install_smoke_pm_data()
 }

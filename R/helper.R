@@ -2,7 +2,7 @@
 #' @return s2_geography object
 #' @export
 #' @examples
-#' contiguous_us()
+#' # contiguous_us()
 contiguous_us <- function() {
   tigris::states(year = 2020) |>
     dplyr::filter(!NAME %in% c(
@@ -14,6 +14,8 @@ contiguous_us <- function() {
     sf::st_as_s2() |>
     s2::s2_union_agg()
 }
+
+utils::globalVariables("NAME")
 
 
 #' get the closest years to a vector of dates

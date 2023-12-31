@@ -1,5 +1,9 @@
 # Air Pollution Prediction Commons
 
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 ## things to be done
 
 - [ ] add just target for downloading/installing required geomarker data sources (w/o running any geomarker assessment code)

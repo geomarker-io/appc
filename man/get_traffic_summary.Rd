@@ -7,12 +7,12 @@
 get_traffic_summary(x, buffer = 400)
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (`s2_cell` object)}
+\item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
 }
 \value{
-a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates
+a list the same length as \code{x}, which each element having a list of \code{total_aadt_m} and \code{truck_aadt_m} estimates
 }
 \description{
 get traffic summary data

@@ -17,12 +17,12 @@ pin_file(url, overwrite = FALSE, progress = interactive())
 a character string that is the file path to the downloaded file (invisibly)
 }
 \description{
-Files are downloaded to the R user data directory (i.e., `tools::R_user_dir("pin", "data")`)
+Files are downloaded to the R user data directory (i.e., \code{tools::R_user_dir("pin", "data")})
 so they can be cached across all of an R user's sessions and projects.
-Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable (see `?tools::R_user_dir`).
+Specify an alternative download location by setting the \code{R_USER_DATA_DIR} environment variable (see \code{?tools::R_user_dir}).
 }
 \examples{
-\donttest{
+\dontrun{
 Sys.setenv("R_USER_DATA_DIR" = tempdir())
 pin_file("https://geomarker.s3-us-east-2.amazonaws.com/nlcd_cog/nlcd_imperviousdesc_2019.tif")
 }

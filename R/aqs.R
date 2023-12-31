@@ -17,9 +17,7 @@
 #' the latest versions.  Since this function always downloads the latest data from EPA AQS,
 #' that means that it will could different results depending on the date it was run.
 #' @examples
-#' get_daily_aqs("pm25", "2021")
-#' get_daily_aqs("ozone", "2021")
-#' get_daily_aqs("no2", "2021")
+#' # get_daily_aqs("pm25", "2021")
 #' @export
 get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") {
   pollutant <- rlang::arg_match(pollutant)
@@ -31,22 +29,22 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") 
     )[pollutant]
   file_name <- glue::glue("daily_{pollutant_code}_{year}.zip")
   on.exit(unlink(file_name))
-  download.file(
+  utils::download.file(
     url = glue::glue("https://aqs.epa.gov/aqsweb/airdata/{file_name}"),
     destfile = file_name,
     quiet = TRUE
   )
   unzipped_file_name <- gsub(pattern = ".zip", ".csv", file_name, fixed = TRUE)
   on.exit(unlink(unzipped_file_name), add = TRUE)
-  unzip(file_name)
+  utils::unzip(file_name)
   d_in <- readr::read_csv(unzipped_file_name, show_col_types = FALSE)
   if (pollutant_code %in% c("88101", "88502")) {
-    d_in <- filter(d_in, `Sample Duration` == "24 HOUR")
+    d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")
   }
   d_out <-
     d_in |>
-    filter(`Observation Percent` >= 75) |>
-    transmute(
+    dplyr::filter(`Observation Percent` >= 75) |>
+    dplyr::transmute(
       site = paste(`State Code`, `County Code`, `Site Num`, sep = "-"),
       lat = Latitude,
       lon = Longitude,
@@ -54,11 +52,16 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") 
       date = `Date Local`,
       pollutant = pollutant
     ) |>
-    mutate(s2 = as_s2_cell(s2_geog_point(lon, lat))) |>
-    group_by(s2, date, pollutant) |>
-    summarise(conc = mean(conc, na.rm = TRUE), .groups = "drop")
+    dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>
+    dplyr::group_by(s2, date, pollutant) |>
+    dplyr::summarise(conc = mean(conc, na.rm = TRUE), .groups = "drop")
   return(d_out)
 }
+
+utils::globalVariables(c("Sample Duration", "Observation Percent",
+                         "State Code", "County Code", "Site Num",
+                         "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
+                         "lon", "lat", "conc"))
 
 # get all the files on the page and the date they were last updated:
 ## readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")

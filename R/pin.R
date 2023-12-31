@@ -8,7 +8,7 @@
 #' @param overwrite overwrite existing downloaded file with same name?
 #' @return a character string that is the file path to the downloaded file (invisibly)
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' Sys.setenv("R_USER_DATA_DIR" = tempdir())
 #' pin_file("https://geomarker.s3-us-east-2.amazonaws.com/nlcd_cog/nlcd_imperviousdesc_2019.tif")
 #' }

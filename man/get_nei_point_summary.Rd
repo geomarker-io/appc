@@ -12,7 +12,7 @@ get_nei_point_summary(
 )
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (`s2_cell` object)}
+\item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{year}{a character string that is the year of the NEI data}
 
@@ -21,7 +21,7 @@ get_nei_point_summary(
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
 }
 \value{
-a vector (the same length as `x`) of the sum of all point emissions within the buffer distance weighted
+a vector (the same length as \code{x}) of the sum of all point emissions within the buffer distance weighted
 by the inverse of the distance squared to each emission point
 }
 \description{

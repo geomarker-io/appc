@@ -2,7 +2,7 @@
 % Please edit documentation in R/nlcd.R
 \name{install_impervious}
 \alias{install_impervious}
-\title{installs NLCD impervious raster data into user's data directory for the `appc` package}
+\title{installs NLCD impervious raster data into user's data directory for the \code{appc} package}
 \usage{
 install_impervious(
   year = as.character(c(2019, 2016, 2013, 2011, 2008, 2004, 2001))
@@ -15,5 +15,5 @@ install_impervious(
 path to impervious raster data
 }
 \description{
-installs NLCD impervious raster data into user's data directory for the `appc` package
+installs NLCD impervious raster data into user's data directory for the \code{appc} package
 }

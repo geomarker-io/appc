@@ -15,7 +15,7 @@ install_nei_point_data <- function(year = as.character(c(2020, 2017))) {
   dplyr::case_when(year == "2020" ~ "https://gaftp.epa.gov/air/nei/2020/data_summaries/Facility%20Level%20by%20Pollutant.zip",
                    year == "2017" ~ "https://gaftp.epa.gov/air/nei/2017/data_summaries/2017v1/2017neiJan_facility.zip") |>
     httr::GET(httr::write_disk(zip_path), httr::progress(), overwrite = TRUE)
-  nei_raw_paths <- unzip(zip_path, exdir = tempdir())
+  nei_raw_paths <- utils::unzip(zip_path, exdir = tempdir())
   grep(".csv", nei_raw_paths, fixed = TRUE, value = TRUE) |>
     readr::read_csv(col_types = readr::cols_only(
       `site latitude` = readr::col_double(),
@@ -29,10 +29,12 @@ install_nei_point_data <- function(year = as.character(c(2020, 2017))) {
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(`site longitude`, `site latitude`))) |>
     dplyr::select(-`site latitude`, -`site longitude`) |>
     dplyr::rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
-    na.omit() |>
+    stats::na.omit() |>
     arrow::write_parquet(dest_file)
   return(dest_file)
 }
+
+utils::globalVariables(c("pollutant code", "site longitude", "site latitude", "total_emissions"))
 
 #' get NEI point summary data
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
@@ -62,3 +64,4 @@ get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", 
   return(nei_pollutant_id2w)
 }
 
+utils::globalVariables(c("dist_to_point"))

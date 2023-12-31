@@ -75,3 +75,5 @@ get_traffic_summary <- function(x, buffer = 400) {
   names(withins_aadt) <- xx
   return(withins_aadt[as.character(x)])
 }
+
+utils::globalVariables(c("total_aadt_m", "truck_aadt_m", "Shape"))

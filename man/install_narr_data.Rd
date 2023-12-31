@@ -2,7 +2,7 @@
 % Please edit documentation in R/narr.R
 \name{install_narr_data}
 \alias{install_narr_data}
-\title{installs NARR raster data into user's data directory for the `appc` package}
+\title{installs NARR raster data into user's data directory for the \code{appc} package}
 \usage{
 install_narr_data(
   narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m",
@@ -19,7 +19,7 @@ install_narr_data(
 path to NARR raster data
 }
 \description{
-installs NARR raster data into user's data directory for the `appc` package
+installs NARR raster data into user's data directory for the \code{appc} package
 }
 \references{
 https://psl.noaa.gov/data/gridded/data.narr.html

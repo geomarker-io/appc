@@ -8,8 +8,6 @@ s2_states(year)
 }
 \arguments{
 \item{year}{numeric data year passed to tigris to get tract boundaries}
-
-\item{state}{character string of state number or abbreviation}
 }
 \description{
 Get states geographic boundaries

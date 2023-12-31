@@ -7,14 +7,14 @@
 get_narr_data(x, dates, narr_var)
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (`s2_cell` object)}
+\item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
-\item{dates}{a list of date vectors for the NARR data, must be the same length as `x`}
+\item{dates}{a list of date vectors for the NARR data, must be the same length as \code{x}}
 
 \item{narr_var}{a character string that is the name of a NARR variable}
 }
 \value{
-a list of numeric vectors of NARR values (the same length as `x` and `dates`)
+a list of numeric vectors of NARR values (the same length as \code{x} and \code{dates})
 }
 \description{
 get narr data for a spatiotemporal location

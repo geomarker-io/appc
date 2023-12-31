@@ -31,7 +31,5 @@ the latest versions.  Since this function always downloads the latest data from 
 that means that it will could different results depending on the date it was run.
 }
 \examples{
-get_daily_aqs("pm25", "2021")
-get_daily_aqs("ozone", "2021")
-get_daily_aqs("no2", "2021")
+# get_daily_aqs("pm25", "2021")
 }

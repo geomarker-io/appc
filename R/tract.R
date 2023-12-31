@@ -1,5 +1,4 @@
 #' Get states geographic boundaries
-#' @param state character string of state number or abbreviation
 #' @param year numeric data year passed to tigris to get tract boundaries
 #' @export
 s2_states <- function(year) {
@@ -67,3 +66,5 @@ get_census_tract_id <- function(x, year) {
     tibble::deframe()
   the_tracts[as.character(x)]
 }
+
+utils::globalVariables(c("census_tract_id", "s2_geography", "s2", "state", "data", "state_tracts", "geometry"))

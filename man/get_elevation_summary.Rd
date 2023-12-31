@@ -4,17 +4,17 @@
 \alias{get_elevation_summary}
 \title{get elevation summary data}
 \usage{
-get_elevation_summary(x, fun = median, buffer = 800)
+get_elevation_summary(x, fun = stats::median, buffer = 800)
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (`s2_cell` object)}
+\item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{fun}{function to summarize extracted data}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
 }
 \value{
-a numeric vector of elevation summaries, the same length as `x`
+a numeric vector of elevation summaries, the same length as \code{x}
 }
 \description{
 get elevation summary data

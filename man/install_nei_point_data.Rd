@@ -2,7 +2,7 @@
 % Please edit documentation in R/nei.R
 \name{install_nei_point_data}
 \alias{install_nei_point_data}
-\title{installs NEI point data into user's data directory for the `appc` package}
+\title{installs NEI point data into user's data directory for the \code{appc} package}
 \usage{
 install_nei_point_data(year = as.character(c(2020, 2017)))
 }
@@ -13,11 +13,11 @@ install_nei_point_data(year = as.character(c(2020, 2017)))
 path to NEI point data parquet file
 }
 \description{
-installs NEI point data into user's data directory for the `appc` package
+installs NEI point data into user's data directory for the \code{appc} package
 }
 \details{
 The NEI file is downloaded, unzipped, and filtered to observations
-with a pollutant code of `EC`, `OC`, `SO4`, `NO3`, `PMFINE`, or `PM25-PRI`.
+with a pollutant code of \code{EC}, \code{OC}, \code{SO4}, \code{NO3}, \code{PMFINE}, or \code{PM25-PRI}.
 Latitude and longitude are encoded as an s2 vector, column names are cleaned,
 and rows with missing values (including total emissions or emissions units) are excluded.
 }
