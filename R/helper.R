@@ -29,3 +29,21 @@ get_closest_year <- function(date, years) {
   date_year <- as.numeric(format(date, "%Y"))
   purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))
 }
+
+#' install geomarker data
+#' Download, convert, and install all required geomarker data for `appc` predictions from 2016 - 2022. The smoke data depends on census tract data retrieved per state from the census API and is *not* downloaded ahead of time here.
+#' @return a character vector of the paths to installed geomarker data
+#' @export
+install_geomarker_data <- function() {
+  c(
+    install_elevation_data(),
+    tidyr::expand_grid(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
+                       narr_year = as.character(2016:2022)) |>
+      purrr::pmap_chr(install_narr_data),
+    purrr::map_chr(c("2017", "2020"), install_nei_point_data),
+    purrr::map_chr(c("2016", "2019"), install_impervious),
+    purrr::map_chr(as.character(2016:2021), install_treecanopy),
+    install_smoke_pm_data()
+  ) |>
+    invisible()
+}

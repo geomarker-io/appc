@@ -1,5 +1,9 @@
 # set shell := ["R", "-e"]
 
+# download and install geospatial source data
+install_data:
+	R -e "devtools::load_all(); install_geomarker_data()"
+
 # document R package
 document:
 	R -e "devtools::document()"
@@ -7,11 +11,6 @@ document:
 # check R package
 check:
 	R -e "devtools::check()"
-
-# install required R packages
-install:
-    R -e "if (!require(pak)) install.packages('pak')"
-    R -e "pak::pak()"
 
 # make training data
 data:
