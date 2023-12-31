@@ -1,9 +1,10 @@
 library(dplyr, warn.conflicts = FALSE)
 library(grf)
+devtools::load_all()
 
 message("loading training data...")
 d_train <-
-  readRDS("data/train.rds") |>
+  readRDS(fs::path(fs::path_package("appc"), "training_data.rds")) |>
   filter(pollutant == "pm25")
 
 pred_names <-
@@ -24,7 +25,7 @@ grf <-
     seed = 224,
     num.threads = parallel::detectCores(),
     num.trees = 100,
-    ## compute.oob.predictions = TRUE,
+    compute.oob.predictions = TRUE,
     honesty = FALSE,
     ## tune.parameters = "all",
     ## tune.num.trees = 50,
@@ -40,16 +41,17 @@ grf <-
     equalize.cluster.weights = FALSE
   )
 
+message("saving GRF...")
+file_output_path <- fs::path(fs::path_package("appc"), "rf_pm.rds")
+saveRDS(grf, file_output_path)
+message("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
+
+message("LLOOB estimates:")
+message("MAE = ", round(median(abs(grf$predictions - grf$Y.orig)), 3))
+message("Cor = ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3))
+
 message("tuning output:")
-
 grf$tuning.output
-
-dir.create("model", showWarnings = FALSE)
-saveRDS(grf, "model/rf_pm.rds")
-
-message("saved model/rf_pm.rds (", fs::file_info("model/rf_pm.rds")$size, ")")
-message("LOLO MAE: ", round(median(abs(grf$predictions - grf$Y.orig)), 3))
-message("LOLO cor: ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3))
 
 tibble(importance = round(variable_importance(grf), 3),
        variable = names(select(d_train, all_of(pred_names)))) |>

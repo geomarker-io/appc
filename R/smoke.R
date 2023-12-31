@@ -6,7 +6,7 @@
 #' @export
 install_smoke_pm_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.parquet")
-  if (file.exists(dest_file)) return(dest_file)
+  if (file.exists(dest_file)) return(as.character(dest_file))
   tf <- tempfile()
   httr::GET("https://www.dropbox.com/sh/atmtfc54zuknnob/AAA7AVRQP-GoIMHpxlvfN7RBa?dl=1",
             httr::write_disk(tf),
@@ -21,7 +21,7 @@ install_smoke_pm_data <- function() {
            smoke_pm = smokePM_pred) |>
     dplyr::filter(date > as.Date("2015-12-31"))
   arrow::write_parquet(d_smoke, dest_file)
-  return(dest_file)
+  return(as.character(dest_file))
 }
 
 utils::globalVariables(c("GEOID", "smokePM_pred"))

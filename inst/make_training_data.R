@@ -4,7 +4,6 @@ library(purrr)
 library(tidyr)
 devtools::load_all()
 
-
 # get AQS data
 d <-
   tidyr::expand_grid(

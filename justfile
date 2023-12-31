@@ -15,9 +15,9 @@ install:
 
 # make training data
 data:
-	inst/make_training_data.R
+	Rscript inst/make_training_data.R
 
 # train grf model
-model:
-    Rscript model/make_model.R
+train:
+    Rscript inst/train_model.R
 
