@@ -6,3 +6,4 @@
 /data-raw/
 /model/*.rds
 /inst/training_data.rds
+/inst/rf_pm.rds
