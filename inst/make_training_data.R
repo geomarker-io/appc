@@ -2,7 +2,7 @@ library(dplyr)
 library(s2)
 library(purrr)
 library(tidyr)
-devtools::load_all()
+if(!require(appc)) devtools::load_all()
 
 # get AQS data
 d <-

@@ -3,6 +3,34 @@
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
   <!-- badges: end -->
+ 
+## Air pollution exposure assessment in R
+
+```R
+library(appc)
+```
+
+## Developing
+
+Use [`just`](https://just.systems/man/en/); e.g., `just --list`:
+
+```sh
+Available recipes:
+    check                # check R package
+    document             # document R package
+    make_training_data   # make training data
+    train                # train grf model
+    upload_training_data # upload training data to S3
+```
+
+### Installing training data
+
+Instead of using the appc functions to make training data (`just make_training_data`), download a pregenerated version in R using the `fs::path_package()` function to download the file to the installed `appc` package:
+
+```R
+download.file(url = "https://geomarker-io.s3-us-east-2.amazonaws.com/appc/training_data_0.1.0.rds",
+              destfile = fs::path(fs::path_package("appc"), "training_data.rds"))
+```
 
 ## things to be done
 

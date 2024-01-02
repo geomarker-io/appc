@@ -1,6 +1,6 @@
 library(dplyr, warn.conflicts = FALSE)
 library(grf)
-devtools::load_all()
+if(!require(appc)) devtools::load_all()
 
 message("loading training data...")
 d_train <-
