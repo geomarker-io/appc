@@ -21,5 +21,5 @@ get traffic summary data
 A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
 }
 \examples{
-get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
+# get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
 }
