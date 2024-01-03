@@ -54,6 +54,9 @@ install_treecanopy <- function(year = as.character(2021:2011)) {
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a vector of mean impervious or treecanopy values (the same length as `x`)
 #' @export
+#' @examples
+#' get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), "impervious", year = "2019")
+#' get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), "treecanopy", year = "2019")
 get_nlcd_summary <- function(x, product = c("impervious", "treecanopy"), year, buffer = 400) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   product <- rlang::arg_match(product)

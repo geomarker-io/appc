@@ -2,7 +2,7 @@
 #' @return s2_geography object
 #' @export
 #' @examples
-#' # contiguous_us()
+#' contiguous_us()
 contiguous_us <- function() {
   tigris::states(year = 2020) |>
     dplyr::filter(!NAME %in% c(

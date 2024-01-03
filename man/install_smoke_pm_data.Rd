@@ -7,10 +7,13 @@
 install_smoke_pm_data()
 }
 \value{
-path to elevation raster
+path to parquet file containing smoke data
 }
 \description{
 note that any census tract - date combination implicitly missing has a value of zero
+}
+\examples{
+arrow::read_parquet(install_smoke_pm_data())
 }
 \references{
 https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/

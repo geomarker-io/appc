@@ -1,6 +1,8 @@
 #' Get states geographic boundaries
 #' @param year numeric data year passed to tigris to get tract boundaries
 #' @export
+#' @examples
+#' s2_states()
 s2_states <- function(year) {
   stopifnot(year %in% c(1990, 2000, 2010:2022))
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
@@ -34,6 +36,8 @@ s2_tracts <- function(state,  year) {
 #' According to <https://github.com/walkerke/tigris>, available years for tracts
 #' and states are 1990, 2000, 2010 - 2022
 #' @export
+#' @examples
+#' get_census_tract_id(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
 get_census_tract_id <- function(x, year) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))

@@ -2,8 +2,10 @@
 #' 
 #' note that any census tract - date combination implicitly missing has a value of zero
 #' @references https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/
-#' @return path to elevation raster
+#' @return path to parquet file containing smoke data
 #' @export
+#' @examples
+#' arrow::read_parquet(install_smoke_pm_data())
 install_smoke_pm_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.parquet")
   if (file.exists(dest_file)) return(as.character(dest_file))

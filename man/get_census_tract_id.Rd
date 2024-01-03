@@ -20,3 +20,6 @@ to benefit from its caching.
 According to \url{https://github.com/walkerke/tigris}, available years for tracts
 and states are 1990, 2000, 2010 - 2022
 }
+\examples{
+get_census_tract_id(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
+}
