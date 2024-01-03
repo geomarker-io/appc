@@ -6,3 +6,6 @@ model
 ^\.github$
 ^codecov\.yml$
 ^.env$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

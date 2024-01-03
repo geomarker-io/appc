@@ -10,6 +10,10 @@ document:
 check:
 	R -e "devtools::check()"
 
+# build documentation website
+build_site: document
+	R -e "pkgdown::build_site(preview = TRUE)"
+
 # make training data
 make_training_data:
 	Rscript inst/make_training_data.R
