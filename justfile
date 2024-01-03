@@ -12,7 +12,7 @@ check:
 
 # build documentation website
 build_site: document
-	R -e "pkgdown::build_site(preview = TRUE)"
+	R -e "pkgdown::build_site(preview = TRUE, devel = TRUE)"
 
 # make training data
 make_training_data:
