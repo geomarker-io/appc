@@ -4,7 +4,7 @@
 #' @examples
 #' contiguous_us()
 contiguous_us <- function() {
-  tigris::states(year = 2020) |>
+  tigris::states(year = 2020, progress_bar = FALSE) |>
     dplyr::filter(!NAME %in% c(
       "United States Virgin Islands",
       "Guam", "Commonwealth of the Northern Mariana Islands",

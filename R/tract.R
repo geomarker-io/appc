@@ -2,11 +2,11 @@
 #' @param year numeric data year passed to tigris to get tract boundaries
 #' @export
 #' @examples
-#' s2_states()
+#' s2_states(year = 2020)
 s2_states <- function(year) {
   stopifnot(year %in% c(1990, 2000, 2010:2022))
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
-    tigris::states(year = year) |>
+    tigris::states(year = year, progress_bar = FALSE) |>
     dplyr::select(GEOID = dplyr::all_of(geoid_col_name)) |>
     dplyr::mutate(s2_geography = s2::as_s2_geography(geometry)) |>
     tibble::as_tibble() |>
