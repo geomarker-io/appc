@@ -13,7 +13,9 @@ path to parquet file containing smoke data
 note that any census tract - date combination implicitly missing has a value of zero
 }
 \examples{
+\dontrun{
 arrow::read_parquet(install_smoke_pm_data())
+}
 }
 \references{
 https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/

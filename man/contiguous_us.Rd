@@ -13,5 +13,7 @@ s2_geography object
 return the s2 shape of the 2020 contiguous united states
 }
 \examples{
+\dontrun{
 contiguous_us()
+}
 }

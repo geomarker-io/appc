@@ -18,5 +18,7 @@ a tibble of tracts with a s2_geography column
 Get census tract geographic boundaries
 }
 \examples{
+\dontrun{
 s2_tracts("OH", 2022)
+}
 }

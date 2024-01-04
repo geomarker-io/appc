@@ -18,5 +18,7 @@ a character vector of the closest year in \code{years} for each date in \code{da
 get the closest years to a vector of dates
 }
 \examples{
+\dontrun{
 get_closest_year(as.Date(c("2021-06-30", "2021-07-01")), years = 2021:2022)
+}
 }

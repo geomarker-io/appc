@@ -28,6 +28,10 @@ a vector of mean impervious or treecanopy values (the same length as \code{x})
 get mean NLCD values buffered around a point
 }
 \examples{
-get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), "impervious", year = "2019")
-get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), "treecanopy", year = "2019")
+\dontrun{
+get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+                 "impervious", year = "2019")
+get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+                "treecanopy", year = "2019")
+}
 }

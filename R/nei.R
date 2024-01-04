@@ -45,7 +45,9 @@ utils::globalVariables(c("pollutant code", "site longitude", "site latitude", "t
 #' by the inverse of the distance squared to each emission point
 #' @export
 #' @examples
+#' \dontrun{
 #' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
+#' }
 get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   nei_data <- arrow::read_parquet(install_nei_point_data(year = year))

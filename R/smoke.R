@@ -5,7 +5,9 @@
 #' @return path to parquet file containing smoke data
 #' @export
 #' @examples
+#' \dontrun{
 #' arrow::read_parquet(install_smoke_pm_data())
+#' }
 install_smoke_pm_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.parquet")
   if (file.exists(dest_file)) return(as.character(dest_file))

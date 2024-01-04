@@ -17,7 +17,9 @@
 #' the latest versions.  Since this function always downloads the latest data from EPA AQS,
 #' that means that it will could different results depending on the date it was run.
 #' @examples
-#' # get_daily_aqs("pm25", "2021")
+#' \dontrun{
+#' get_daily_aqs("pm25", "2021")
+#' }
 #' @export
 get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") {
   pollutant <- rlang::arg_match(pollutant)
