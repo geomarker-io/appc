@@ -18,6 +18,10 @@ install_elevation_data <- function() {
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a numeric vector of elevation summaries, the same length as `x`
 #' @export
+#' @examples
+#' \dontrun{
+#' get_elevation_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
+#' }
 get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   elevation_raster <- terra::rast(install_elevation_data())

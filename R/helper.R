@@ -2,9 +2,11 @@
 #' @return s2_geography object
 #' @export
 #' @examples
-#' # contiguous_us()
+#' \dontrun{
+#' contiguous_us()
+#' }
 contiguous_us <- function() {
-  tigris::states(year = 2020) |>
+  tigris::states(year = 2020, progress_bar = FALSE) |>
     dplyr::filter(!NAME %in% c(
       "United States Virgin Islands",
       "Guam", "Commonwealth of the Northern Mariana Islands",
@@ -24,7 +26,9 @@ utils::globalVariables("NAME")
 #' @return a character vector of the closest year in `years` for each date in `date`
 #' @export
 #' @examples
+#' \dontrun{
 #' get_closest_year(as.Date(c("2021-06-30", "2021-07-01")), years = 2021:2022)
+#' }
 get_closest_year <- function(date, years) {
   date_year <- as.numeric(format(date, "%Y"))
   purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))

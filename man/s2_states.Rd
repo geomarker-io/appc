@@ -12,3 +12,6 @@ s2_states(year)
 \description{
 Get states geographic boundaries
 }
+\examples{
+s2_states(year = 2020)
+}

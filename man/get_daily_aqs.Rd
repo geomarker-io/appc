@@ -31,5 +31,7 @@ the latest versions.  Since this function always downloads the latest data from 
 that means that it will could different results depending on the date it was run.
 }
 \examples{
-# get_daily_aqs("pm25", "2021")
+\dontrun{
+get_daily_aqs("pm25", "2021")
+}
 }
