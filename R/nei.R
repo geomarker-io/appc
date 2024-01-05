@@ -1,12 +1,49 @@
-#' installs NEI point data into user's data directory for the `appc` package
-#' @param year a character string that is the year of the data
-#' @return path to NEI point data parquet file
+#' Get NEI point summary data
+#'
+#' National Emissions Inventory (NEI) data is summarized as the sum of all point emissions within the
+#' buffer distance of each s2 geohash weighted by the inverse of the distance squared to each emission point.
+#' @param x a vector of s2 cell identifers (`s2_cell` object)
+#' @param year a character string that is the year of the NEI data
+#' @param pollutant_code the NEI pollutant to summarize
+#' @param buffer distance from s2 cell (in meters) to summarize data
+#' @return for `get_nei_point_summary()`, a numeric vector (the same length as `x`)
+#' @references <https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei>
+#' @references <https://www.epa.gov/air-emissions-inventories/2020-national-emissions-inventory-nei-technical-support-document-tsd>
+#' @export
+#' @examples
+#' \dontrun{
+#' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
+#' }
+get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
+  year <- rlang::arg_match(year)
+  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  nei_data <- arrow::read_parquet(install_nei_point_data(year = year))
+  pollutant_code <- rlang::arg_match(pollutant_code)
+  message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
+  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
+  summarize_emissions <- function(i) {
+    nei_data[withins[[i]], ] |>
+      dplyr::filter(pollutant_code == pollutant_code) |>
+      dplyr::mutate(
+        dist_to_point =
+          purrr::map_dbl(s2, \(.) s2::s2_cell_distance(., x[[i]]))
+      ) |>
+      dplyr::summarize(nei_pm25_id2w = sum(total_emissions / dist_to_point^2)) |>
+      as.double()
+  }
+  nei_pollutant_id2w <- purrr::map_dbl(1:length(withins), summarize_emissions, .progress = "summarizing intersections")
+  return(nei_pollutant_id2w)
+}
+
+#' Installs NEI point data into user's data directory for the `appc` package
+#' @return for `get_nei_point_data()`, a character string path to NEI point data parquet file
 #' @details The NEI file is downloaded, unzipped, and filtered to observations
 #' with a pollutant code of `EC`, `OC`, `SO4`, `NO3`, `PMFINE`, or `PM25-PRI`.
 #' Latitude and longitude are encoded as an s2 vector, column names are cleaned,
 #' and rows with missing values (including total emissions or emissions units) are excluded.
+#' @rdname get_nei_point_summary
 #' @export
-install_nei_point_data <- function(year = as.character(c(2020, 2017))) {
+install_nei_point_data <- function(year = c("2020", "2017")) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nei_{year}.parquet"))
   if (file.exists(dest_file)) return(dest_file)
@@ -35,37 +72,5 @@ install_nei_point_data <- function(year = as.character(c(2020, 2017))) {
 }
 
 utils::globalVariables(c("pollutant code", "site longitude", "site latitude", "total_emissions"))
-
-#' get NEI point summary data
-#' @param x a vector of s2 cell identifers (`s2_cell` object)
-#' @param year a character string that is the year of the NEI data
-#' @param pollutant_code the NEI pollutant to summarize
-#' @param buffer distance from s2 cell (in meters) to summarize data
-#' @return a vector (the same length as `x`) of the sum of all point emissions within the buffer distance weighted
-#' by the inverse of the distance squared to each emission point
-#' @export
-#' @examples
-#' \dontrun{
-#' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
-#' }
-get_nei_point_summary <- function(x, year, pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
-  nei_data <- arrow::read_parquet(install_nei_point_data(year = year))
-  pollutant_code <- rlang::arg_match(pollutant_code)
-  message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
-  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
-  summarize_emissions <- function(i) {
-    nei_data[withins[[i]], ] |>
-      dplyr::filter(pollutant_code == pollutant_code) |>
-      dplyr::mutate(
-        dist_to_point =
-          purrr::map_dbl(s2, \(.) s2::s2_cell_distance(., x[[i]]))
-      ) |>
-      dplyr::summarize(nei_pm25_id2w = sum(total_emissions / dist_to_point^2)) |>
-      as.double()
-  }
-  nei_pollutant_id2w <- purrr::map_dbl(1:length(withins), summarize_emissions, .progress = "summarizing intersections")
-  return(nei_pollutant_id2w)
-}
 
 utils::globalVariables(c("dist_to_point"))

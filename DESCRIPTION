@@ -22,7 +22,6 @@ Imports:
     terra,
     fs,
     httr,
-    httr2,
     rlang,
     tibble,
     scales

@@ -2,14 +2,17 @@
 % Please edit documentation in R/nei.R
 \name{get_nei_point_summary}
 \alias{get_nei_point_summary}
-\title{get NEI point summary data}
+\alias{install_nei_point_data}
+\title{Get NEI point summary data}
 \usage{
 get_nei_point_summary(
   x,
-  year,
+  year = c("2020", "2017"),
   pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"),
   buffer = 1000
 )
+
+install_nei_point_data(year = c("2020", "2017"))
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
@@ -21,14 +24,27 @@ get_nei_point_summary(
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
 }
 \value{
-a vector (the same length as \code{x}) of the sum of all point emissions within the buffer distance weighted
-by the inverse of the distance squared to each emission point
+for \code{get_nei_point_summary()}, a numeric vector (the same length as \code{x})
+
+for \code{get_nei_point_data()}, a character string path to NEI point data parquet file
 }
 \description{
-get NEI point summary data
+National Emissions Inventory (NEI) data is summarized as the sum of all point emissions within the
+buffer distance of each s2 geohash weighted by the inverse of the distance squared to each emission point.
+}
+\details{
+The NEI file is downloaded, unzipped, and filtered to observations
+with a pollutant code of \code{EC}, \code{OC}, \code{SO4}, \code{NO3}, \code{PMFINE}, or \code{PM25-PRI}.
+Latitude and longitude are encoded as an s2 vector, column names are cleaned,
+and rows with missing values (including total emissions or emissions units) are excluded.
 }
 \examples{
 \dontrun{
 get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
 }
+}
+\references{
+\url{https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei}
+
+\url{https://www.epa.gov/air-emissions-inventories/2020-national-emissions-inventory-nei-technical-support-document-tsd}
 }

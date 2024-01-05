@@ -1,31 +1,13 @@
-#' installs NARR raster data into user's data directory for the `appc` package
-#' @param narr_var a character string that is the name of a NARR variable
-#' @param narr_year a character string that is the year for the NARR data
-#' @return path to NARR raster data
-#' @references https://psl.noaa.gov/data/gridded/data.narr.html
-#' @export
-install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
-                              narr_year = as.character(2016:2022)) {
-  narr_var <- rlang::arg_match(narr_var)
-  narr_year <- rlang::arg_match(narr_year)
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("narr_{narr_var}_{narr_year}.nc"))
-  if (file.exists(dest_file)) return(dest_file)
-  message(glue::glue("downloading {narr_year} {narr_var}:"))
-  glue::glue("https://downloads.psl.noaa.gov",
-    "Datasets", "NARR", "Dailies", "monolevel",
-    "{narr_var}.{narr_year}.nc",
-    .sep = "/"
-  ) |>
-    utils::download.file(destfile = dest_file)
-  return(dest_file)
-}
-
-#' get narr data for a spatiotemporal location
+#' Get daily North American Regional Reanalysis (NARR) weather data
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the NARR data, must be the same length as `x`
 #' @param narr_var a character string that is the name of a NARR variable
-#' @references https://psl.noaa.gov/data/gridded/data.narr.html
-#' @return a list of numeric vectors of NARR values (the same length as `x` and `dates`)
+#' @param narr_year a character string that is the year for the NARR data
+#' @details NARR data comes as 0.3 degrees gridded data, which is about 32 sq km resolution. s2 geohashes
+#' are intersected with this 0.3 degree grid for matching with daily weather values.
+#' @return for `get_narr_data()`, a list of numeric vectors of NARR values (the same length as `x` and `dates`)
+#' @references <https://psl.noaa.gov/data/gridded/data.narr.html>
+#' @references <https://www.ncei.noaa.gov/products/weather-climate-models/north-american-regional>
 #' @export
 get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
@@ -52,6 +34,26 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
     \(x, idx) unlist(xx[idx, as.character(x)]),
     .progress = paste0("calculating ", narr_var)
   )
+}
+
+#' Installs NARR raster data into user's data directory for the `appc` package
+#' @return for `install_narr_data()`, a character string path to NARR raster data
+#' @export
+#' @rdname get_narr_data
+install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
+                              narr_year = as.character(2016:2022)) {
+  narr_var <- rlang::arg_match(narr_var)
+  narr_year <- rlang::arg_match(narr_year)
+  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("narr_{narr_var}_{narr_year}.nc"))
+  if (file.exists(dest_file)) return(dest_file)
+  message(glue::glue("downloading {narr_year} {narr_var}:"))
+  glue::glue("https://downloads.psl.noaa.gov",
+    "Datasets", "NARR", "Dailies", "monolevel",
+    "{narr_var}.{narr_year}.nc",
+    .sep = "/"
+  ) |>
+    utils::download.file(destfile = dest_file)
+  return(dest_file)
 }
 
 utils::globalVariables(c("d"))

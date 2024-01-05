@@ -2,7 +2,7 @@
 % Please edit documentation in R/smoke.R
 \name{install_smoke_pm_data}
 \alias{install_smoke_pm_data}
-\title{installs smoke pm data into user's data directory for the \code{appc} package}
+\title{Installs daily, census-tract level smoke pm data into user's data directory for the \code{appc} package}
 \usage{
 install_smoke_pm_data()
 }
@@ -10,7 +10,9 @@ install_smoke_pm_data()
 path to parquet file containing smoke data
 }
 \description{
-note that any census tract - date combination implicitly missing has a value of zero
+See the examples to read the installed parquet file.
+Merge this data with existing data on \code{date} and \code{census_tract_id_2010} to retrieve the
+\code{smoke_pm} column. Note that any census tract-date combination implicitly missing has a value of zero.
 }
 \examples{
 \dontrun{
@@ -18,5 +20,7 @@ arrow::read_parquet(install_smoke_pm_data())
 }
 }
 \references{
-https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/
+\url{https://pubmed.ncbi.nlm.nih.gov/36134580/}
+
+\url{https://github.com/echolab-stanford/daily-10km-smokePM}
 }

@@ -1,7 +1,10 @@
-#' installs smoke pm data into user's data directory for the `appc` package
+#' Installs daily, census-tract level smoke pm data into user's data directory for the `appc` package
 #' 
-#' note that any census tract - date combination implicitly missing has a value of zero
-#' @references https://github.com/echolab-stanford/daily-10km-smokePM and https://pubmed.ncbi.nlm.nih.gov/36134580/
+#' See the examples to read the installed parquet file.
+#' Merge this data with existing data on `date` and `census_tract_id_2010` to retrieve the
+#' `smoke_pm` column. Note that any census tract-date combination implicitly missing has a value of zero. 
+#' @references <https://pubmed.ncbi.nlm.nih.gov/36134580/>
+#' @references <https://github.com/echolab-stanford/daily-10km-smokePM>
 #' @return path to parquet file containing smoke data
 #' @export
 #' @examples

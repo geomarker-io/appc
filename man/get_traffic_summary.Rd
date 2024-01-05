@@ -2,9 +2,12 @@
 % Please edit documentation in R/traffic.R
 \name{get_traffic_summary}
 \alias{get_traffic_summary}
-\title{get traffic summary data}
+\alias{install_traffic}
+\title{Get traffic summary}
 \usage{
 get_traffic_summary(x, buffer = 400)
+
+install_traffic()
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
@@ -15,7 +18,7 @@ get_traffic_summary(x, buffer = 400)
 a list the same length as \code{x}, which each element having a list of \code{total_aadt_m} and \code{truck_aadt_m} estimates
 }
 \description{
-get traffic summary data
+Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the sum of the total (and truck-only) average annual daily vehicle-meter counts within \code{buffer} meters of each s2 geohash.
 }
 \details{
 A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
@@ -24,4 +27,11 @@ A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection ca
 \dontrun{
 get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
 }
+}
+\references{
+\url{https://www.fhwa.dot.gov/policyinformation/hpms.cfm}
+
+\url{https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about}
+
+\url{https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf}
 }

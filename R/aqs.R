@@ -16,6 +16,9 @@
 #' Note: Historical measurements are subject to change and the EPA AQS website only stores
 #' the latest versions.  Since this function always downloads the latest data from EPA AQS,
 #' that means that it will could different results depending on the date it was run.
+#'
+#' Get all the files on the page and the date they were last updated:
+#' `readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
 #' @examples
 #' \dontrun{
 #' get_daily_aqs("pm25", "2021")
@@ -64,6 +67,3 @@ utils::globalVariables(c("Sample Duration", "Observation Percent",
                          "State Code", "County Code", "Site Num",
                          "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
                          "lon", "lat", "conc"))
-
-# get all the files on the page and the date they were last updated:
-## readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")

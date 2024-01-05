@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{get_closest_year}
 \alias{get_closest_year}
-\title{get the closest years to a vector of dates}
+\title{Get the closest years to a vector of dates}
 \usage{
 get_closest_year(date, years)
 }
@@ -15,10 +15,14 @@ get_closest_year(date, years)
 a character vector of the closest year in \code{years} for each date in \code{date}
 }
 \description{
-get the closest years to a vector of dates
+Get the closest years to a vector of dates
+}
+\details{
+To find the closest year, each date is converted to a year
+and the differences with the provided years is minimzed. This is a problem....
 }
 \examples{
 \dontrun{
-get_closest_year(as.Date(c("2021-06-30", "2021-07-01")), years = 2021:2022)
+get_closest_year(as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
 }
 }

@@ -2,7 +2,9 @@
 % Please edit documentation in R/nlcd.R
 \name{get_nlcd_summary}
 \alias{get_nlcd_summary}
-\title{get mean NLCD values buffered around a point}
+\alias{install_impervious}
+\alias{install_treecanopy}
+\title{Get average buffered National Land Cover Database (NLCD) values}
 \usage{
 get_nlcd_summary(
   x,
@@ -10,22 +12,35 @@ get_nlcd_summary(
   year,
   buffer = 400
 )
+
+install_impervious(
+  year = as.character(c(2019, 2016, 2013, 2011, 2008, 2004, 2001))
+)
+
+install_treecanopy(year = as.character(2021:2011))
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{product}{get the "impervious" or "treecanopy" summary?}
 
-\item{year}{a character string that is the year of the impervious or treecanopy data;
-note that each product has different available years}
+\item{year}{a character string that is the year of the NLCD data}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
 }
 \value{
-a vector of mean impervious or treecanopy values (the same length as \code{x})
+for \code{get_nlcd_summary()}, a vector of mean impervious or treecanopy values (the same length as \code{x})
+
+for \code{install_impervious()}, a character string path to impervious raster data
+
+for \code{install_treecanopy()}, a character string path to treecanopy raster data
 }
 \description{
-get mean NLCD values buffered around a point
+Get average buffered National Land Cover Database (NLCD) values
+
+\code{install_impervious()} installs NLCD impervious raster data into user's data directory for the \code{appc} package
+
+\code{install_treecanopy()} installs NLCD treecanopy raster data into user's data directory for the \code{appc} package
 }
 \examples{
 \dontrun{
@@ -34,4 +49,9 @@ get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
 get_nlcd_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
                 "treecanopy", year = "2019")
 }
+}
+\references{
+\url{https://www.usgs.gov/centers/eros/science/national-land-cover-database}
+
+\url{https://www.mrlc.gov/}
 }

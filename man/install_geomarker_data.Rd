@@ -2,8 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{install_geomarker_data}
 \alias{install_geomarker_data}
-\title{install geomarker data
-Download, convert, and install all required geomarker data for \code{appc} predictions from 2016 - 2022. The smoke data depends on census tract data retrieved per state from the census API and is \emph{not} downloaded ahead of time here.}
+\title{Install (almost) all of the geomarker data}
 \usage{
 install_geomarker_data()
 }
@@ -11,6 +10,6 @@ install_geomarker_data()
 a character vector of the paths to installed geomarker data
 }
 \description{
-install geomarker data
-Download, convert, and install all required geomarker data for \code{appc} predictions from 2016 - 2022. The smoke data depends on census tract data retrieved per state from the census API and is \emph{not} downloaded ahead of time here.
+Download, convert, and install all required geomarker data for \code{appc} predictions from 2016 - 2022.
+The smoke data depends on census tract data retrieved per state from the census API and is \emph{not} downloaded ahead of time here.
 }

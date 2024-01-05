@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{contiguous_us}
 \alias{contiguous_us}
-\title{return the s2 shape of the 2020 contiguous united states}
+\title{Get the geography of the 2020 contiguous United States}
 \usage{
 contiguous_us()
 }
@@ -10,7 +10,7 @@ contiguous_us()
 s2_geography object
 }
 \description{
-return the s2 shape of the 2020 contiguous united states
+Get the geography of the 2020 contiguous United States
 }
 \examples{
 \dontrun{

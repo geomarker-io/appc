@@ -1,4 +1,4 @@
-#' return the s2 shape of the 2020 contiguous united states
+#' Get the geography of the 2020 contiguous United States
 #' @return s2_geography object
 #' @export
 #' @examples
@@ -20,22 +20,26 @@ contiguous_us <- function() {
 utils::globalVariables("NAME")
 
 
-#' get the closest years to a vector of dates
+#' Get the closest years to a vector of dates
 #' @param date a vector of date objects
 #' @param years vector of characters (or numerics) representing years to choose from
 #' @return a character vector of the closest year in `years` for each date in `date`
 #' @export
+#' @details To find the closest year, each date is converted to a year
+#' and the differences with the provided years is minimzed. This is a problem....
 #' @examples
 #' \dontrun{
-#' get_closest_year(as.Date(c("2021-06-30", "2021-07-01")), years = 2021:2022)
+#' get_closest_year(as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
 #' }
 get_closest_year <- function(date, years) {
   date_year <- as.numeric(format(date, "%Y"))
   purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))
 }
 
-#' install geomarker data
-#' Download, convert, and install all required geomarker data for `appc` predictions from 2016 - 2022. The smoke data depends on census tract data retrieved per state from the census API and is *not* downloaded ahead of time here.
+#' Install (almost) all of the geomarker data
+#' 
+#' Download, convert, and install all required geomarker data for `appc` predictions from 2016 - 2022.
+#' The smoke data depends on census tract data retrieved per state from the census API and is *not* downloaded ahead of time here.
 #' @return a character vector of the paths to installed geomarker data
 #' @export
 install_geomarker_data <- function() {

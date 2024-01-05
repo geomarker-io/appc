@@ -2,13 +2,20 @@
 % Please edit documentation in R/narr.R
 \name{get_narr_data}
 \alias{get_narr_data}
-\title{get narr data for a spatiotemporal location}
+\alias{install_narr_data}
+\title{Get daily North American Regional Reanalysis (NARR) weather data}
 \usage{
 get_narr_data(
   x,
   dates,
   narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m",
     "vwnd.10m")
+)
+
+install_narr_data(
+  narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m",
+    "vwnd.10m"),
+  narr_year = as.character(2016:2022)
 )
 }
 \arguments{
@@ -17,13 +24,25 @@ get_narr_data(
 \item{dates}{a list of date vectors for the NARR data, must be the same length as \code{x}}
 
 \item{narr_var}{a character string that is the name of a NARR variable}
+
+\item{narr_year}{a character string that is the year for the NARR data}
 }
 \value{
-a list of numeric vectors of NARR values (the same length as \code{x} and \code{dates})
+for \code{get_narr_data()}, a list of numeric vectors of NARR values (the same length as \code{x} and \code{dates})
+
+for \code{install_narr_data()}, a character string path to NARR raster data
 }
 \description{
-get narr data for a spatiotemporal location
+Get daily North American Regional Reanalysis (NARR) weather data
+
+Installs NARR raster data into user's data directory for the \code{appc} package
+}
+\details{
+NARR data comes as 0.3 degrees gridded data, which is about 32 sq km resolution. s2 geohashes
+are intersected with this 0.3 degree grid for matching with daily weather values.
 }
 \references{
-https://psl.noaa.gov/data/gridded/data.narr.html
+\url{https://psl.noaa.gov/data/gridded/data.narr.html}
+
+\url{https://www.ncei.noaa.gov/products/weather-climate-models/north-american-regional}
 }

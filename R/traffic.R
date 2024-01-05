@@ -1,7 +1,44 @@
-#' installs traffic data into user's data directory for the `appc` package
-#' @references https://www.fhwa.dot.gov/policyinformation/hpms.cfm
-#' @references https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about
-#' @references https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf
+#' Get traffic summary
+#' 
+#' Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the sum of the total (and truck-only) average annual daily vehicle-meter counts within `buffer` meters of each s2 geohash.
+#' @param x a vector of s2 cell identifers (`s2_cell` object)
+#' @param buffer distance from s2 cell (in meters) to summarize data
+#' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates 
+#' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
+#' @references <https://www.fhwa.dot.gov/policyinformation/hpms.cfm>
+#' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
+#' @references <https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf>
+#' @export
+#' @examples
+#' \dontrun{
+#' get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
+#' }
+get_traffic_summary <- function(x, buffer = 400) {
+  aadt_data <-
+    readRDS(install_traffic()) |>
+    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2, level = 15)) |>
+    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
+                     truck_aadt_m = sum(truck_aadt_m))
+  ## sqrt(median(s2::s2_cell_area(aadt_data$s2_parent)))
+  # s2 level 16 are 130 m sq
+  # s2 level 15 are 260 m sq
+  # s2 level 14 are 521 m sq
+  xx <- unique(x)
+  message("intersecting with AADT data using level 15 s2 approximation ( ~ 260 m sq)")
+  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
+  summarize_traffic <- function(i) {
+    aadt_data[withins[[i]], ] |>
+    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
+                     truck_aadt_m = sum(truck_aadt_m)) |>
+      as.list()
+  }
+  withins_aadt <- purrr::map(1:length(withins), summarize_traffic, .progress = "summarizing AADT")
+  names(withins_aadt) <- xx
+  return(withins_aadt[as.character(x)])
+}
+
+#' `install_traffic()` installs traffic data into user's data directory for the `appc` package
+#' @rdname get_traffic_summary
 #' @export
 install_traffic <- function() {
   out_path <- fs::path(tools::R_user_dir("appc", "data"), "hpms_f123_aadt", ext = "rds")
@@ -43,41 +80,6 @@ install_traffic <- function() {
   out <- dplyr::bind_rows(hpms_pa_aadt)
   saveRDS(out, out_path)
   return(out_path)
-}
-
-
-#' get traffic summary data
-#' @param x a vector of s2 cell identifers (`s2_cell` object)
-#' @param buffer distance from s2 cell (in meters) to summarize data
-#' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates 
-#' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
-#' @export
-#' @examples
-#' \dontrun{
-#' get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
-#' }
-get_traffic_summary <- function(x, buffer = 400) {
-  aadt_data <-
-    readRDS(install_traffic()) |>
-    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2, level = 15)) |>
-    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
-                     truck_aadt_m = sum(truck_aadt_m))
-  ## sqrt(median(s2::s2_cell_area(aadt_data$s2_parent)))
-  # s2 level 16 are 130 m sq
-  # s2 level 15 are 260 m sq
-  # s2 level 14 are 521 m sq
-  xx <- unique(x)
-  message("intersecting with AADT data using level 15 s2 approximation ( ~ 260 m sq)")
-  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
-  summarize_traffic <- function(i) {
-    aadt_data[withins[[i]], ] |>
-    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
-                     truck_aadt_m = sum(truck_aadt_m)) |>
-      as.list()
-  }
-  withins_aadt <- purrr::map(1:length(withins), summarize_traffic, .progress = "summarizing AADT")
-  names(withins_aadt) <- xx
-  return(withins_aadt[as.character(x)])
 }
 
 utils::globalVariables(c("total_aadt_m", "truck_aadt_m", "Shape"))
