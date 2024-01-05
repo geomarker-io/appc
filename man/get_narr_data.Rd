@@ -4,7 +4,12 @@
 \alias{get_narr_data}
 \title{get narr data for a spatiotemporal location}
 \usage{
-get_narr_data(x, dates, narr_var)
+get_narr_data(
+  x,
+  dates,
+  narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m",
+    "vwnd.10m")
+)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}

@@ -54,7 +54,7 @@ install_traffic <- function() {
 #' @export
 #' @examples
 #' \dontrun{
-#' # get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
+#' get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
 #' }
 get_traffic_summary <- function(x, buffer = 400) {
   aadt_data <-

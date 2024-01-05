@@ -27,8 +27,9 @@ install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m",
 #' @references https://psl.noaa.gov/data/gridded/data.narr.html
 #' @return a list of numeric vectors of NARR values (the same length as `x` and `dates`)
 #' @export
-get_narr_data <- function(x, dates, narr_var) {
+get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  narr_var <- rlang::arg_match(narr_var)
   narr_raster <-
     dates |>
     unlist() |>
