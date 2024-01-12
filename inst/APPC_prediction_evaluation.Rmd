@@ -1,0 +1,417 @@
+---
+title: "APPC prediction"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+        toc: true
+        toc_float: 
+            collapsed: false
+            smooth_scroll: true
+        code_download: true
+        code_folding: hide
+        highlight: pygments
+        df_print: kable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(grf)
+library(sf)
+library(s2)
+library(hexbin)
+library(data.table)
+library(tmap)
+```
+
+# Model Training
+
+```{r, eval=F}
+
+download.file(url = "https://geomarker-io.s3-us-east-2.amazonaws.com/appc/training_data_0.1.0.rds",
+              destfile = "data/training_data.rds")
+
+d_train <- readRDS("data/training_data.rds")
+
+pred_names <-
+  c("x", "y",
+    "doy",
+    "year",
+    "elevation_median_800", "elevation_sd_800",
+    "total_aadt_m_400", "truck_aadt_m_400",
+    "nei_point_id2w_1000",
+    "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")
+
+grf <-
+  regression_forest(
+    X = select(d_train, all_of(pred_names)),
+    Y = d_train$conc,
+    seed = 224,
+    num.threads = parallel::detectCores(),
+    num.trees = 100,
+    compute.oob.predictions = TRUE,
+    honesty = FALSE,
+    ## tune.parameters = "all",
+    ## tune.num.trees = 50,
+    ## tune.num.reps = 100,
+    ## tune.num.draws = 1000,
+    tune.parameters = "none",
+    ## mtry = 17, # default effectively uses ncol(X)
+    sample.fraction = 0.5,
+    min.node.size = 5,
+    alpha = 0.05,
+    imbalance.penalty = 0,
+    clusters = as.factor(d_train$s2),
+    equalize.cluster.weights = FALSE
+  )
+
+saveRDS(grf, "output/rf_pm.rds")
+
+```
+
+# Model evaluation
+
+## OOB prediction
+
+```{r, eval=F}
+
+grf <- readRDS("output/rf_pm.rds")
+
+grf_preds_oob <- predict(grf, estimate.variance = TRUE)
+
+d_out <- select(d_train, s2, date)
+
+d_out$pm_pred_oob <- grf_preds_oob$predictions
+d_out$pm_pred_oob_se <- sqrt(grf_preds_oob$variance.estimates)
+  
+d_out <-
+  d_out |> 
+    mutate_at(vars(starts_with("pm_pred_")), signif, digits = 4)
+
+saveRDS(d_out, "data/st_pm_grf_preds.rds")
+
+```
+
+```{r}
+
+d <-
+  readRDS("data/st_pm_grf_preds.rds") |>
+  as_tibble() |>
+  rename(
+    pred = pm_pred_oob,
+    se = pm_pred_oob_se
+  )
+
+d_train <- readRDS("data/training_data.rds")
+
+d <- left_join(d, d_train, by = c("date", "s2")) |> 
+  mutate(year = year(date))
+
+d <- d |>
+  mutate(lci = pred - se * qnorm(0.025, lower.tail = FALSE),
+         uci = pred + se * qnorm(0.025, lower.tail = FALSE),
+         ci_length = uci - lci,
+         ci_covered = conc < uci & conc > lci)
+
+```
+
+## Prediction accuracy across observations
+
+### Overall
+
+```{r}
+#' daily prediction errors overall
+d %>%
+  summarize(
+    mae = median(abs(conc - pred)),
+    rmse = sqrt(mean((conc - pred)^2)),
+    rsq = cor(conc, pred, use = "pairwise.complete")^2,
+    slope = lm(pred ~ conc - 1, data = .) |> coefficients(),
+    ci_coverage = scales::percent(sum(ci_covered) / length(ci_covered))
+  ) |>
+  knitr::kable(digits = 2)
+```
+
+```{r}
+#' plot overall obs versus oob predicted
+d |>
+  ggplot(aes(conc, pred)) +
+  stat_bin_hex(binwidth = c(0.33, 0.33)) +
+  viridis::scale_fill_viridis(option = "C", name = "Count") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
+  xlim(c(0, 75)) + ylim(c(0, 75)) +
+  ## scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab(expression(CV ~ Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  CB::theme_cb() +
+  coord_fixed() +
+  ggtitle("Oob predicted versus observed")
+
+d |>
+  ggplot(aes(conc, pred)) +
+  stat_bin_hex(binwidth = c(0.33, 0.33))+
+  viridis::scale_fill_viridis(option = "C", name = "Count") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
+  xlim(c(0, 15)) + ylim(c(0, 15)) +
+  ## scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab(expression(CV ~ Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  CB::theme_cb() +
+  coord_fixed() +
+  ggtitle("Oob predicted versus observed (zoomed)")
+
+```
+
+### Temporal
+
+```{r}
+#' annual summaries of model performance, and PM2.5 measurements
+d |>
+  group_by(year) |>
+  summarize(
+    n = n(),
+    mean_measured_pm = mean(conc),
+    mae = median(abs(conc - pred)),
+    rsq = cor(conc, pred, use = "pairwise.complete")^2
+  ) |>
+  knitr::kable(digits = 2)
+```
+
+```{r}
+d |> 
+  ggplot(aes(conc, pred)) +
+  stat_bin_hex(binwidth = c(0.2, 0.2))+
+  viridis::scale_fill_viridis(option = "C", name = "Count") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
+  xlim(c(0, 75)) + ylim(c(0, 75)) +
+  ## scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab(expression(Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  CB::theme_cb() +
+  facet_wrap(year~., ncol = 4) +
+  coord_fixed() +
+  theme(legend.position = c(0.9, 0.2),
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 11, family = "sans"),
+        legend.text = element_text(size = 11),
+        legend.box = "hortizontal",
+        legend.key.height = unit(4, "mm"),
+        legend.key.width = unit(9, "mm")) +
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
+  ggtitle("Oob predicted versus observed by year")
+
+```
+
+## Prediction accuracy across s2 geometries (level 30)
+
+```{r}
+#' for each site, generate predictions for daily pm2.5 and averages for week, month, year, and and entire time period
+
+d <- as.data.table(d, key = c("s2", "year", "date"))
+d$month <- lubridate::month(d$date)
+d$week <- lubridate::week(d$date)
+
+#' aggregate predictions, actuals, and standard errors for different time periods, for each s2 cell
+
+# function to add CIs and summarize error by a given time frame
+add_mean_CIs_and_summarize_error <- function(x) {
+  x |>
+    mutate(lci = mean_pm_pred - mean_pm_se * qnorm(0.025, lower.tail = FALSE),
+           uci = mean_pm_pred + mean_pm_se * qnorm(0.025, lower.tail = FALSE),
+           ci_covered = mean_pm25 <= uci & mean_pm25 >= lci) |>
+    group_by(s2) %>%
+    summarize(
+      n_time_units = n(),
+      n_observations = sum(N),
+      mae = median(abs(mean_pm25 - mean_pm_pred)),
+      rmse = sqrt(mean((mean_pm25 - mean_pm_pred)^2)),
+      rsq = cor(mean_pm25, mean_pm_pred, use = "pairwise.complete")^2,
+      slope = lm(mean_pm_pred ~ mean_pm25 - 1, data = .) |> coefficients(),
+      ci_coverage = scales::percent(sum(ci_covered) / length(ci_covered))
+    )
+}
+
+d_temporal_cv <- list()
+
+# alltime
+d_temporal_cv$all <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+# annual
+d_temporal_cv$annual <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "year")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+# monthly
+d_temporal_cv$monthly <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "year", "month")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+# weekly
+d_temporal_cv$weekly <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "year", "week")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+#' daily
+d_temporal_cv$daily <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "date")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+d_temporal_cv <-
+  tibble::enframe(d_temporal_cv, name = "time") |>
+  unnest(cols = c(value))
+
+d_temporal_cv$time <-
+  d_temporal_cv$time |>
+  factor(levels = c("all", "annual", "monthly", "weekly", "daily"))
+
+#saveRDS(d_temporal_cv, glue::glue("{cv_out_folder}/d_temporal_cv.rds"))
+```
+
+### Temporal
+
+```{r}
+d_temporal_cv |>
+  group_by(time) |>
+  summarize(
+    median_n_time_units = median(n_time_units, na.rm = TRUE),
+    median_n_observations = median(n_observations, na.rm = TRUE),
+    median_mae = median(mae, na.rm = TRUE),
+    median_rmse = median(rmse, na.rm = TRUE),
+    median_rsq = median(rsq, na.rm = TRUE),
+    median_slope = median(slope, na.rm = TRUE),
+    median_ci_coverage = median(as.numeric(sub("%", "", ci_coverage)), na.rm = TRUE),
+    .groups = "keep"
+  ) |>
+  knitr::kable(digits = 2) 
+
+d_temporal_cv |>
+  ggplot(aes(time, mae)) +
+  geom_boxplot() +
+  CB::theme_cb() +
+  ylab(expression(paste(CV~MAE~(ug/m^3)))) +
+  xlab("Temporal Aggregation Window") +
+  ggtitle("CV median absolute error")
+
+d_temporal_cv |>
+  ggplot(aes(time, rsq)) +
+  geom_boxplot() +
+  CB::theme_cb() +
+  ylab(expression(paste(CV~R^2))) +
+  xlab("Temporal Aggregation Window") +
+  ggtitle("CV rsq")
+
+```
+
+### Spatiotemporal
+
+```{r}
+#' average CV by spatial region 
+
+d_temporal_cv <- d_temporal_cv |> 
+  mutate(
+    s2_5 = s2_cell_parent(s2, level = 5)
+  )
+
+d_spatiotemporal_cv <-
+  d_temporal_cv |>
+  group_by(time, s2_5) |>
+  summarise(
+    n = median(n_time_units, na.rm = TRUE),
+    mae = median(mae, na.rm = TRUE),
+    rmse = median(rmse, na.rm = TRUE),
+    rsq = median(rsq, na.rm = TRUE),
+    slope = median(slope, na.rm = TRUE),
+    ci_coverage = median(as.numeric(sub("%", "", ci_coverage)), na.rm = TRUE),
+  ) 
+
+d_spatiotemporal_cv |> 
+  mutate(geometry = s2_cell_polygon(s2_5)) |>  
+  st_as_sf() |>
+  ggplot() +
+  geom_sf(aes(fill = mae), size = 0) +
+  coord_sf(crs = 5072) +
+  facet_wrap(. ~ time) +
+  CB::theme_map() +
+  scale_fill_viridis_c() +
+  theme(legend.position = c(0.83, 0.2),
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 11, family = "sans"),
+        legend.text = element_text(size = 11),
+        legend.box = "hortizontal",
+        legend.key.height = unit(4, "mm"),
+        legend.key.width = unit(9, "mm"),
+        strip.text.x = element_text(size = 11, face = "bold", vjust = 1),
+        strip.text.y = element_text(size = 11, face = "bold")) +
+  labs(fill = expression(paste(MAE~(ug/m^3)))) +
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
+  ggtitle("CV median absolute error estimated for each time window")
+
+```
+
+
+```{r}
+
+d_spatiotemporal_cv_w <- d_spatiotemporal_cv |> 
+  pivot_wider(
+    id_cols = s2_5,
+    names_from = time, 
+    values_from = mae, 
+    values_fill = NA) |> 
+  mutate(geometry = s2_cell_polygon(s2_5)) |>  
+  st_as_sf() 
+
+tmap_mode("view")
+
+tm <- 
+  tm_shape(d_spatiotemporal_cv_w,
+           name = 'all') +
+  tm_polygons(col = "all", 
+              title = "Legend",
+              alpha = 0.5, 
+              palette = 'viridis') +
+  tm_shape(d_spatiotemporal_cv_w) +
+  tm_polygons(col = c("annual", "monthly", "weekly", "daily"), 
+              title = c("annual", "monthly", "weekly", "daily"),
+              alpha = 0.5, 
+              palette = 'viridis',
+              legend.show = FALSE) +
+  tm_facets(as.layers = TRUE, 
+            free.scales.fill = FALSE)
+
+tm |> 
+  tmap_leaflet() |> 
+  leaflet::hideGroup(c("annual", "monthly", "weekly", "daily"))
+
+```
