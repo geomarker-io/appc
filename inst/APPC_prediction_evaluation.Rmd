@@ -159,7 +159,7 @@ d |>
 
 ```
 
-# Prediction accuracy across s2 geometries (level 30)
+# Prediction accuracy across different cumulative exposure windows
 
 Aggregate predictions, actuals, and standard errors for different time periods, for each s2 cell.
 
@@ -252,8 +252,6 @@ d_temporal_cv$time <-
 
 ```
 
-### Temporal
-
 ```{r}
 d_temporal_cv |>
   group_by(time) |>
@@ -283,36 +281,46 @@ d_temporal_cv |>
 
 ```
 
-### Spatiotemporal
+# Prediction accuracy across spatial regions (level 5 S2 polygons)
 
 ```{r}
-#' average CV by spatial region 
-
-d_temporal_cv <- d_temporal_cv |> 
-  mutate(
-    s2_5 = s2_cell_parent(s2, level = 5)
-  )
+library(s2)
 
 d_spatiotemporal_cv <-
   d_temporal_cv |>
+  mutate(s2_5 = s2_cell_parent(s2, 5)) |>
   group_by(time, s2_5) |>
   summarise(
     n = median(n_time_units, na.rm = TRUE),
     mae = median(mae, na.rm = TRUE),
     rmse = median(rmse, na.rm = TRUE),
     rsq = median(rsq, na.rm = TRUE),
-    slope = median(slope, na.rm = TRUE),
     ci_coverage = median(as.numeric(sub("%", "", ci_coverage)), na.rm = TRUE),
-  ) 
+    .groups = "drop"
+    )
+
+the_map_theme <-
+  the_theme +
+  ggplot2::theme(
+    axis.ticks = ggplot2::element_blank(), 
+    axis.text = ggplot2::element_blank(),
+    axis.title = ggplot2::element_blank(), 
+    rect = ggplot2::element_blank(),
+    line = ggplot2::element_blank(), 
+    panel.grid = ggplot2::element_blank(),
+    plot.margin = ggplot2::margin(1, 1, 1, 1, "cm"),
+    legend.key.height = ggplot2::unit(1, "cm"),
+    legend.key.width = ggplot2::unit(0.3, "cm")
+  )
 
 d_spatiotemporal_cv |> 
   mutate(geometry = s2_cell_polygon(s2_5)) |>  
-  st_as_sf() |>
+  sf::st_as_sf() |>
   ggplot() +
   geom_sf(aes(fill = mae), size = 0) +
   coord_sf(crs = 5072) +
   facet_wrap(. ~ time) +
-  CB::theme_map() +
+  the_map_theme +
   scale_fill_viridis_c() +
   theme(legend.position = c(0.83, 0.2),
         legend.direction = "horizontal",
@@ -324,43 +332,5 @@ d_spatiotemporal_cv |>
         strip.text.x = element_text(size = 11, face = "bold", vjust = 1),
         strip.text.y = element_text(size = 11, face = "bold")) +
   labs(fill = expression(paste(MAE~(ug/m^3)))) +
-  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5)) +
-  ggtitle("CV median absolute error estimated for each time window")
-
-```
-
-
-```{r}
-
-d_spatiotemporal_cv_w <- d_spatiotemporal_cv |> 
-  pivot_wider(
-    id_cols = s2_5,
-    names_from = time, 
-    values_from = mae, 
-    values_fill = NA) |> 
-  mutate(geometry = s2_cell_polygon(s2_5)) |>  
-  st_as_sf() 
-
-tmap_mode("view")
-
-tm <- 
-  tm_shape(d_spatiotemporal_cv_w,
-           name = 'all') +
-  tm_polygons(col = "all", 
-              title = "Legend",
-              alpha = 0.5, 
-              palette = 'viridis') +
-  tm_shape(d_spatiotemporal_cv_w) +
-  tm_polygons(col = c("annual", "monthly", "weekly", "daily"), 
-              title = c("annual", "monthly", "weekly", "daily"),
-              alpha = 0.5, 
-              palette = 'viridis',
-              legend.show = FALSE) +
-  tm_facets(as.layers = TRUE, 
-            free.scales.fill = FALSE)
-
-tm |> 
-  tmap_leaflet() |> 
-  leaflet::hideGroup(c("annual", "monthly", "weekly", "daily"))
-
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5))
 ```
