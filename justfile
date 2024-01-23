@@ -26,3 +26,6 @@ upload_training_data:
 train:
     Rscript inst/train_model.R
 
+# create CV accuracy report
+report:
+	R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd')"

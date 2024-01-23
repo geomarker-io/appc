@@ -1,0 +1,311 @@
+---
+title: "Spatiotemporal Cross-Validated Model Performance"
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+if(!require(appc)) devtools::load_all()
+library(grf)
+library(dplyr)
+library(ggplot2)
+
+the_theme <- 
+  ggplot2::theme_light(base_size = 11) +
+  ggplot2::theme(
+    panel.background = ggplot2::element_rect(fill = "white", colour = NA),
+    panel.border = ggplot2::element_rect(fill = NA, colour = "grey20"),
+    panel.grid.major = ggplot2::element_line(colour = "grey92"),
+    panel.grid.minor = ggplot2::element_blank(),
+    strip.background = ggplot2::element_rect(fill = "grey92", colour = "grey20"),
+    strip.text = ggplot2::element_text(color = "grey20"), legend.key = ggplot2::element_rect(fill = "white", colour = NA),
+    complete = TRUE
+  )
+```
+
+```{r "load model and predictions"}
+d_train <- readRDS(fs::path(fs::path_package("appc"), "training_data.rds"))
+grf <- readRDS(fs::path(fs::path_package("appc"), "rf_pm.rds"))
+```
+
+```{r "estimate variance of predictions"}
+d <-
+  grf |>
+  predict(estimate.variance = TRUE) |>
+  tibble::as_tibble() |>
+  transmute(
+    pred = signif(predictions, 2),
+    se = signif(sqrt(variance.estimates), 2),
+    conc = grf$Y.orig) |>
+  bind_cols(select(d_train, s2, date))
+
+d <- d |>
+  mutate(lci = pred - se * qnorm(0.025, lower.tail = FALSE),
+         uci = pred + se * qnorm(0.025, lower.tail = FALSE),
+         ci_length = uci - lci,
+         ci_covered = conc < uci & conc > lci)
+
+```
+
+```{r "add temporal components"}
+d$year <- as.numeric(format(d$date, "%Y"))
+d$month <- as.numeric(format(d$date, "%m"))
+d$week <- as.numeric(format(d$date, "%U"))
+```
+
+## Overall Leave One Location Out (LOLO) Accuracy
+
+```{r}
+d %>%
+  summarize(
+    mae = median(abs(conc - pred)),
+    rmse = sqrt(mean((conc - pred)^2)),
+    rsq = cor(conc, pred, use = "pairwise.complete")^2,
+    ci_coverage = scales::percent(sum(ci_covered) / length(ci_covered))
+  ) |>
+  knitr::kable(digits = 2)
+```
+
+```{r}
+d |>
+  ggplot(aes(conc, pred)) +
+  stat_bin_hex(binwidth = c(0.33, 0.33)) +
+  viridis::scale_fill_viridis(option = "C", name = "Count") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
+  xlim(c(0, 75)) + ylim(c(0, 75)) +
+  ## scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab(expression(CV ~ Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  the_theme +
+  coord_fixed()
+
+d |>
+  ggplot(aes(conc, pred)) +
+  stat_bin_hex(binwidth = c(0.33, 0.33))+
+  viridis::scale_fill_viridis(option = "C", name = "Count") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
+  xlim(c(0, 15)) + ylim(c(0, 15)) +
+  ## scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab(expression(CV ~ Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  the_theme +
+  coord_fixed()
+
+```
+
+### Overall LOLO by Year
+
+```{r}
+d |>
+  group_by(year) |>
+  summarize(
+    n = n(),
+    mae = median(abs(conc - pred)),
+    rsq = cor(conc, pred, use = "pairwise.complete")^2
+  ) |>
+  knitr::kable(digits = 2)
+```
+
+```{r}
+#| include: false
+d |> 
+  ggplot(aes(conc, pred)) +
+  stat_bin_hex(binwidth = c(0.2, 0.2))+
+  viridis::scale_fill_viridis(option = "C", name = "Count") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
+  xlim(c(0, 75)) + ylim(c(0, 75)) +
+  ## scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab(expression(Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  the_theme +
+  facet_wrap(year~., ncol = 4) +
+  coord_fixed() +
+  theme(legend.position = c(0.9, 0.2),
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 11, family = "sans"),
+        legend.text = element_text(size = 11),
+        legend.box = "hortizontal",
+        legend.key.height = unit(4, "mm"),
+        legend.key.width = unit(9, "mm")) +
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5))
+
+```
+
+## Median LOLO Accuracy Per Temporal Aggregation Period
+
+Aggregate predictions, actuals, and standard errors for different time periods, for each s2 cell.
+
+```{r}
+library(data.table)
+
+d <- as.data.table(d, key = c("s2", "year", "date"))
+
+add_mean_CIs_and_summarize_error <- function(x) {
+  x |>
+    mutate(lci = mean_pm_pred - mean_pm_se * qnorm(0.025, lower.tail = FALSE),
+           uci = mean_pm_pred + mean_pm_se * qnorm(0.025, lower.tail = FALSE),
+           ci_covered = mean_pm25 <= uci & mean_pm25 >= lci) |>
+    group_by(s2) %>%
+    summarize(
+      n_time_units = n(),
+      n_observations = sum(N),
+      mae = median(abs(mean_pm25 - mean_pm_pred)),
+      rmse = sqrt(mean((mean_pm25 - mean_pm_pred)^2)),
+      rsq = cor(mean_pm25, mean_pm_pred, use = "pairwise.complete")^2,
+      ## slope = lm(mean_pm_pred ~ mean_pm25 - 1, data = .) |> coefficients(),
+      ci_coverage = scales::percent(sum(ci_covered) / length(ci_covered))
+    )
+}
+
+d_temporal_cv <- list()
+
+# alltime
+d_temporal_cv$all <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+# annual
+d_temporal_cv$annual <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "year")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+# monthly
+d_temporal_cv$monthly <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "year", "month")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+# weekly
+d_temporal_cv$weekly <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "year", "week")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+#' daily
+d_temporal_cv$daily <-
+  d[,
+    .(.N,
+      mean_pm25 = mean(conc),
+      mean_pm_pred = mean(pred),
+      mean_pm_se = sqrt(sum(se^2))),
+    by = c("s2", "date")
+  ] |>
+  add_mean_CIs_and_summarize_error()
+
+d_temporal_cv <-
+  tibble::enframe(d_temporal_cv, name = "time") |>
+  tidyr::unnest(cols = c(value))
+
+d_temporal_cv$time <-
+  d_temporal_cv$time |>
+  factor(levels = c("all", "annual", "monthly", "weekly", "daily"))
+
+```
+
+```{r}
+d_temporal_cv |>
+  group_by(time) |>
+  summarize(
+    median_n_time_units = median(n_time_units, na.rm = TRUE),
+    median_mae = median(mae, na.rm = TRUE),
+    median_rmse = median(rmse, na.rm = TRUE),
+    median_rsq = median(rsq, na.rm = TRUE),
+    median_ci_coverage = median(as.numeric(sub("%", "", ci_coverage)), na.rm = TRUE),
+    .groups = "keep"
+  ) |>
+  knitr::kable(digits = 2) 
+
+d_temporal_cv |>
+  ggplot(aes(time, mae)) +
+  geom_boxplot() +
+  the_theme +
+  ylab(expression(paste(CV~MAE~(ug/m^3)))) +
+  xlab("Temporal Aggregation Window")
+
+d_temporal_cv |>
+  ggplot(aes(time, rsq)) +
+  geom_boxplot() +
+  the_theme +
+  ylab(expression(paste(CV~R^2))) +
+  xlab("Temporal Aggregation Window")
+
+```
+
+## Median LOLO Accuracy Per Spatial Aggregation Period
+
+Level 5 s2 polygons
+
+```{r}
+library(s2)
+
+d_spatiotemporal_cv <-
+  d_temporal_cv |>
+  mutate(s2_5 = s2_cell_parent(s2, 5)) |>
+  group_by(time, s2_5) |>
+  summarise(
+    n = median(n_time_units, na.rm = TRUE),
+    mae = median(mae, na.rm = TRUE),
+    rmse = median(rmse, na.rm = TRUE),
+    rsq = median(rsq, na.rm = TRUE),
+    ci_coverage = median(as.numeric(sub("%", "", ci_coverage)), na.rm = TRUE),
+    .groups = "drop"
+    )
+
+the_map_theme <-
+  the_theme +
+  ggplot2::theme(
+    axis.ticks = ggplot2::element_blank(), 
+    axis.text = ggplot2::element_blank(),
+    axis.title = ggplot2::element_blank(), 
+    rect = ggplot2::element_blank(),
+    line = ggplot2::element_blank(), 
+    panel.grid = ggplot2::element_blank(),
+    plot.margin = ggplot2::margin(1, 1, 1, 1, "cm"),
+    legend.key.height = ggplot2::unit(1, "cm"),
+    legend.key.width = ggplot2::unit(0.3, "cm")
+  )
+
+d_spatiotemporal_cv |> 
+  mutate(geometry = s2_cell_polygon(s2_5)) |>  
+  sf::st_as_sf() |>
+  ggplot() +
+  geom_sf(aes(fill = mae), size = 0) +
+  coord_sf(crs = 5072) +
+  facet_wrap(. ~ time) +
+  the_map_theme +
+  scale_fill_viridis_c() +
+  theme(legend.position = c(0.83, 0.2),
+        legend.direction = "horizontal",
+        legend.title = element_text(size = 11, family = "sans"),
+        legend.text = element_text(size = 11),
+        legend.box = "hortizontal",
+        legend.key.height = unit(4, "mm"),
+        legend.key.width = unit(9, "mm"),
+        strip.text.x = element_text(size = 11, face = "bold", vjust = 1),
+        strip.text.y = element_text(size = 11, face = "bold")) +
+  labs(fill = expression(paste(MAE~(ug/m^3)))) +
+  guides(fill = guide_colorbar(title.position = "top", title.hjust = 0.5))
+```
