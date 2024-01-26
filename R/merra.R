@@ -30,7 +30,7 @@ get_merra_data <- function(x, dates) {
 install_merra_data <- function(merra_year = as.character(2016:2023)) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
-                        "merra_", merra_year, ext = "parquet")
+                        paste0(c("merra", merra_year), collapse = "_"), ext = "parquet")
   if (fs::file_exists(dest_file)) return(as.character(dest_file))
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
                   as.Date(paste(c(merra_year, "12", "31"), collapse = "-")),
