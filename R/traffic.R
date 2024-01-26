@@ -47,6 +47,7 @@ install_traffic <- function() {
   }
   message("downloading HPMS data")
   dest_path <- tempfile(fileext = ".gdb.zip")
+  # TODO change to httr2?
   httr::GET(
     "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data",
     httr::write_disk(dest_path, overwrite = TRUE),
