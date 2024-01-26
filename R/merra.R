@@ -35,10 +35,8 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
                   as.Date(paste(c(merra_year, "12", "31"), collapse = "-")),
                   by = 1)
-  merra_data <- purrr::map(date_seq,
-    create_daily_merra_data,
-    .progress = "downloading daily merra files"
-  )
+  # takes a long time, so cache intermediate daily downloads and extractions
+  merra_data <- mappp::mappp(date_seq, create_daily_merra_data, cache = TRUE, cache_name = "merra_cache")
   names(merra_data) <- date_seq
   tibble::enframe(merra_data, name = "date") |>
     dplyr::mutate(date = as.Date(date)) |>
@@ -73,11 +71,11 @@ create_daily_merra_data <- function(date) {
     ) |>
     ## httr2::req_progress() |>
     httr2::req_retry(max_tries = 3) |>
-    httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
-      port = 80,
-      username = Sys.getenv("CCHMC_USERNAME"),
-      password = Sys.getenv("CCHMC_PASSWORD")
-    ) |>
+    ## httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
+    ##   port = 80,
+    ##   username = Sys.getenv("CCHMC_USERNAME"),
+    ##   password = Sys.getenv("CCHMC_PASSWORD")
+    ## ) |>
     httr2::req_perform(path = tf)
   out <-
     tidync::tidync(tf) |>
