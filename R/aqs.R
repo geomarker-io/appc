@@ -34,6 +34,7 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") 
     )[pollutant]
   file_name <- glue::glue("daily_{pollutant_code}_{year}.zip")
   on.exit(unlink(file_name))
+  # TODO change to httr or httr2
   utils::download.file(
     url = glue::glue("https://aqs.epa.gov/aqsweb/airdata/{file_name}"),
     destfile = file_name,

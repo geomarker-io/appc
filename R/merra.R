@@ -6,6 +6,15 @@
 # filter to contiguous US: http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313
 # all mass units are kg/m3; translate to ug/m3 with 1e9 factor
 # total surface PM2.5 mass is calculated according to <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
+
+#' d <- list(
+#'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
+#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+#' )
+
+#' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
+
+
 get_merra_data <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   d_merra <-
@@ -17,9 +26,33 @@ get_merra_data <- function(x, dates) {
     unique() |>
     purrr::map_chr(\(.) install_merra_data(merra_year = .)) |>
     purrr::map(arrow::read_parquet) |>
-    purrr::list_rbind()
-  # TODO find nearest s2 among all unique s2 locations in merra
-  # TODO extract merra values for each list of dates per s2 location
+    purrr::list_rbind() |>
+    dplyr::nest_by(s2) |>
+    dplyr::ungroup() |>
+    dplyr::pull(data, s2)
+  d_merra_s2_geog <-
+    d_merra |>
+    names() |>
+    s2::as_s2_cell() |>
+    s2::s2_cell_to_lnglat()
+  x_closest_merra <- 
+    x |>
+    s2::s2_cell_to_lnglat() |>
+    s2::s2_closest_feature(d_merra_s2_geog)
+  x_closest_merra <-
+    d_merra[x_closest_merra] |>
+    setNames(x)
+  out <-
+    purrr::map2(x_closest_merra, dates,
+                \(xx, dd) {
+                  tibble::tibble(date = dd) |>
+                    dplyr::left_join(xx, by = "date") |>
+                    dplyr::select(-date)
+                },
+                .progress = "extracting closest merra data"
+                )
+  names(out) <- as.character(x)
+  return(out)
 }
 
 #' Installs MERRA PM2.5 data into user's data directory for the `appc` package
@@ -71,11 +104,11 @@ create_daily_merra_data <- function(date) {
     ) |>
     ## httr2::req_progress() |>
     httr2::req_retry(max_tries = 3) |>
-    ## httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
-    ##   port = 80,
-    ##   username = Sys.getenv("CCHMC_USERNAME"),
-    ##   password = Sys.getenv("CCHMC_PASSWORD")
-    ## ) |>
+    httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
+      port = 80,
+      username = Sys.getenv("CCHMC_USERNAME"),
+      password = Sys.getenv("CCHMC_PASSWORD")
+    ) |>
     httr2::req_perform(path = tf)
   out <-
     tidync::tidync(tf) |>

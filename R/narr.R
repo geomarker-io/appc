@@ -30,6 +30,7 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
     terra::project(narr_raster)
   narr_cells <- terra::cells(narr_raster[[1]], x_vect)[, "cell"]
   xx <- terra::extract(narr_raster, narr_cells)
+  # TODO where is d below here coming from?
   purrr::imap(d$dates,
     \(x, idx) unlist(xx[idx, as.character(x)]),
     .progress = paste0("calculating ", narr_var)

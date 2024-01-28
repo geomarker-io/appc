@@ -59,6 +59,10 @@ d$pres.sfc <- my_narr("pres.sfc")
 d$uwnd.10m <- my_narr("uwnd.10m")
 d$vwnd.10m <- my_narr("vwnd.10m")
 
+# merra
+d$merra <- get_merra_data(d$s2, d$dates)
+# TODO unnest this into single columns
+
 ## impervious
 impervious_years <- c("2016", "2019")
 d$impervious_400 <-

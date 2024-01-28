@@ -19,7 +19,6 @@ contiguous_us <- function() {
 
 utils::globalVariables("NAME")
 
-
 #' Get the closest years to a vector of dates
 #' @param date a vector of date objects
 #' @param years vector of characters (or numerics) representing years to choose from
@@ -36,6 +35,7 @@ get_closest_year <- function(date, years) {
   purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))
 }
 
+# TODO add option to install geomarker data using binary instead of from source
 #' Install (almost) all of the geomarker data
 #' 
 #' Download, convert, and install all required geomarker data for `appc` predictions from 2016 - 2022.
@@ -52,6 +52,7 @@ install_geomarker_data <- function() {
     purrr::map_chr(c("2016", "2019"), install_impervious),
     purrr::map_chr(as.character(2016:2021), install_treecanopy),
     install_smoke_pm_data()
+    # TODO add in merra data
   ) |>
     invisible()
 }
