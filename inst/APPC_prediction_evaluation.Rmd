@@ -61,7 +61,7 @@ d %>%
   summarize(
     mae = median(abs(conc - pred)),
     rmse = sqrt(mean((conc - pred)^2)),
-    rsq = cor(conc, pred, use = "pairwise.complete")^2,
+    rsq = cor.test(conc, pred, method = "spearman", exact = FALSE)$estimate,
     ci_coverage = scales::percent(sum(ci_covered) / length(ci_covered))
   ) |>
   knitr::kable(digits = 2)
@@ -152,7 +152,7 @@ add_mean_CIs_and_summarize_error <- function(x) {
       n_observations = sum(N),
       mae = median(abs(mean_pm25 - mean_pm_pred)),
       rmse = sqrt(mean((mean_pm25 - mean_pm_pred)^2)),
-      rsq = cor(mean_pm25, mean_pm_pred, use = "pairwise.complete")^2,
+      rsq = cor.test(mean_pm25, mean_pm_pred, method = "spearman", exact = FALSE)$estimate,
       ## slope = lm(mean_pm_pred ~ mean_pm25 - 1, data = .) |> coefficients(),
       ci_coverage = scales::percent(sum(ci_covered) / length(ci_covered))
     )
@@ -160,16 +160,16 @@ add_mean_CIs_and_summarize_error <- function(x) {
 
 d_temporal_cv <- list()
 
-# alltime
-d_temporal_cv$all <-
-  d[,
-    .(.N,
-      mean_pm25 = mean(conc),
-      mean_pm_pred = mean(pred),
-      mean_pm_se = sqrt(sum(se^2))),
-    by = c("s2")
-  ] |>
-  add_mean_CIs_and_summarize_error()
+## # alltime
+## d_temporal_cv$all <-
+##   d[,
+##     .(.N,
+##       mean_pm25 = mean(conc),
+##       mean_pm_pred = mean(pred),
+##       mean_pm_se = sqrt(sum(se^2))),
+##     by = c("s2")
+##   ] |>
+##   add_mean_CIs_and_summarize_error()
 
 # annual
 d_temporal_cv$annual <-
@@ -221,7 +221,7 @@ d_temporal_cv <-
 
 d_temporal_cv$time <-
   d_temporal_cv$time |>
-  factor(levels = c("all", "annual", "monthly", "weekly", "daily"))
+  factor(levels = c("annual", "monthly", "weekly", "daily"))
 
 ```
 
@@ -263,8 +263,8 @@ library(s2)
 
 d_spatiotemporal_cv <-
   d_temporal_cv |>
-  mutate(s2_5 = s2_cell_parent(s2, 5)) |>
-  group_by(time, s2_5) |>
+  mutate(s2_ = s2_cell_parent(s2, 4)) |>
+  group_by(time, s2_) |>
   summarise(
     n = median(n_time_units, na.rm = TRUE),
     mae = median(mae, na.rm = TRUE),
@@ -289,7 +289,7 @@ the_map_theme <-
   )
 
 d_spatiotemporal_cv |> 
-  mutate(geometry = s2_cell_polygon(s2_5)) |>  
+  mutate(geometry = s2_cell_polygon(s2_)) |>  
   sf::st_as_sf() |>
   ggplot() +
   geom_sf(aes(fill = mae), size = 0) +

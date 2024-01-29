@@ -41,7 +41,7 @@ d <-
   ) |>
   select(-data)
 
-# subset to contiguous
+# subset to contiguous US
 d <- d |>
   filter(
     s2_intersects(
@@ -78,17 +78,13 @@ d$vwnd.10m <- my_narr("vwnd.10m")
 
 # merra
 d$merra <- get_merra_data(d$s2, d$dates)
-d$merra_dust <- purrr::map_dbl(d$merra, "merra_dust")
-d$merra_oc <- purrr::map_dbl(d$merra, "merra_oc")
-d$merra_bc <- purrr::map_dbl(d$merra, "merra_bc")
-d$merra_ss <- purrr::map_dbl(d$merra, "merra_ss")
-d$merra_so4 <- purrr::map_dbl(d$merra, "merra_so4")
-d$merra_pm25 <- purrr::map_dbl(d$merra, "merra_pm25")
-
-
-
-d$truck_aadt_m_400 <- purrr::map_dbl(d$traffic_400, "truck_aadt_m")
-# TODO unnest this into single columns
+d$merra_dust <- purrr::map(d$merra, "merra_dust")
+d$merra_oc <- purrr::map(d$merra, "merra_oc")
+d$merra_bc <- purrr::map(d$merra, "merra_bc")
+d$merra_ss <- purrr::map(d$merra, "merra_ss")
+d$merra_so4 <- purrr::map(d$merra, "merra_so4")
+d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
+d$merra <- NULL
 
 ## impervious
 impervious_years <- c("2016", "2019")
@@ -117,7 +113,11 @@ d$nei_point_id2w_1000 <- map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_clos
 # unnest
 d <-
   d |>
-  tidyr::unnest(cols = c(dates, conc, air.2m, hpbl, acpcp, rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m, impervious_400, treecanopy_400, nei_point_id2w_1000)) |>
+  tidyr::unnest(cols = c(dates, conc, air.2m, hpbl, acpcp,
+                         rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
+                         merra_dust, merra_oc, merra_bc, merra_ss, merra_so4, merra_pm25,
+                         impervious_400, treecanopy_400,
+                         nei_point_id2w_1000)) |>
   rename(date = dates)
 
 # smoke
