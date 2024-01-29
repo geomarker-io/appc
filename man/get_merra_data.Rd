@@ -23,8 +23,8 @@ create_daily_merra_data(merra_date)
 }
 \value{
 for \code{get_merra_data()}, a list of tibbles the same
-length as \code{x}, each containing merra data columns (...) with
-one row per date in \code{dates}
+length as \code{x}, each containing merra data columns (\code{merra_dust}, \code{merra_oc}, \code{merra_bc},
+\code{merra_ss}, \code{merra_so4}, \code{merra_pm25}) with one row per date in \code{dates}
 
 for \code{install_merra_data()}, a character string path to the merra data
 

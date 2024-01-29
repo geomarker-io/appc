@@ -19,8 +19,8 @@
 #' @param merra_year a character string that is the year for the merra data
 #' @param merra_date a date object that is the date for the merra data
 #' @return for `get_merra_data()`, a list of tibbles the same
-#' length as `x`, each containing merra data columns (...) with
-#' one row per date in `dates`
+#' length as `x`, each containing merra data columns (`merra_dust`, `merra_oc`, `merra_bc`,
+#' `merra_ss`, `merra_so4`, `merra_pm25`) with one row per date in `dates`
 #' @export
 #' @examples
 #' # d <- list(

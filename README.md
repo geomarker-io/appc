@@ -17,8 +17,8 @@ library(appc)
 
 ### Exposure Assessment Model Details
 
-- Contiguous United States
-- Daily, 2016 - 2022, but updated ?how often?
+- Exact s2 location, contiguous United States
+- Daily, 2017 - 2023
 
 ## Developing
 

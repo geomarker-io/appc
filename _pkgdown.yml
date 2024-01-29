@@ -18,5 +18,4 @@ reference:
   - s2_states
   - s2_tracts
   - get_closest_year
-  - install_geomarker_data
   - get_daily_aqs
