@@ -1,20 +1,33 @@
-# MERRA-2
-# an Earthdata account that is authorized for the NASA GESDISC DATA ARCHIVE application is required
-# see https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access for more information
-# M2T1NXAER: 2 dimensional, hourly, time-averaged, single-level, assimilation, aerosol diagnostics v5.12.4
-# https://disc.gsfc.nasa.gov/datasets/M2T1NXAER_5.12.4/summary
-# filter to contiguous US: http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313
-# all mass units are kg/m3; translate to ug/m3 with 1e9 factor
-# total surface PM2.5 mass is calculated according to <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
-
+#' Get MERRA-2 aerosol diagnostics data
+#' 
+#' Total and component (Dust, OC, BC, SS, SO4) surface PM2.5 concentrations
+#' from the MERRA-2 [M2T1NXAER v5.12.4](https://disc.gsfc.nasa.gov/datasets/M2T1NXAER_5.12.4/summary) product.
+#' @details
+#' - To install data from source, an [Earthdata account linked with
+#' permissions for GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) is required.
+#' The `EARTHDATA_USERNAME` and `EARTHDATA_PASSWORD` must be set. If
+#' a `.env` file is present, environment variables will be loaded
+#' using the {dotenv} package.
+#' - Installed data are filtered to a
+#' [bounding box](http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313)
+#' around the contiguous US, averaged to daily values, and
+#' converted to micrograms per cubic meter ($ug/m^3$).
+#' - Total surface PM2.5 mass is calculated according to
+#' the formula in <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
+#' @param x a vector of s2 cell identifers (`s2_cell` object)
+#' @param dates a list of date vectors for the MERRA data, must be the same length as `x`
+#' @return for `get_merra_data()`, a list of tibbles the same
+#' length as `x`, each containing merra data columns (...) with
+#' one row per date in `dates`
+#' @export
+#' @examples
+#' dontrun{
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
-
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-
-
+#' }
 get_merra_data <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   d_merra <-
@@ -55,7 +68,8 @@ get_merra_data <- function(x, dates) {
   return(out)
 }
 
-#' Installs MERRA PM2.5 data into user's data directory for the `appc` package
+#' `install_merra_data()` installs MERRA PM2.5 data into
+#' user's data directory for the `appc` package
 #' @param year a year object that is the year for the merra data
 #' @return for `install_merra_data()`, a character string path to the merra data
 #' @export
@@ -78,9 +92,9 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
   return(dest_file)
 }
 
-#' Downloads and computes MERRA PM2.5 data for a single day
+#' `create_daily_merra_data` downloads and computes MERRA PM2.5 data for a single day
 #' @param date a date object that is the date for the merra data
-#' @return for `get_daily_merra_data()`, a tibble with columns for s2,
+#' @return for `create_daily_merra_data()`, a tibble with columns for s2,
 #' date, and concentrations of PM2.5 total, dust, oc, bc, ss, so4 
 #' @export
 #' @rdname get_merra_data
