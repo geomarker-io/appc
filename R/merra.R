@@ -16,18 +16,18 @@
 #' the formula in <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the MERRA data, must be the same length as `x`
+#' @param merra_year a character string that is the year for the merra data
+#' @param merra_date a date object that is the date for the merra data
 #' @return for `get_merra_data()`, a list of tibbles the same
 #' length as `x`, each containing merra data columns (...) with
 #' one row per date in `dates`
 #' @export
 #' @examples
-#' dontrun{
-#' d <- list(
-#'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
-#' )
-#' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-#' }
+#' # d <- list(
+#' #   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
+#' #   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+#' # )
+#' # get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
 get_merra_data <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   d_merra <-
@@ -54,7 +54,7 @@ get_merra_data <- function(x, dates) {
     s2::s2_closest_feature(d_merra_s2_geog)
   x_closest_merra <-
     d_merra[x_closest_merra] |>
-    setNames(x)
+    stats::setNames(x)
   out <-
     purrr::map2(x_closest_merra, dates,
                 \(xx, dd) {
@@ -70,7 +70,6 @@ get_merra_data <- function(x, dates) {
 
 #' `install_merra_data()` installs MERRA PM2.5 data into
 #' user's data directory for the `appc` package
-#' @param year a year object that is the year for the merra data
 #' @return for `install_merra_data()`, a character string path to the merra data
 #' @export
 #' @rdname get_merra_data
@@ -93,13 +92,12 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
 }
 
 #' `create_daily_merra_data` downloads and computes MERRA PM2.5 data for a single day
-#' @param date a date object that is the date for the merra data
 #' @return for `create_daily_merra_data()`, a tibble with columns for s2,
 #' date, and concentrations of PM2.5 total, dust, oc, bc, ss, so4 
 #' @export
 #' @rdname get_merra_data
-create_daily_merra_data <- function(date) {
-  the_date <- as.Date(date)
+create_daily_merra_data <- function(merra_date) {
+  the_date <- as.Date(merra_date)
   if (file.exists(".env")) dotenv::load_dot_env()
   earthdata_secrets <- Sys.getenv(c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"), unset = NA)
   if (any(is.na(earthdata_secrets))) stop("EARTHDATA_USERNAME or EARTHDATA_PASSWORD environment variables are unset", call. = FALSE)
@@ -141,8 +139,12 @@ create_daily_merra_data <- function(date) {
     ) |>
     dplyr::mutate(merra_pm25 = merra_dust + merra_oc + merra_bc + merra_ss + (merra_so4 * 132.14 / 96.06)) |>
     dplyr::group_by(lon, lat) |>
-    dplyr::summarize(dplyr::across(starts_with("merra"), mean), .groups = "drop") |>
+    dplyr::summarize(dplyr::across(dplyr::starts_with("merra"), mean), .groups = "drop") |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>
     dplyr::select(-lon, -lat)
   return(out)
 }
+
+utils::globalVariables(c("DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25",
+                         "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
+                         "merra_bc", "merra_ss", "merra_so4", "value"))

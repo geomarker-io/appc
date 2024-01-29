@@ -28,5 +28,7 @@ Imports:
     tidync,
     rlang,
     tibble,
-    scales
+    scales,
+    dotenv,
+    mappp
 RoxygenNote: 7.2.3

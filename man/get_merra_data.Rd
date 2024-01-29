@@ -10,16 +10,16 @@ get_merra_data(x, dates)
 
 install_merra_data(merra_year = as.character(2016:2023))
 
-create_daily_merra_data(date)
+create_daily_merra_data(merra_date)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{dates}{a list of date vectors for the MERRA data, must be the same length as \code{x}}
 
-\item{date}{a date object that is the date for the merra data}
+\item{merra_year}{a character string that is the year for the merra data}
 
-\item{year}{a year object that is the year for the merra data}
+\item{merra_date}{a date object that is the date for the merra data}
 }
 \value{
 for \code{get_merra_data()}, a list of tibbles the same
@@ -50,11 +50,9 @@ the formula in \url{https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4}
 }
 }
 \examples{
-dontrun{
-d <- list(
-  "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-  "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
-)
-get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-}
+# d <- list(
+#   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
+#   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+# )
+# get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
 }
