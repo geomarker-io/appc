@@ -4,12 +4,27 @@ library(purrr)
 library(tidyr)
 if(!require(appc)) devtools::load_all()
 
+# download any geomarker data ahead of time, if not already cached
+c(
+  install_elevation_data(),
+  tidyr::expand_grid(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
+                     narr_year = as.character(2017:2023)) |>
+    purrr::pmap_chr(install_narr_data),
+  purrr::map_chr(c("2017", "2020"), install_nei_point_data),
+  purrr::map_chr(c("2016", "2019"), install_impervious),
+  purrr::map_chr(as.character(2016:2021), install_treecanopy),
+  install_smoke_pm_data(),
+  purrr::map_chr(as.character(2017:2023), install_merra_data)
+) |>
+  invisible()
+
 # get AQS data
 d <-
   tidyr::expand_grid(
     ## pollutant = c("pm25", "ozone", "no2"),
     pollutant = "pm25",
-    year = 2016:2022
+    ## year = 2016:2023
+    year = 2022:2023
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
@@ -24,16 +39,18 @@ d <-
     dates = purrr::map(data, "date"),
     conc = purrr::map(data, "conc")
   ) |>
-  select(-data) |>
-  mutate(s2_geometry = as_s2_geography(s2_cell_to_lnglat(s2)))
+  select(-data)
 
 # subset to contiguous
-d <-
-  d |>
-  filter(s2_intersects(s2_geometry, contiguous_us())) |>
-  select(-s2_geometry)
+d <- d |>
+  filter(
+    s2_intersects(
+      as_s2_geography(s2_cell_to_lnglat(s2)),
+      contiguous_us()
+    )
+  )
 
-# coords
+# coords TODO transform to projected coordinates?
 d <- d |>
   mutate(x = s2_x(s2_cell_to_lnglat(s2)),
          y = s2_y(s2_cell_to_lnglat(s2)))
@@ -61,6 +78,16 @@ d$vwnd.10m <- my_narr("vwnd.10m")
 
 # merra
 d$merra <- get_merra_data(d$s2, d$dates)
+d$merra_dust <- purrr::map_dbl(d$merra, "merra_dust")
+d$merra_oc <- purrr::map_dbl(d$merra, "merra_oc")
+d$merra_bc <- purrr::map_dbl(d$merra, "merra_bc")
+d$merra_ss <- purrr::map_dbl(d$merra, "merra_ss")
+d$merra_so4 <- purrr::map_dbl(d$merra, "merra_so4")
+d$merra_pm25 <- purrr::map_dbl(d$merra, "merra_pm25")
+
+
+
+d$truck_aadt_m_400 <- purrr::map_dbl(d$traffic_400, "truck_aadt_m")
 # TODO unnest this into single columns
 
 ## impervious
