@@ -29,3 +29,4 @@ train:
 # create CV accuracy report
 report:
 	R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd')"
+	open inst/APPC_prediction_evaluation.html
