@@ -42,21 +42,21 @@ get_merra_data <- function(x, dates) {
     purrr::list_rbind() |>
     dplyr::nest_by(s2) |>
     dplyr::ungroup() |>
-    dplyr::pull(data, s2)
-  d_merra_s2_geog <-
-    d_merra |>
-    names() |>
-    s2::as_s2_cell() |>
-    s2::s2_cell_to_lnglat()
+    dplyr::mutate(s2 = s2::as_s2_cell(s2)) |>
+    dplyr::mutate(s2_geography = s2::s2_cell_to_lnglat(s2)) |>
+    na.omit() # some s2 failed to convert to lnglat ?
+
   x_closest_merra <- 
     x |>
     s2::s2_cell_to_lnglat() |>
-    s2::s2_closest_feature(d_merra_s2_geog)
+    s2::s2_closest_feature(d_merra$s2_geography)
+
   x_closest_merra <-
-    d_merra[x_closest_merra] |>
-    stats::setNames(x)
+    d_merra[x_closest_merra, "data"] |>
+    dplyr::mutate(s2 = x)
+
   out <-
-    purrr::map2(x_closest_merra, dates,
+    purrr::map2(x_closest_merra$data, dates,
                 \(xx, dd) {
                   tibble::tibble(date = dd) |>
                     dplyr::left_join(xx, by = "date") |>
@@ -116,11 +116,11 @@ create_daily_merra_data <- function(merra_date) {
     ) |>
     ## httr2::req_progress() |>
     httr2::req_retry(max_tries = 3) |>
-    httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
-      port = 80,
-      username = Sys.getenv("CCHMC_USERNAME"),
-      password = Sys.getenv("CCHMC_PASSWORD")
-    ) |>
+    ## httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
+    ##   port = 80,
+    ##   username = Sys.getenv("CCHMC_USERNAME"),
+    ##   password = Sys.getenv("CCHMC_PASSWORD")
+    ## ) |>
     httr2::req_perform(path = tf)
   out <-
     tidync::tidync(tf) |>

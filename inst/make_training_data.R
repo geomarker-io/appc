@@ -4,27 +4,27 @@ library(purrr)
 library(tidyr)
 if(!require(appc)) devtools::load_all()
 
-# download any geomarker data ahead of time, if not already cached
-c(
-  install_elevation_data(),
-  tidyr::expand_grid(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
-                     narr_year = as.character(2017:2023)) |>
-    purrr::pmap_chr(install_narr_data),
-  purrr::map_chr(c("2017", "2020"), install_nei_point_data),
-  purrr::map_chr(c("2016", "2019"), install_impervious),
-  purrr::map_chr(as.character(2016:2021), install_treecanopy),
-  install_smoke_pm_data(),
-  purrr::map_chr(as.character(2017:2023), install_merra_data)
-) |>
-  invisible()
+## # download any geomarker data ahead of time, if not already cached
+## c(
+##   install_elevation_data(),
+##   tidyr::expand_grid(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
+##                      narr_year = as.character(2017:2023)) |>
+##     purrr::pmap_chr(install_narr_data),
+##   purrr::map_chr(c("2017", "2020"), install_nei_point_data),
+##   purrr::map_chr(c("2016", "2019"), install_impervious),
+##   purrr::map_chr(as.character(2016:2021), install_treecanopy),
+##   install_smoke_pm_data(),
+##   purrr::map_chr(as.character(2017:2023), install_merra_data)
+## ) |>
+##   invisible()
 
 # get AQS data
 d <-
   tidyr::expand_grid(
     ## pollutant = c("pm25", "ozone", "no2"),
     pollutant = "pm25",
-    ## year = 2016:2023
-    year = 2022:2023
+    ## year = 2017:2023
+    year = c("2017", "2018", "2019", "2020", "2022", "2023")
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
