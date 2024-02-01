@@ -23,10 +23,9 @@ install_released_data <- function(released_data_name, package_version = packageV
              released_data_name,
              .sep = "/"
              ) |>
-    httr2::request("https://github.com/geomarker-io/appc/releases/download/v0.1.0/smoke.parquet") |>
+    httr2::request() |>
     httr2::req_progress() |>
     httr2::req_perform(path = dest_file)
-  return(dest_file)
 }
 
 #' install_source_preference()

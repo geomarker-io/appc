@@ -18,7 +18,7 @@ install_smoke_pm_data <- function() {
   }
   if (!install_source_preference()) {
     install_released_data(released_data_name = "smoke.parquet")
-    return(dest_file)
+    return(as.character(dest_file))
   }
   message("downloading and installing smoke PM data from source")
   tf <- tempfile()

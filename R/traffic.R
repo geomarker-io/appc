@@ -51,20 +51,9 @@ install_traffic <- function() {
     return(out_path)
   }
 
-  if (!any(
-    getOption("appc_install_data_from_source", "") != "",
-    Sys.getenv("APPC_INSTALL_DATA_FROM_SOURCE", "") != ""
-  )) {
-    glue::glue("https://github.com", "geomarker-io",
-      "appc", "releases", "download",
-      "v{desc::desc_get('Version')}",
-      "hpms_f123_aadt.rds",
-      .sep = "/"
-    ) |>
-      httr2::request() |>
-      httr2::req_progress() |>
-      httr2::req_perform(path = out_path)
-    return(out_path)
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = "hpms_f123_aadt.rds")
+    return(as.character(out_path))
   }
 
   message("downloading and installing HPMS data from source")
@@ -100,7 +89,7 @@ install_traffic <- function() {
   hpms_pa_aadt <- purrr::map(hpms_states, extract_F123_AADT, .progress = "extracting state F123 AADT files")
   out <- dplyr::bind_rows(hpms_pa_aadt)
   saveRDS(out, out_path)
-  return(out_path)
+  return(as.character(out_path))
 }
 
 utils::globalVariables(c("total_aadt_m", "truck_aadt_m", "Shape"))
