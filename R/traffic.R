@@ -46,16 +46,13 @@ get_traffic_summary <- function(x, buffer = 400) {
 #' @export
 install_traffic <- function() {
   out_path <- fs::path(tools::R_user_dir("appc", "data"), "hpms_f123_aadt", ext = "rds")
-
   if (file.exists(out_path)) {
     return(out_path)
   }
-
   if (!install_source_preference()) {
     install_released_data(released_data_name = "hpms_f123_aadt.rds")
     return(as.character(out_path))
   }
-
   message("downloading and installing HPMS data from source")
   dest_path <- tempfile(fileext = ".gdb.zip")
   "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data" |>

@@ -47,6 +47,10 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nei_{year}.parquet"))
   if (file.exists(dest_file)) return(dest_file)
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = glue::glue("nei_{year}.parquet"))
+    return(as.character(dest_file))
+  }
   message(glue::glue("downloading {year} NEI file"))
   zip_path <- fs::path(tempdir(), glue::glue("nei_{year}.zip"))
   dplyr::case_when(year == "2020" ~ "https://gaftp.epa.gov/air/nei/2020/data_summaries/Facility%20Level%20by%20Pollutant.zip",
@@ -68,7 +72,7 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
     dplyr::rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
     stats::na.omit() |>
     arrow::write_parquet(dest_file)
-  return(dest_file)
+  return(as.character(dest_file))
 }
 
 utils::globalVariables(c("pollutant code", "site longitude", "site latitude", "total_emissions"))

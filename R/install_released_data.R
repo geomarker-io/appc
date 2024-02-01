@@ -1,12 +1,15 @@
 #' Download pre-installed data from GitHub release
 #' 
-#' `install_smoke_pm_data()`, `install_merra_data()`,
-#' `install_traffic()`, and install_nei_point_data()`
-#' all download and then transform or subset data into
+#' `install_smoke_pm_data()`, `install_merra_data()`, `install_traffic()`, and install_nei_point_data()`
+#' all download geospatial data directly from the provider and then transform or subset data into
 #' smaller files to be used by appc `get_*_data()` functions.
-#' Because this installation process can take a long time, the installed
-#' geomarker data are (by default) downloaded from the
-#' corresponding github release.
+#' Because this installation process can take a long time, the installed geomarker data are (by default)
+#' downloaded from the corresponding github release.
+#'
+#' These functions are utilized automatically by the geomarker assessment functions,
+#' but can be called without input data to install the geomarker data ahead of time,
+#' if external internet access is not possible after input data is added.
+#' *Note that some of the install functions require a system installation of `gdal`.* 
 #'
 #' To turn *off* the default usage of downloading
 #' pre-generated data and to instead install data

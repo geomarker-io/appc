@@ -78,9 +78,14 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
                         paste0(c("merra", merra_year), collapse = "_"), ext = "parquet")
   if (fs::file_exists(dest_file)) return(as.character(dest_file))
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = glue::glue("merra_{merra_year}.parquet"))
+    return(as.character(dest_file))
+  }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
                   as.Date(paste(c(merra_year, "12", "31"), collapse = "-")),
                   by = 1)
+  message(glue::glue("downloading and subsetting daily MERRA files for {merra_year}"))
   # takes a long time, so cache intermediate daily downloads and extractions
   merra_data <- mappp::mappp(date_seq, create_daily_merra_data, cache = TRUE, cache_name = "merra_cache")
   names(merra_data) <- date_seq
@@ -88,7 +93,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
     dplyr::mutate(date = as.Date(date)) |>
     tidyr::unnest(cols = c(value)) |>
     arrow::write_parquet(dest_file)
-  return(dest_file)
+  return(as.character(dest_file))
 }
 
 #' `create_daily_merra_data` downloads and computes MERRA PM2.5 data for a single day
