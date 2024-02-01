@@ -9,13 +9,15 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
  
 ## Air pollution exposure assessment in R
 
-### Use R to assess air pollution exposure
-
-1. A vector of `s2` geohashes
-2. A list of date vectors, one for each geohash
+`get_{geomarker}_summary()` functions (e.g., `get_narr_data()`, `get_census_tract_id()`) take a vector of `s2` geographic cell identifers (and sometimes a calendar year or a list of date vectors). If required, the `year` argument specifies the calendar year to be used for geomarker assessment. If `dates` are required, each item in the list of date vectors corresponds to one of the `s2` cell identifiers in the vector and can contain multiple dates.
 
 ```R
 library(appc)
+# get_census_tract_id(year = "2019")
+# get_traffic_summary(x, buffer = 400)
+# get_nei_point_summary(x, year = "2020", pollutant_code = "PM25-PRI", buffer = 1000)
+# get_narr_data(x, dates, narr_var = "air.2m")
+# get_nlcd_summary(x, "treecanopy", buffer = 750)
 ```
 
 ### Exposure Assessment Model Details
