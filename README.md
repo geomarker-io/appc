@@ -29,20 +29,12 @@ Use [`just`](https://just.systems/man/en/); e.g., `just --list`:
 
 ```sh
 Available recipes:
-    check                # check R package
-    document             # document R package
-    make_training_data   # make training data
-    train                # train grf model
-    upload_training_data # upload training data to S3
+    build_site         # build documentation website
+    check              # check R package
+    document           # document R package
+    make_training_data # make training data
+    report             # create CV accuracy report
+    train              # train grf model
+    upload_geo_data    # upload precomputed geomarker data to current github release
+    upload_grf         # upload grf model to current github release
 ```
-
-### Installing training data
-
-Instead of using the appc functions to make training data (`just make_training_data`), download a pregenerated version in R using the `fs::path_package()` function to download the file to the installed `appc` package:
-
-```R
-download.file(url = "https://geomarker-io.s3-us-east-2.amazonaws.com/appc/training_data_0.1.0.rds",
-              destfile = fs::path(fs::path_package("appc"), "training_data.rds"))
-```
-
-	

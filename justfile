@@ -18,10 +18,6 @@ build_site: document
 make_training_data:
 	Rscript inst/make_training_data.R
 
-# upload training data to S3
-upload_training_data:
-	aws s3 cp inst/training_data.rds s3://geomarker-io/appc/training_data_{{pkg_version}}.rds --acl public-read
-
 # upload grf model to current github release
 upload_grf:
     gh release upload v{{pkg_version}} "inst/rf_pm.rds"
