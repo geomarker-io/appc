@@ -1,9 +1,9 @@
 #' Get traffic summary
-#' 
+#'
 #' Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the sum of the total (and truck-only) average annual daily vehicle-meter counts within `buffer` meters of each s2 geohash.
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param buffer distance from s2 cell (in meters) to summarize data
-#' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates 
+#' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates
 #' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms.cfm>
 #' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
@@ -17,8 +17,10 @@ get_traffic_summary <- function(x, buffer = 400) {
   aadt_data <-
     readRDS(install_traffic()) |>
     dplyr::group_by(s2_parent = s2::s2_cell_parent(s2, level = 15)) |>
-    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
-                     truck_aadt_m = sum(truck_aadt_m))
+    dplyr::summarize(
+      total_aadt_m = sum(total_aadt_m),
+      truck_aadt_m = sum(truck_aadt_m)
+    )
   ## sqrt(median(s2::s2_cell_area(aadt_data$s2_parent)))
   # s2 level 16 are 130 m sq
   # s2 level 15 are 260 m sq
@@ -28,8 +30,10 @@ get_traffic_summary <- function(x, buffer = 400) {
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
   summarize_traffic <- function(i) {
     aadt_data[withins[[i]], ] |>
-    dplyr::summarize(total_aadt_m = sum(total_aadt_m),
-                     truck_aadt_m = sum(truck_aadt_m)) |>
+      dplyr::summarize(
+        total_aadt_m = sum(total_aadt_m),
+        truck_aadt_m = sum(truck_aadt_m)
+      ) |>
       as.list()
   }
   withins_aadt <- purrr::map(1:length(withins), summarize_traffic, .progress = "summarizing AADT")
@@ -42,17 +46,33 @@ get_traffic_summary <- function(x, buffer = 400) {
 #' @export
 install_traffic <- function() {
   out_path <- fs::path(tools::R_user_dir("appc", "data"), "hpms_f123_aadt", ext = "rds")
+
   if (file.exists(out_path)) {
     return(out_path)
   }
-  message("downloading HPMS data")
+
+  if (!any(
+    getOption("appc_install_data_from_source", "") != "",
+    Sys.getenv("APPC_INSTALL_DATA_FROM_SOURCE", "") != ""
+  )) {
+    glue::glue("https://github.com", "geomarker-io",
+      "appc", "releases", "download",
+      "v{desc::desc_get('Version')}",
+      "hpms_f123_aadt.rds",
+      .sep = "/"
+    ) |>
+      httr2::request() |>
+      httr2::req_progress() |>
+      httr2::req_perform(path = out_path)
+    return(out_path)
+  }
+
+  message("downloading and installing HPMS data from source")
   dest_path <- tempfile(fileext = ".gdb.zip")
-  # TODO change to httr2?
-  httr::GET(
-    "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data",
-    httr::write_disk(dest_path, overwrite = TRUE),
-    httr::progress()
-  )
+  "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data" |>
+    httr2::request() |>
+    httr2::req_progress() |>
+    httr2::req_perform(path = dest_path)
   hpms_states <-
     sf::st_layers(dsn = dest_path)$name |>
     strsplit("_", fixed = TRUE) |>
