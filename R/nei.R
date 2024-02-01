@@ -11,9 +11,7 @@
 #' @references <https://www.epa.gov/air-emissions-inventories/2020-national-emissions-inventory-nei-technical-support-document-tsd>
 #' @export
 #' @examples
-#' \dontrun{
 #' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
-#' }
 get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
   year <- rlang::arg_match(year)
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)

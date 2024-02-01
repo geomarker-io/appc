@@ -6,17 +6,20 @@
 \usage{
 install_released_data(
   released_data_name,
-  package_version = packageVersion("appc")
+  package_version = utils::packageVersion("appc")
 )
 }
 \description{
-\code{install_smoke_pm_data()}, \code{install_merra_data()},
-\code{install_traffic()}, and install_nei_point_data()\verb{all download and then transform or subset data into smaller files to be used by appc}get_*_data()` functions.
-Because this installation process can take a long time, the installed
-geomarker data are (by default) downloaded from the
-corresponding github release.
+\code{install_smoke_pm_data()}, \code{install_merra_data()}, \code{install_traffic()}, and install_nei_point_data()\verb{all download geospatial data directly from the provider and then transform or subset data into smaller files to be used by appc}get_*_data()` functions.
+Because this installation process can take a long time, the installed geomarker data are (by default)
+downloaded from the corresponding github release.
 }
 \details{
+These functions are utilized automatically by the geomarker assessment functions,
+but can be called without input data to install the geomarker data ahead of time,
+if external internet access is not possible after input data is added.
+\emph{Note that some of the install functions require a system installation of \code{gdal}.}
+
 To turn \emph{off} the default usage of downloading
 pre-generated data and to instead install data
 geomarker data directly from their sources, set

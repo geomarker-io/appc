@@ -44,7 +44,7 @@ get_merra_data <- function(x, dates) {
     dplyr::ungroup() |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2)) |>
     dplyr::mutate(s2_geography = s2::s2_cell_to_lnglat(s2)) |>
-    na.omit() # some s2 failed to convert to lnglat ?
+    stats::na.omit() # some s2 failed to convert to lnglat ?
 
   x_closest_merra <- 
     x |>

@@ -18,7 +18,7 @@
 #' environment variable `APPC_INSTALL_DATA_FROM_SOURCE`
 #' to any non-empty value.
 #' @keywords internal
-install_released_data <- function(released_data_name, package_version = packageVersion("appc")) {
+install_released_data <- function(released_data_name, package_version = utils::packageVersion("appc")) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), released_data_name)
   glue::glue("https://github.com", "geomarker-io",
              "appc", "releases", "download",
