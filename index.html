@@ -65,16 +65,14 @@
 <div class="section level2">
 <h2 id="air-pollution-exposure-assessment-in-r">Air pollution exposure assessment in R<a class="anchor" aria-label="anchor" href="#air-pollution-exposure-assessment-in-r"></a>
 </h2>
-<div class="section level3">
-<h3 id="use-r-to-assess-air-pollution-exposure">Use R to assess air pollution exposure<a class="anchor" aria-label="anchor" href="#use-r-to-assess-air-pollution-exposure"></a>
-</h3>
-<ol style="list-style-type: decimal">
-<li>A vector of <code>s2</code> geohashes</li>
-<li>A list of date vectors, one for each geohash</li>
-</ol>
+<p><code>get_{geomarker}_summary()</code> functions (e.g., <code><a href="reference/get_narr_data.html">get_narr_data()</a></code>, <code><a href="reference/get_census_tract_id.html">get_census_tract_id()</a></code>) take a vector of <code>s2</code> geographic cell identifers (and sometimes a calendar year or a list of date vectors). If required, the <code>year</code> argument specifies the calendar year to be used for geomarker assessment. If <code>dates</code> are required, each item in the list of date vectors corresponds to one of the <code>s2</code> cell identifiers in the vector and can contain multiple dates.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geomarker-io/appc" class="external-link">appc</a></span><span class="op">)</span></span></code></pre></div>
-</div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geomarker-io/appc" class="external-link">appc</a></span><span class="op">)</span></span>
+<span><span class="co"># get_census_tract_id(year = "2019")</span></span>
+<span><span class="co"># get_traffic_summary(x, buffer = 400)</span></span>
+<span><span class="co"># get_nei_point_summary(x, year = "2020", pollutant_code = "PM25-PRI", buffer = 1000)</span></span>
+<span><span class="co"># get_narr_data(x, dates, narr_var = "air.2m")</span></span>
+<span><span class="co"># get_nlcd_summary(x, "treecanopy", buffer = 750)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="exposure-assessment-model-details">Exposure Assessment Model Details<a class="anchor" aria-label="anchor" href="#exposure-assessment-model-details"></a>
 </h3>
