@@ -6,7 +6,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-0289-3151")),
     person("Qing", "Duan", role = "aut")
 	   )
-URL: https://github.com/geomarker-io/appc
+URL: https://github.com/geomarker-io/appc, http://geomarker.io/appc/
 Description: Functions for geomarker assessment for s2 locations and dates. These are used to train and predict daily ambient air pollution concentrations across the contiguous US 2016 - 2022.
 License: MIT + file LICENSE
 Encoding: UTF-8

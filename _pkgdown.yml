@@ -1,4 +1,4 @@
-url: ~
+url: http://geomarker.io/appc/
 template:
   bootstrap: 5
 reference:
@@ -19,3 +19,4 @@ reference:
   - s2_tracts
   - get_closest_year
   - get_daily_aqs
+
