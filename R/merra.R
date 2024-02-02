@@ -1,5 +1,5 @@
 #' Get MERRA-2 aerosol diagnostics data
-#' 
+#'
 #' Total and component (Dust, OC, BC, SS, SO4) surface PM2.5 concentrations
 #' from the MERRA-2 [M2T1NXAER v5.12.4](https://disc.gsfc.nasa.gov/datasets/M2T1NXAER_5.12.4/summary) product.
 #' @details
@@ -23,11 +23,11 @@
 #' `merra_ss`, `merra_so4`, `merra_pm25`) with one row per date in `dates`
 #' @export
 #' @examples
-#' # d <- list(
-#' #   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-#' #   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
-#' # )
-#' # get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
+#' d <- list(
+#'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
+#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+#' )
+#' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
 get_merra_data <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   d_merra <-
@@ -46,7 +46,7 @@ get_merra_data <- function(x, dates) {
     dplyr::mutate(s2_geography = s2::s2_cell_to_lnglat(s2)) |>
     stats::na.omit() # some s2 failed to convert to lnglat ?
 
-  x_closest_merra <- 
+  x_closest_merra <-
     x |>
     s2::s2_cell_to_lnglat() |>
     s2::s2_closest_feature(d_merra$s2_geography)
@@ -57,13 +57,13 @@ get_merra_data <- function(x, dates) {
 
   out <-
     purrr::map2(x_closest_merra$data, dates,
-                \(xx, dd) {
-                  tibble::tibble(date = dd) |>
-                    dplyr::left_join(xx, by = "date") |>
-                    dplyr::select(-date)
-                },
-                .progress = "extracting closest merra data"
-                )
+      \(xx, dd) {
+        tibble::tibble(date = dd) |>
+          dplyr::left_join(xx, by = "date") |>
+          dplyr::select(-date)
+      },
+      .progress = "extracting closest merra data"
+    )
   names(out) <- as.character(x)
   return(out)
 }
@@ -76,15 +76,20 @@ get_merra_data <- function(x, dates) {
 install_merra_data <- function(merra_year = as.character(2016:2023)) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
-                        paste0(c("merra", merra_year), collapse = "_"), ext = "parquet")
-  if (fs::file_exists(dest_file)) return(as.character(dest_file))
+    paste0(c("merra", merra_year), collapse = "_"),
+    ext = "parquet"
+  )
+  if (fs::file_exists(dest_file)) {
+    return(as.character(dest_file))
+  }
   if (!install_source_preference()) {
     install_released_data(released_data_name = glue::glue("merra_{merra_year}.parquet"))
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
-                  as.Date(paste(c(merra_year, "12", "31"), collapse = "-")),
-                  by = 1)
+    as.Date(paste(c(merra_year, "12", "31"), collapse = "-")),
+    by = 1
+  )
   message(glue::glue("downloading and subsetting daily MERRA files for {merra_year}"))
   # takes a long time, so cache intermediate daily downloads and extractions
   merra_data <- mappp::mappp(date_seq, create_daily_merra_data, cache = TRUE, cache_name = "merra_cache")
@@ -98,7 +103,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
 
 #' `create_daily_merra_data` downloads and computes MERRA PM2.5 data for a single day
 #' @return for `create_daily_merra_data()`, a tibble with columns for s2,
-#' date, and concentrations of PM2.5 total, dust, oc, bc, ss, so4 
+#' date, and concentrations of PM2.5 total, dust, oc, bc, ss, so4
 #' @export
 #' @rdname get_merra_data
 create_daily_merra_data <- function(merra_date) {
@@ -107,25 +112,26 @@ create_daily_merra_data <- function(merra_date) {
   earthdata_secrets <- Sys.getenv(c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"), unset = NA)
   if (any(is.na(earthdata_secrets))) stop("EARTHDATA_USERNAME or EARTHDATA_PASSWORD environment variables are unset", call. = FALSE)
   tf <- tempfile(fileext = ".nc4")
-  fs::path("https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
-    "M2T1NXAER.5.12.4",
-    format(the_date, "%Y"),
-    format(the_date, "%m"),
-    paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
-    ext = "nc4"
-  ) |>
+  req_url <-
+    fs::path("https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
+      "M2T1NXAER.5.12.4",
+      format(the_date, "%Y"),
+      format(the_date, "%m"),
+      paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
+      ext = "nc4"
+    )
+  if ((format(the_date, "%Y") == "2020" & format(the_date, "%m") == "09") ||
+        (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
+    req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
+  }
+  req_url |>
     httr2::request() |>
     httr2::req_auth_basic(
       username = earthdata_secrets["EARTHDATA_USERNAME"],
       password = earthdata_secrets["EARTHDATA_PASSWORD"]
     ) |>
+    httr2::req_cache(tempdir()) |>
     ## httr2::req_progress() |>
-    httr2::req_retry(max_tries = 3) |>
-    ## httr2::req_proxy("http://bmiproxyp.chmcres.cchmc.org",
-    ##   port = 80,
-    ##   username = Sys.getenv("CCHMC_USERNAME"),
-    ##   password = Sys.getenv("CCHMC_PASSWORD")
-    ## ) |>
     httr2::req_perform(path = tf)
   out <-
     tidync::tidync(tf) |>
@@ -150,6 +156,8 @@ create_daily_merra_data <- function(merra_date) {
   return(out)
 }
 
-utils::globalVariables(c("DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25",
-                         "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
-                         "merra_bc", "merra_ss", "merra_so4", "value"))
+utils::globalVariables(c(
+  "DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25",
+  "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
+  "merra_bc", "merra_ss", "merra_so4", "value"
+))
