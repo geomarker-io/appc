@@ -1,3 +1,7 @@
+.onLoad <- function(...) {
+  dir.create(tools::R_user_dir("appc", "data"), recursive = TRUE, showWarnings=FALSE)
+}
+
 #' Get the geography of the 2020 contiguous United States
 #' @return s2_geography object
 #' @export
