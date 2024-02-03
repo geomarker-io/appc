@@ -9,10 +9,11 @@ d_train <-
 
 pred_names <-
   c("x", "y",
-    "doy", "year",
+    "doy", "year", "month",
     "elevation_median_800", "elevation_sd_800",
     "total_aadt_m_400", "truck_aadt_m_400",
     "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
+    "impervious_400", "treecanopy_400",
     ## "merra_pm25",
     "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "nei_point_id2w_1000",

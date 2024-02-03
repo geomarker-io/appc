@@ -23,8 +23,7 @@ d <-
   tidyr::expand_grid(
     ## pollutant = c("pm25", "ozone", "no2"),
     pollutant = "pm25",
-    ## year = 2017:2023
-    year = c("2017", "2018", "2019", "2020", "2022", "2023")
+    year = 2017:2023
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
@@ -131,6 +130,6 @@ d <-
 
 d$year <- as.numeric(format(d$date, "%Y"))
 d$doy <- as.numeric(format(d$date, "%j"))
-# month?
+d$month <- as.numeric(format(d$date, "%m"))
 
 saveRDS(d, fs::path(fs::path_package("appc"), "training_data.rds"))
