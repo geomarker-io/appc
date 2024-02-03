@@ -1,26 +1,6 @@
 # getting daily merra from GES DISC works
 
     Code
-      create_daily_merra_data("2023-05-23")
-    Output
-      # A tibble: 4,800 x 7
-         merra_dust merra_oc merra_bc merra_ss merra_so4 merra_pm25 s2              
-              <dbl>    <dbl>    <dbl>    <dbl>     <dbl>      <dbl> <s2cell>        
-       1       1.46    0.308   0.0468     3.89     0.446       6.31 81a3f339877d0c5f
-       2       1.38    0.328   0.0503     4.57     0.497       7.02 81a43f437c7a310d
-       3       1.34    0.338   0.0524     4.92     0.534       7.39 81a5c74e7884f30b
-       4       1.31    0.347   0.0546     5.44     0.580       7.95 81af5de48e848ceb
-       5       1.34    0.356   0.0565     5.97     0.623       8.58 81af21e856572593
-       6       1.48    0.367   0.0582     6.33     0.658       9.14 81aebd9a839ae4f3
-       7       1.68    0.387   0.0616     7.10     0.686      10.2  81ac157723ad238b
-       8       1.89    0.417   0.0667     8.11     0.717      11.5  81ac8d385d99a58d
-       9       2.00    0.458   0.0729     9.27     0.741      12.8  81acb54e797c8449
-      10       2.03    0.500   0.0791    10.3      0.747      13.9  805372bafbb0d335
-      # i 4,790 more rows
-
----
-
-    Code
       create_daily_merra_data(merra_date = "2020-09-02")
     Output
       # A tibble: 4,800 x 7
