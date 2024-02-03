@@ -131,7 +131,6 @@ create_daily_merra_data <- function(merra_date) {
       password = earthdata_secrets["EARTHDATA_PASSWORD"]
     ) |>
     httr2::req_cache(tempdir()) |>
-    ## httr2::req_progress() |>
     httr2::req_perform(path = tf)
   out <-
     tidync::tidync(tf) |>

@@ -1,5 +1,5 @@
 #' Download pre-installed data from GitHub release
-#' 
+#'
 #' `install_smoke_pm_data()`, `install_merra_data()`, `install_traffic()`, and install_nei_point_data()`
 #' all download geospatial data directly from the provider and then transform or subset data into
 #' smaller files to be used by appc `get_*_data()` functions.
@@ -9,7 +9,7 @@
 #' These functions are utilized automatically by the geomarker assessment functions,
 #' but can be called without input data to install the geomarker data ahead of time,
 #' if external internet access is not possible after input data is added.
-#' *Note that some of the install functions require a system installation of `gdal`.* 
+#' *Note that some of the install functions require a system installation of `gdal`.*
 #'
 #' To turn *off* the default usage of downloading
 #' pre-generated data and to instead install data
@@ -20,15 +20,14 @@
 #' @keywords internal
 install_released_data <- function(released_data_name, package_version = utils::packageVersion("appc")) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), released_data_name)
-  glue::glue("https://github.com", "geomarker-io",
-             "appc", "releases", "download",
-             "v{package_version}",
-             released_data_name,
-             .sep = "/"
-             ) |>
-    httr2::request() |>
-    httr2::req_progress() |>
-    httr2::req_perform(path = dest_file)
+  dl_url <- glue::glue(
+    "https://github.com", "geomarker-io",
+    "appc", "releases", "download",
+    "v{package_version}",
+    released_data_name,
+    .sep = "/"
+  )
+  utils::download.file(dl_url, dest_file, quiet = FALSE)
 }
 
 #' install_source_preference()

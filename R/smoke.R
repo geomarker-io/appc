@@ -22,10 +22,7 @@ install_smoke_pm_data <- function() {
   }
   message("downloading and installing smoke PM data from source")
   tf <- tempfile()
-  "https://www.dropbox.com/sh/atmtfc54zuknnob/AAA7AVRQP-GoIMHpxlvfN7RBa?dl=1" |>
-    httr2::request() |>
-    httr2::req_progress() |>
-    httr2::req_perform(path = tf)
+  utils::download.file("https://www.dropbox.com/sh/atmtfc54zuknnob/AAA7AVRQP-GoIMHpxlvfN7RBa?dl=1", tf)
   d_smoke <-
     unz(tf, grep(".csv", utils::unzip(tf, list = TRUE)$Name, value = TRUE)) |>
     readr::read_csv(

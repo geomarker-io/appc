@@ -34,12 +34,8 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") 
     )[pollutant]
   file_name <- glue::glue("daily_{pollutant_code}_{year}.zip")
   on.exit(unlink(file_name))
-  # TODO change to httr or httr2
-  utils::download.file(
-    url = glue::glue("https://aqs.epa.gov/aqsweb/airdata/{file_name}"),
-    destfile = file_name,
-    quiet = TRUE
-  )
+  glue::glue("https://aqs.epa.gov/aqsweb/airdata/{file_name}") |>
+    utils::download.file(destfile = file_name, quiet = TRUE)
   unzipped_file_name <- gsub(pattern = ".zip", ".csv", file_name, fixed = TRUE)
   on.exit(unlink(unzipped_file_name), add = TRUE)
   utils::unzip(file_name)
@@ -64,7 +60,9 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") 
   return(d_out)
 }
 
-utils::globalVariables(c("Sample Duration", "Observation Percent",
-                         "State Code", "County Code", "Site Num",
-                         "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
-                         "lon", "lat", "conc"))
+utils::globalVariables(c(
+  "Sample Duration", "Observation Percent",
+  "State Code", "County Code", "Site Num",
+  "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
+  "lon", "lat", "conc"
+))
