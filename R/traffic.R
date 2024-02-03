@@ -56,9 +56,7 @@ install_traffic <- function() {
   message("downloading and installing HPMS data from source")
   dest_path <- tempfile(fileext = ".gdb.zip")
   "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data" |>
-    httr2::request() |>
-    httr2::req_progress() |>
-    httr2::req_perform(path = dest_path)
+    utils::download.file(dest_path)
   hpms_states <-
     sf::st_layers(dsn = dest_path)$name |>
     strsplit("_", fixed = TRUE) |>

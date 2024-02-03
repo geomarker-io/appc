@@ -48,7 +48,7 @@ install_impervious <- function(year = as.character(c(2019, 2016, 2013, 2011, 200
   message(glue::glue("downloading {year} NLCD impervious raster"))
   nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_impervious_{year}.zip"))
   glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_{year}_impervious_l48_20210604.zip") |>
-    httr::GET(httr::write_disk(nlcd_zip_path, overwrite = TRUE), httr::progress())
+    utils::download.file(nlcd_zip_path)
   nlcd_raw_paths <- utils::unzip(nlcd_zip_path, exdir = tempdir())
   message(glue::glue("converting {year} NLCD impervious raster"))
   system2(

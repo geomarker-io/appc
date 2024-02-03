@@ -51,7 +51,7 @@ install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m",
     "Datasets", "NARR", "Dailies", "monolevel",
     "{narr_var}.{narr_year}.nc",
     .sep = "/"
-  ) |> # TODO replace with httr2
+  ) |>
     utils::download.file(destfile = dest_file)
   return(dest_file)
 }
