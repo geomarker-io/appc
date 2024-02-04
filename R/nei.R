@@ -12,12 +12,13 @@
 #' @export
 #' @examples
 #' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
+#' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2017")
 get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
   year <- rlang::arg_match(year)
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   nei_data <- readRDS(install_nei_point_data(year = year))
   pollutant_code <- rlang::arg_match(pollutant_code)
-  message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
+  ## message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
   summarize_emissions <- function(i) {
     nei_data[withins[[i]], ] |>
@@ -54,7 +55,7 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
   dl_url <-
     dplyr::case_when(year == "2020" ~ "https://gaftp.epa.gov/air/nei/2020/data_summaries/Facility%20Level%20by%20Pollutant.zip",
                      year == "2017" ~ "https://gaftp.epa.gov/air/nei/2017/data_summaries/2017v1/2017neiJan_facility.zip")
-  utils::download.file(dl_url, dest_file, quiet = FALSE)
+  utils::download.file(dl_url, zip_path, quiet = FALSE)
   nei_raw_paths <- utils::unzip(zip_path, exdir = tempdir())
   grep(".csv", nei_raw_paths, fixed = TRUE, value = TRUE) |>
     readr::read_csv(col_types = readr::cols_only(

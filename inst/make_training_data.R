@@ -121,7 +121,7 @@ d <-
 
 # smoke
 d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010)
-d_smoke <- arrow::read_parquet(install_smoke_pm_data())
+d_smoke <- readRDS(install_smoke_pm_data())
 d <-
   d |>
   left_join(d_smoke, by = c("census_tract_id_2010", "date")) |>
