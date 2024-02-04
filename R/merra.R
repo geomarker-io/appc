@@ -33,7 +33,7 @@ get_merra_data <- function(x, dates) {
   d_merra <-
     dates |>
     unlist() |>
-    as.Date() |>
+    as.Date(origin = "1970-01-01") |>
     unique() |>
     format("%Y") |>
     unique() |>

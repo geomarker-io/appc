@@ -15,7 +15,7 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
   narr_raster <-
     dates |>
     unlist() |>
-    as.Date() |>
+    as.Date(origin = "1970-01-01") |>
     unique() |>
     format("%Y") |>
     unique() |>
