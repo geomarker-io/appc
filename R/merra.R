@@ -38,7 +38,7 @@ get_merra_data <- function(x, dates) {
     format("%Y") |>
     unique() |>
     purrr::map_chr(\(.) install_merra_data(merra_year = .)) |>
-    purrr::map(arrow::read_parquet) |>
+    purrr::map(readRDS) |>
     purrr::list_rbind() |>
     dplyr::nest_by(s2) |>
     dplyr::ungroup() |>
@@ -77,13 +77,13 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
     paste0(c("merra", merra_year), collapse = "_"),
-    ext = "parquet"
+    ext = "rds"
   )
   if (fs::file_exists(dest_file)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("merra_{merra_year}.parquet"))
+    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"))
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
@@ -97,7 +97,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
   tibble::enframe(merra_data, name = "date") |>
     dplyr::mutate(date = as.Date(date)) |>
     tidyr::unnest(cols = c(value)) |>
-    arrow::write_parquet(dest_file)
+    saveRDS(dest_file)
   return(as.character(dest_file))
 }
 

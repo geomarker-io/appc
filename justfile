@@ -39,7 +39,7 @@ upload_geo_data:
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2020.parquet"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2021.parquet"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2022.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2023.parquet"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2023.rds"
 
 # train grf model
 train:
