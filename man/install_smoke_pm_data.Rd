@@ -7,16 +7,16 @@
 install_smoke_pm_data()
 }
 \value{
-path to parquet file containing smoke data
+path to RDS file containing smoke data
 }
 \description{
-See the examples to read the installed parquet file.
+See the examples to read the installed RDS file.
 Merge this data with existing data on \code{date} and \code{census_tract_id_2010} to retrieve the
 \code{smoke_pm} column. Note that any census tract-date combination implicitly missing has a value of zero.
 }
 \examples{
 \dontrun{
-arrow::read_parquet(install_smoke_pm_data())
+readRDS(install_smoke_pm_data())
 }
 }
 \references{

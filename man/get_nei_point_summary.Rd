@@ -26,7 +26,7 @@ install_nei_point_data(year = c("2020", "2017"))
 \value{
 for \code{get_nei_point_summary()}, a numeric vector (the same length as \code{x})
 
-for \code{get_nei_point_data()}, a character string path to NEI point data parquet file
+for \code{get_nei_point_data()}, a character string path to NEI point data RDS file
 }
 \description{
 National Emissions Inventory (NEI) data is summarized as the sum of all point emissions within the

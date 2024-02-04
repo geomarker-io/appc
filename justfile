@@ -29,16 +29,16 @@ upload_grf:
 geomarker_folder := `Rscript -e "cat(tools::R_user_dir('appc', 'data'))"`
 # upload precomputed geomarker data to current github release
 upload_geo_data:
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/smoke.parquet"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/smoke.rds"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/hpms_f123_aadt.rds"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/nei_2020.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/nei_2017.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2017.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2018.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2019.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2020.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2021.parquet"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2022.parquet"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/nei_2020.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/nei_2017.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2017.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2018.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2019.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2020.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2021.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2022.rds"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2023.rds"
 
 # train grf model

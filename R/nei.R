@@ -15,7 +15,7 @@
 get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
   year <- rlang::arg_match(year)
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
-  nei_data <- arrow::read_parquet(install_nei_point_data(year = year))
+  nei_data <- readRDS(install_nei_point_data(year = year))
   pollutant_code <- rlang::arg_match(pollutant_code)
   message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
@@ -34,7 +34,7 @@ get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = 
 }
 
 #' Installs NEI point data into user's data directory for the `appc` package
-#' @return for `get_nei_point_data()`, a character string path to NEI point data parquet file
+#' @return for `get_nei_point_data()`, a character string path to NEI point data RDS file
 #' @details The NEI file is downloaded, unzipped, and filtered to observations
 #' with a pollutant code of `EC`, `OC`, `SO4`, `NO3`, `PMFINE`, or `PM25-PRI`.
 #' Latitude and longitude are encoded as an s2 vector, column names are cleaned,
@@ -43,10 +43,10 @@ get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = 
 #' @export
 install_nei_point_data <- function(year = c("2020", "2017")) {
   year <- rlang::arg_match(year)
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nei_{year}.parquet"))
+  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nei_{year}.rds"))
   if (file.exists(dest_file)) return(dest_file)
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("nei_{year}.parquet"))
+    install_released_data(released_data_name = glue::glue("nei_{year}.rds"))
     return(as.character(dest_file))
   }
   message(glue::glue("downloading {year} NEI file"))
@@ -70,7 +70,7 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
     dplyr::select(-`site latitude`, -`site longitude`) |>
     dplyr::rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
     stats::na.omit() |>
-    arrow::write_parquet(dest_file)
+    saveRDS(dest_file)
   return(as.character(dest_file))
 }
 
