@@ -51,23 +51,21 @@ release_smoke_data:
 # install traffic data from source and upload to github release
 release_traffic_data:
   rm -f "{{geomarker_folder}}/hpms_f123_aadt.rds"
-  R --quiet -e \
-    "devtools::load_all(); \
-     options('appc_install_data_from_source' = TRUE); \
-     options('timeout' = 3000); \
-     install_traffic()"
+  Rscript \
+    -e "devtools::load_all()" \
+    -e "options('appc_install_data_from_source' = TRUE)" \
+    -e "options('timeout' = 3000)" \
+    -e "install_traffic()"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/hpms_f123_aadt.rds"
 
-# install merra data from source and upload to github release
+# upload merra data to github release
 release_merra_data:
-  export APPC_INSTALL_DATA_FROM_SOURCE=TRUE
-  rm "{{geomarker_folder}}/merra_2017.rds"
-  R -f -e "install_merra_data('2017')"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2017.rds"
-  rm "{{geomarker_folder}}/merra_2018.rds"
-  R -f -e "install_merra_data('2018')"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2018.rds"
-  rm "{{geomarker_folder}}/merra_2017.rds"
-  R -f -e "install_merra_data('2017')"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_2017.rds"
+  for year in 2017 2018 2019 2020 2021 2022 2023; do \
+    rm -f ~/.local/share/R/appc/merra_$year.rds \
+    Rscript \
+      -e "appc::install_merra_data('$year')" \
+      -e "devtools::load_all()" \
+      -e "options('appc_install_data_from_source' = TRUE)" \
+    gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_$year.rds" \
+  done
 
