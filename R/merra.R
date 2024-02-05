@@ -14,6 +14,8 @@
 #' converted to micrograms per cubic meter ($ug/m^3$).
 #' - Total surface PM2.5 mass is calculated according to
 #' the formula in <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
+#' Set a proxy to be used by all {httr} calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`; e.g.
+#' `httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))`
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the MERRA data, must be the same length as `x`
 #' @param merra_year a character string that is the year for the merra data
@@ -116,24 +118,20 @@ create_daily_merra_data <- function(merra_date) {
   tf <- tempfile(fileext = ".nc4")
   req_url <-
     fs::path("https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
-      "M2T1NXAER.5.12.4",
-      format(the_date, "%Y"),
-      format(the_date, "%m"),
-      paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
-      ext = "nc4"
-    )
+             "M2T1NXAER.5.12.4",
+             format(the_date, "%Y"),
+             format(the_date, "%m"),
+             paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
+             ext = "nc4")
   if ((format(the_date, "%Y") == "2020" & format(the_date, "%m") == "09") ||
         (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
     req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
   }
-  req_url |>
-    httr2::request() |>
-    httr2::req_auth_basic(
-      username = earthdata_secrets["EARTHDATA_USERNAME"],
-      password = earthdata_secrets["EARTHDATA_PASSWORD"]
-    ) |>
-    httr2::req_cache(tempdir()) |>
-    httr2::req_perform(path = tf)
+  httr::GET(
+    req_url,
+    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
+    httr::write_disk(tf)
+  )
   out <-
     tidync::tidync(tf) |>
     tidync::hyper_filter(
