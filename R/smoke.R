@@ -1,23 +1,23 @@
 #' Installs daily, census-tract level smoke pm data into user's data directory for the `appc` package
 #'
-#' See the examples to read the installed parquet file.
+#' See the examples to read the installed RDS file.
 #' Merge this data with existing data on `date` and `census_tract_id_2010` to retrieve the
 #' `smoke_pm` column. Note that any census tract-date combination implicitly missing has a value of zero.
 #' @references <https://pubmed.ncbi.nlm.nih.gov/36134580/>
 #' @references <https://github.com/echolab-stanford/daily-10km-smokePM>
-#' @return path to parquet file containing smoke data
+#' @return path to RDS file containing smoke data
 #' @export
 #' @examples
 #' \dontrun{
-#' arrow::read_parquet(install_smoke_pm_data())
+#' readRDS(install_smoke_pm_data())
 #' }
 install_smoke_pm_data <- function() {
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.parquet")
+  dest_file <- fs::path(tools::R_user_dir("appc", "data"), "smoke.rds")
   if (file.exists(dest_file)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = "smoke.parquet")
+    install_released_data(released_data_name = "smoke.rds")
     return(as.character(dest_file))
   }
   message("downloading and installing smoke PM data from source")
@@ -37,7 +37,7 @@ install_smoke_pm_data <- function() {
       smoke_pm = smokePM_pred
     ) |>
     dplyr::filter(date > as.Date("2015-12-31"))
-  arrow::write_parquet(d_smoke, dest_file)
+  saveRDS(d_smoke, dest_file)
   return(as.character(dest_file))
 }
 

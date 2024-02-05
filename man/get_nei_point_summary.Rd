@@ -26,7 +26,7 @@ install_nei_point_data(year = c("2020", "2017"))
 \value{
 for \code{get_nei_point_summary()}, a numeric vector (the same length as \code{x})
 
-for \code{get_nei_point_data()}, a character string path to NEI point data parquet file
+for \code{get_nei_point_data()}, a character string path to NEI point data RDS file
 }
 \description{
 National Emissions Inventory (NEI) data is summarized as the sum of all point emissions within the
@@ -40,6 +40,7 @@ and rows with missing values (including total emissions or emissions units) are 
 }
 \examples{
 get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
+get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2017")
 }
 \references{
 \url{https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei}

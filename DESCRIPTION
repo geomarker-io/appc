@@ -20,7 +20,6 @@ Imports:
     purrr,
     tigris,
     sf,
-    arrow,
     terra,
     fs,
     httr,
