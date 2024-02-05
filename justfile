@@ -26,46 +26,30 @@ report:
 
 # install nei data from source and upload to github release
 release_nei_data:
-  rm -f "{{geomarker_folder}}/nei_2017.rds"
-  Rscript \
-  -e "devtools::load_all()" \
-  -e "options('appc_install_data_from_source' = TRUE)" \
-  -e "install_nei_point_data('2017')"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/nei_2017.rds"
-  rm -f "{{geomarker_folder}}/nei_2020.rds"
-  Rscript \
-    -e "devtools::load_all()" \
-    -e "options('appc_install_data_from_source' = TRUE)" \
-    -e "install_nei_point_data('2020')"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/nei_2020.rds"
+  for year in 2017 2020; do \
+    rm -f "{{geomarker_folder}}"/nei_$year.rds; \
+    APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_nei_point_data('$year')"; \
+    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/nei_$year.rds; \
+  done
 
 # install smoke data from source and upload to github release
 release_smoke_data:
   rm -f "{{geomarker_folder}}/smoke.rds"
-  Rscript \
-    -e "devtools::load_all()" \
-    -e "options('appc_install_data_from_source' = TRUE)" \
-    -e "install_smoke_pm_data()"
+  APPC_INSTALL_DATA_FROM_SOURCE=1 \
+    Rscript -e "install_smoke_pm_data()"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/smoke.rds"
 
 # install traffic data from source and upload to github release
 release_traffic_data:
   rm -f "{{geomarker_folder}}/hpms_f123_aadt.rds"
-  Rscript \
-    -e "devtools::load_all()" \
-    -e "options('appc_install_data_from_source' = TRUE)" \
-    -e "options('timeout' = 3000)" \
-    -e "install_traffic()"
+  APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "merra::install_traffic()"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/hpms_f123_aadt.rds"
 
 # upload merra data to github release
 release_merra_data:
-  for year in 2017 2018 2019 2020 2021 2022 2023; do \
-    rm -f ~/.local/share/R/appc/merra_$year.rds \
-    Rscript \
-      -e "appc::install_merra_data('$year')" \
-      -e "devtools::load_all()" \
-      -e "options('appc_install_data_from_source' = TRUE)" \
-    gh release upload v{{pkg_version}} "{{geomarker_folder}}/merra_$year.rds" \
+  for year in {2017..2023}; do \
+    rm -f "{{geomarker_folder}}"/merra_$year.rds; \
+    APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_merra_data('$year')"; \
+    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/merra_$year.rds; \
   done
 
