@@ -7,6 +7,7 @@ if(!require(appc)) devtools::load_all()
 ## # download any geomarker data ahead of time, if not already cached
 ## c(
 ##   install_elevation_data(),
+##   install_traffic(),
 ##   tidyr::expand_grid(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
 ##                      narr_year = as.character(2017:2023)) |>
 ##     purrr::pmap_chr(install_narr_data),
