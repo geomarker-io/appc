@@ -86,7 +86,7 @@ buffer distance of each s2 geohash weighted by the inverse of the distance squar
 <p>for <code>get_nei_point_summary()</code>, a numeric vector (the same length as <code>x</code>)</p>
 
 
-<p>for <code>get_nei_point_data()</code>, a character string path to NEI point data parquet file</p>
+<p>for <code>get_nei_point_data()</code>, a character string path to NEI point data RDS file</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -104,8 +104,9 @@ and rows with missing values (including total emissions or emissions units) are 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_nei_point_summary</span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b399ced97c47"</span>, <span class="st">"8841b38578834123"</span><span class="op">)</span><span class="op">)</span>, year <span class="op">=</span> <span class="st">"2020"</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> intersecting 2020 PM25-PRI NEI point sources within 1000 meters</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.302855e-05 1.770889e-05</span>
+<span class="r-in"><span><span class="fu">get_nei_point_summary</span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b399ced97c47"</span>, <span class="st">"8841b38578834123"</span><span class="op">)</span><span class="op">)</span>, year <span class="op">=</span> <span class="st">"2017"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.140541e-05 1.894630e-05</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
