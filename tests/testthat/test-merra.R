@@ -1,5 +1,3 @@
-skip()
-
 test_that("get_merra_data works", {
   d <- list(
     "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),

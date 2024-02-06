@@ -35,8 +35,7 @@ release_nei_data:
 # install smoke data from source and upload to github release
 release_smoke_data:
   rm -f "{{geomarker_folder}}/smoke.rds"
-  APPC_INSTALL_DATA_FROM_SOURCE=1 \
-    Rscript -e "install_smoke_pm_data()"
+  APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "install_smoke_pm_data()"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/smoke.rds"
 
 # install traffic data from source and upload to github release
