@@ -1,4 +1,4 @@
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 library(s2)
 library(purrr)
 library(tidyr)
@@ -60,8 +60,8 @@ d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = sd, buffer = 800)
 
 # aadt
 d$traffic_400 <- get_traffic_summary(d$s2, buffer = 400)
-d$total_aadt_m_400 <- purrr::map_dbl(d$traffic_400, "total_aadt_m")
-d$truck_aadt_m_400 <- purrr::map_dbl(d$traffic_400, "truck_aadt_m")
+d$aadt_total_m_400 <- purrr::map_dbl(d$traffic_400, "aadt_total_m")
+d$aadt_truck_m_400 <- purrr::map_dbl(d$traffic_400, "aadt_truck_m")
 d$traffic_400 <- NULL
 
 # narr
