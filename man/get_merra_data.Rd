@@ -47,6 +47,8 @@ around the contiguous US, averaged to daily values, and
 converted to micrograms per cubic meter ($ug/m^3$).
 \item Total surface PM2.5 mass is calculated according to
 the formula in \url{https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4}
+Set a proxy to be used by all {httr} calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}; e.g.
+\code{httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))}
 }
 }
 \examples{
