@@ -31,6 +31,7 @@ get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = 
       as.double()
   }
   nei_pollutant_id2w <- purrr::map_dbl(1:length(withins), summarize_emissions, .progress = "summarizing intersections")
+  # TODO set names of output object?
   return(nei_pollutant_id2w)
 }
 

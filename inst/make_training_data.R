@@ -50,7 +50,6 @@ d <- d |>
     )
   )
 
-# coords TODO transform to projected coordinates?
 d <- d |>
   mutate(x = s2_x(s2_cell_to_lnglat(s2)),
          y = s2_y(s2_cell_to_lnglat(s2)))

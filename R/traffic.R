@@ -16,23 +16,29 @@
 get_traffic_summary <- function(x, buffer = 400) {
   aadt_data <-
     readRDS(install_traffic()) |>
-    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2, level = 15)) |>
+    dplyr::transmute(
+      s2_centroid,
+      length,
+      aadt_total = AADT,
+      aadt_truck = sum(AADT_SINGLE_UNIT, AADT_COMBINATION, na.rm = TRUE)
+    ) |>
+    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2_centroid, level = 15)) |>
     dplyr::summarize(
-      total_aadt_m = sum(total_aadt_m),
-      truck_aadt_m = sum(truck_aadt_m)
+      aadt_total_m = sum(aadt_total * length, na.rm = TRUE),
+      aadt_truck_m = sum(aadt_truck * length, na.rm = TRUE)
     )
   ## sqrt(median(s2::s2_cell_area(aadt_data$s2_parent)))
   # s2 level 16 are 130 m sq
   # s2 level 15 are 260 m sq
   # s2 level 14 are 521 m sq
   xx <- unique(x)
-  message("intersecting with AADT data using level 15 s2 approximation ( ~ 260 m sq)")
+  message("intersecting with AADT data using level 15 s2 approximation ( ~ 260 sq m)")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
   summarize_traffic <- function(i) {
     aadt_data[withins[[i]], ] |>
       dplyr::summarize(
-        total_aadt_m = sum(total_aadt_m),
-        truck_aadt_m = sum(truck_aadt_m)
+        aadt_total_m = sum(aadt_total_m),
+        aadt_truck_m = sum(aadt_truck_m)
       ) |>
       as.list()
   }
