@@ -104,7 +104,9 @@ using the dotenv package.</p></li>
 around the contiguous US, averaged to daily values, and
 converted to micrograms per cubic meter ($ug/m^3$).</p></li>
 <li><p>Total surface PM2.5 mass is calculated according to
-the formula in <a href="https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4" class="external-link">https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4</a></p></li>
+the formula in <a href="https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4" class="external-link">https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4</a>
+Set a proxy to be used by all httr calls in the merra functions with <code>httr::set_config(httr::use_proxy( ... ))</code>; e.g.
+<code>httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))</code></p></li>
 </ul></div>
 
     <div class="section level2">
