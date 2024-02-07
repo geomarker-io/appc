@@ -6,7 +6,12 @@ date: "`r Sys.Date()`"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
-if(!require(appc)) devtools::load_all()
+# load development version if developing (instead of currently installed version)
+if (basename(getwd()) == "inst") {
+  devtools::load_all()
+} else {
+  library(appc)
+}
 library(grf)
 library(dplyr)
 library(ggplot2)
@@ -25,28 +30,16 @@ the_theme <-
 ```
 
 ```{r "load model and predictions"}
-d_train <- readRDS(fs::path(fs::path_package("appc"), "training_data.rds"))
 grf <- readRDS(fs::path(fs::path_package("appc"), "rf_pm.rds"))
+d_train <- readRDS(fs::path(fs::path_package("appc"), "training_data.rds"))
 ```
 
 ## Variable Importance
 
 ```{r "variable importance"}
-
-pred_names <-
-  c("x", "y",
-    "doy", "year", "month",
-    "elevation_median_800", "elevation_sd_800",
-    "aadt_total_m_400", "aadt_truck_m_400",
-    "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
-    "impervious_400", "treecanopy_400",
-    ## "merra_pm25",
-    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
-    "nei_point_id2w_1000",
-    "smoke_pm")
-
+pred_names <- names(grf$X.orig)
 tibble(importance = round(variable_importance(grf), 3),
-       variable = names(select(d_train, all_of(pred_names)))) |>
+       variable = pred_names) |>
   arrange(desc(importance)) |>
   knitr::kable()
 ```
