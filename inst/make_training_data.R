@@ -4,7 +4,7 @@ library(purrr)
 library(tidyr)
 
 # load development version if developing (instead of currently installed version)
-if (file.exists("./inst/make_training_data.R")) {
+if (file.exists("./inst")) {
   devtools::load_all()
 } else {
   library(appc)
