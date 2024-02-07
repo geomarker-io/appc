@@ -2,7 +2,13 @@ library(dplyr, warn.conflicts = FALSE)
 library(s2)
 library(purrr)
 library(tidyr)
-if(!require(appc)) devtools::load_all()
+
+# load development version if developing (instead of currently installed version)
+if (file.exists("./inst/make_training_data.R")) {
+  devtools::load_all()
+} else {
+  library(appc)
+}
 
 ## # download any geomarker data ahead of time, if not already cached
 ## c(

@@ -1,6 +1,5 @@
 library(dplyr, warn.conflicts = FALSE)
 library(grf)
-if(!require(appc)) devtools::load_all()
 
 message("loading training data...")
 d_train <-
@@ -8,7 +7,8 @@ d_train <-
   filter(pollutant == "pm25")
 
 pred_names <-
-  c("x", "y",
+  c(
+    "x", "y",
     "doy", "year", "month",
     "elevation_median_800", "elevation_sd_800",
     "total_aadt_m_400", "truck_aadt_m_400",
@@ -17,7 +17,8 @@ pred_names <-
     ## "merra_pm25",
     "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "nei_point_id2w_1000",
-    "smoke_pm")
+    "smoke_pm"
+  )
 
 message("training GRF...")
 grf <-
@@ -55,7 +56,9 @@ message("Cor = ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman
 message("tuning output:")
 grf$tuning.output
 
-tibble(importance = round(variable_importance(grf), 3),
-       variable = names(select(d_train, all_of(pred_names)))) |>
+tibble(
+  importance = round(variable_importance(grf), 3),
+  variable = names(select(d_train, all_of(pred_names)))
+) |>
   arrange(desc(importance)) |>
   knitr::kable()
