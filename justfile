@@ -9,11 +9,11 @@ docker_test:
 
 # make training data
 make_training_data:
-  Rscript inst/make_training_data.R
+  Rscript --verbose inst/make_training_data.R
 
 # train grf model
 train:
-  Rscript inst/train_model.R
+  Rscript --verbose inst/train_model.R
 
 # upload grf model to current github release
 upload_grf:
