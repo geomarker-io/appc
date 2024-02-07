@@ -1,7 +1,14 @@
 library(dplyr, warn.conflicts = FALSE)
 library(grf)
+# load development version if developing (instead of currently installed version)
+if (file.exists("./inst/make_training_data.R")) {
+  devtools::load_all()
+} else {
+  library(appc)
+}
 
 message("loading training data...")
+message(fs::path(fs::path_package("appc"), "training_data.rds"))
 d_train <-
   readRDS(fs::path(fs::path_package("appc"), "training_data.rds")) |>
   filter(pollutant == "pm25")
@@ -11,7 +18,7 @@ pred_names <-
     "x", "y",
     "doy", "year", "month",
     "elevation_median_800", "elevation_sd_800",
-    "total_aadt_m_400", "truck_aadt_m_400",
+    "aadt_total_m_400", "aadt_truck_m_400",
     "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
     "impervious_400", "treecanopy_400",
     ## "merra_pm25",
