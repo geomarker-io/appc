@@ -2,6 +2,8 @@
 justfile
 Dockerfile
 model
+inst/rf_pm.rds
+inst/training_data.rds
 ^\.github$
 ^codecov\.yml$
 ^.env$
