@@ -93,4 +93,5 @@ install_traffic <- function() {
   return(as.character(out_path))
 }
 
-utils::globalVariables(c("total_aadt_m", "truck_aadt_m", "Shape"))
+utils::globalVariables(c("aadt_total", "aadt_total_m", "aadt_truck", "aadt_truck_m",
+                         "AADT", "AADT_COMBINATION", "AADT_SINGLE_UNIT", "Shape", "s2_centroid"))

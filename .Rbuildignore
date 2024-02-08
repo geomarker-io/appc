@@ -1,6 +1,4 @@
 ^LICENSE\.md$
-inst/training_data.rds
-inst/rf_pm.rds
 justfile
 Dockerfile
 model
