@@ -45,6 +45,10 @@ install_impervious <- function(year = as.character(c(2019, 2016, 2013, 2011, 200
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nlcd_impervious_{year}.tif"))
   if (file.exists(dest_file)) return(dest_file)
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = glue::glue("nlcd_impervious_{year}.rds"))
+    return(as.character(dest_file))
+  }
   message(glue::glue("downloading {year} NLCD impervious raster"))
   nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_impervious_{year}.zip"))
   glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_{year}_impervious_l48_20210604.zip") |>
@@ -53,7 +57,8 @@ install_impervious <- function(year = as.character(c(2019, 2016, 2013, 2011, 200
   message(glue::glue("converting {year} NLCD impervious raster"))
   system2(
     "gdal_translate",
-    c("-of COG",
+    c("-of GTiff",
+      "-co COMPRESS=DEFLATE",
       grep(".img", nlcd_raw_paths, fixed = TRUE, value = TRUE),
       shQuote(dest_file))
   )
@@ -69,16 +74,20 @@ install_treecanopy <- function(year = as.character(2021:2011)) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nlcd_treecanopy_{year}.tif"))
   if (file.exists(dest_file)) return(dest_file)
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = glue::glue("nlcd_treecanopy_{year}.rds"))
+    return(as.character(dest_file))
+  }
   message(glue::glue("downloading {year} NLCD treecanopy raster"))
   nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_treecanopy_{year}.zip"))
   glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/nlcd_tcc_CONUS_{year}_v2021-4.zip") |>
-    httr::GET(httr::write_disk(nlcd_zip_path), httr::progress(), overwrite = TRUE)
+    utils::download.file(nlcd_zip_path)
   nlcd_raw_paths <- utils::unzip(nlcd_zip_path, exdir = tempdir())
   message(glue::glue("converting {year} NLCD treecanopy raster"))
   system2(
     "gdal_translate",
-    c("-of COG",
-      "-co BIGTIFF=YES",
+    c("-of GTiff",
+      "-co COMPRESS=DEFLATE",
       grep(".tif$", nlcd_raw_paths, value = TRUE),
       shQuote(dest_file))
   )

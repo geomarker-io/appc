@@ -18,7 +18,7 @@ dl_geomarker_data:
   install_smoke_pm_data()
   purrr::map_chr(as.character(2017:2023), install_merra_data)
   
-# run tests without cached geomarker files
+# run tests without cached release files
 docker_test:
   docker build -t appc .
 
@@ -39,6 +39,22 @@ report:
   R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd')"
   open inst/APPC_prediction_evaluation.html
 
+# install nlcd treecanopy data from source and upload to github release
+release_treecanopy_data:
+  for year in 2017 2018 2019 2020 2021; do \
+    rm -f "{{geomarker_folder}}"/nlcd_treecanopy_$year.tif; \
+    APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_treecanopy('$year')"; \
+    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/nlcd_treecanopy_$year.tif; \
+  done
+
+# install nlcd treecanopy data from source and upload to github release
+release_impervious_data:
+  for year in 2016 2019; do \
+    rm -f "{{geomarker_folder}}"/nlcd_impervious_$year.tif; \
+    APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_impervious('$year')"; \
+    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/nlcd_impervious_$year.tif; \
+  done
+
 # install nei data from source and upload to github release
 release_nei_data:
   for year in 2017 2020; do \
@@ -56,7 +72,7 @@ release_smoke_data:
 # install traffic data from source and upload to github release
 release_traffic_data:
   rm -f "{{geomarker_folder}}/hpms_f123_aadt.rds"
-  APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "merra::install_traffic()"
+  APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_traffic()"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/hpms_f123_aadt.rds"
 
 # upload merra data to github release

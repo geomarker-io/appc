@@ -20,6 +20,9 @@ library(appc)
 # get_nlcd_summary(x, "treecanopy", buffer = 750)
 ```
 
+Pre-installed geomarker data for years in the air pollution models (2017 - current) are included in the GitHub release. 
+Older years for some data can still be used with `install_xxxxxxx()` functions, but will install directly from the source.
+
 ### Exposure Assessment Model Details
 
 - Exact s2 location, contiguous United States
