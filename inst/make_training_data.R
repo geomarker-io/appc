@@ -82,7 +82,7 @@ d$urban_imperviousness_400 <-
   purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 400)) |>
   setNames(impervious_years) |>
   purrr::list_transpose()
-d$urban_imperviousness_400 <- map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
+d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
 
 # nei
 nei_years <- c("2017", "2020")
@@ -98,7 +98,7 @@ d <-
   tidyr::unnest(cols = c(dates, conc, air.2m, hpbl, acpcp,
                          rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
                          merra_dust, merra_oc, merra_bc, merra_ss, merra_so4, merra_pm25,
-                         impervious_400, treecanopy_400,
+                         urban_imperviousness_400,
                          nei_point_id2w_1000)) |>
   rename(date = dates)
 
