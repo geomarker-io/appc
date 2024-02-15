@@ -115,4 +115,4 @@ d$year <- as.numeric(format(d$date, "%Y"))
 d$doy <- as.numeric(format(d$date, "%j"))
 d$month <- as.numeric(format(d$date, "%m"))
 
-saveRDS(d, fs::path(fs::path_package("appc"), "training_data.rds"))
+saveRDS(d, fs::path_wd("training_data.rds"))

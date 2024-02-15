@@ -31,7 +31,7 @@ train:
 
 # upload grf model to current github release
 upload_grf:
-  gh release upload v{{pkg_version}} "inst/rf_pm.rds"
+  gh release upload v{{pkg_version}} "rf_pm.rds"
 
 # create CV accuracy report
 report:

@@ -8,9 +8,9 @@ if (file.exists("./inst")) {
 }
 
 message("loading training data...")
-message(fs::path(fs::path_package("appc"), "training_data.rds"))
+message(fs::path_wd("training_data.rds"))
 d_train <-
-  readRDS(fs::path(fs::path_package("appc"), "training_data.rds")) |>
+  readRDS(fs::path_wd("training_data.rds")) |>
   filter(pollutant == "pm25")
 
 pred_names <-
@@ -52,7 +52,7 @@ grf <-
   )
 
 message("saving GRF...")
-file_output_path <- fs::path(fs::path_package("appc"), "rf_pm.rds")
+file_output_path <- fs::path_wd("rf_pm.rds")
 saveRDS(grf, file_output_path)
 message("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
 

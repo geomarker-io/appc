@@ -18,9 +18,8 @@ predict_pm25 <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
   if(!file.exists(grf_file)) install_released_data("rf_pm.rds")
-  grf <- readRDS(grf_file)
   message("loading random forest model...")
-  grf <- readRDS(fs::path(fs::path_package("appc"), "rf_pm.rds"))
+  grf <- readRDS(grf_file)
   required_predictors <- names(grf$X.orig)
 
   # create all columns required for rf_model
