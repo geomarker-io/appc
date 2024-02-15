@@ -13,8 +13,7 @@ dl_geomarker_data:
                      narr_year = as.character(2017:2023)) |>
     purrr::pmap_chr(install_narr_data)
   purrr::map_chr(c("2017", "2020"), install_nei_point_data)
-  purrr::map_chr(c("2016", "2019"), install_impervious)
-  purrr::map_chr(as.character(2016:2021), install_treecanopy)
+  purrr::map_chr(c("2016", "2019", "2021"), install_urban_imperviousness)
   install_smoke_pm_data()
   purrr::map_chr(as.character(2017:2023), install_merra_data)
   
@@ -39,20 +38,12 @@ report:
   R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd')"
   open inst/APPC_prediction_evaluation.html
 
-# install nlcd treecanopy data from source and upload to github release
-release_treecanopy_data:
-  for year in 2017 2018 2019 2020 2021; do \
-    rm -f "{{geomarker_folder}}"/nlcd_treecanopy_$year.tif; \
-    APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_treecanopy('$year')"; \
-    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/nlcd_treecanopy_$year.tif; \
-  done
-
-# install nlcd treecanopy data from source and upload to github release
-release_impervious_data:
-  for year in 2016 2019; do \
-    rm -f "{{geomarker_folder}}"/nlcd_impervious_$year.tif; \
+# install nlcd urban imperviousness data from source and upload to github release
+release_urban_imperviousness_data:
+  for year in 2016 2019 2021; do \
+    rm -f "{{geomarker_folder}}"/urban_imperviousness_$year.tif; \
     APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "appc::install_impervious('$year')"; \
-    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/nlcd_impervious_$year.tif; \
+    gh release upload v{{pkg_version}} "{{geomarker_folder}}"/urban_imperviousness_$year.tif; \
   done
 
 # install nei data from source and upload to github release
