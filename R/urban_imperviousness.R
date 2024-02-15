@@ -51,10 +51,10 @@ install_urban_imperviousness <- function(year = as.character(c(2021, 2019, 2016)
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("urban_imperviousness_{year}.tif"))
   if (file.exists(dest_file)) return(dest_file)
-  ## if (!install_source_preference()) {
-  ##   install_released_data(released_data_name = glue::glue("nlcd_impervious_{year}.rds"))
-  ##   return(as.character(dest_file))
-  ## }
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = glue::glue("urban_imperviousness_{year}.rds"))
+    return(as.character(dest_file))
+  }
   message(glue::glue("downloading {year} NLCD impervious raster"))
   nlcd_zip_path <- fs::path(tempdir(), glue::glue("nlcd_impervious_{year}.zip"))
   dplyr::case_when(
