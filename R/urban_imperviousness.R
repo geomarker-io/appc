@@ -18,7 +18,10 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' get_urban_imperviousness(x = s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2021")
+#' get_urban_imperviousness(
+#'   x = s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+#'   year = "2021"
+#' )
 #' }
 get_urban_imperviousness <- function(x, year, buffer = 400) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
@@ -44,6 +47,7 @@ get_urban_imperviousness <- function(x, year, buffer = 400) {
 }
 
 #' `install_urban_imperviousness()` installs NLCD urban imperviousness raster data into user's data directory for the `appc` package
+#' @param year a character string that is the year of the urban imperviousness data
 #' @return for `install_impervious()`, a character string path to impervious raster data
 #' @rdname get_nlcd_summary
 #' @export
@@ -74,3 +78,5 @@ install_urban_imperviousness <- function(year = as.character(c(2021, 2019, 2016)
   )
   return(dest_file)
 }
+
+utils::globalVariables(c("urban_imperviousness_400"))

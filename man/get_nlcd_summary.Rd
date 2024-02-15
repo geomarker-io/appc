@@ -6,6 +6,9 @@
 \usage{
 install_urban_imperviousness(year = as.character(c(2021, 2019, 2016)))
 }
+\arguments{
+\item{year}{a character string that is the year of the urban imperviousness data}
+}
 \value{
 for \code{install_impervious()}, a character string path to impervious raster data
 }
