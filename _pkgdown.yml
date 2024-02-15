@@ -13,6 +13,7 @@ reference:
   - get_merra_data
   - install_smoke_pm_data
 - title: Air pollution assessment
+  contents:
   - predict_pm25
 - title: Helpers
   contents:
