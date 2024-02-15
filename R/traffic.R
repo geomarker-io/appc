@@ -4,7 +4,7 @@
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates
-#' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
+#' @details A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms.cfm>
 #' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf>
