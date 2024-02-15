@@ -78,11 +78,11 @@ d$merra <- NULL
 
 # urban imperviousness
 impervious_years <- c("2016", "2019", "2021")
-d$urban_impervious_400 <-
+d$urban_imperviousness_400 <-
   purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 400)) |>
   setNames(impervious_years) |>
   purrr::list_transpose()
-d$urban_imperviousness_400 <- map2(d$dates, d$urban_impervious_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
+d$urban_imperviousness_400 <- map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
 
 # nei
 nei_years <- c("2017", "2020")
