@@ -49,14 +49,14 @@ get_urban_imperviousness <- function(x, year, buffer = 400) {
 #' `install_urban_imperviousness()` installs NLCD urban imperviousness raster data into user's data directory for the `appc` package
 #' @param year a character string that is the year of the urban imperviousness data
 #' @return for `install_impervious()`, a character string path to impervious raster data
-#' @rdname get_nlcd_summary
+#' @rdname get_urban_imperviousness
 #' @export
 install_urban_imperviousness <- function(year = as.character(c(2021, 2019, 2016))) {
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("urban_imperviousness_{year}.tif"))
   if (file.exists(dest_file)) return(dest_file)
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("urban_imperviousness_{year}.rds"))
+    install_released_data(released_data_name = glue::glue("urban_imperviousness_{year}.tif"))
     return(as.character(dest_file))
   }
   message(glue::glue("downloading {year} NLCD impervious raster"))

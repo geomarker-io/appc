@@ -2,9 +2,12 @@
 % Please edit documentation in R/urban_imperviousness.R
 \name{get_urban_imperviousness}
 \alias{get_urban_imperviousness}
+\alias{install_urban_imperviousness}
 \title{Get average buffered urban imperviousness}
 \usage{
 get_urban_imperviousness(x, year, buffer = 400)
+
+install_urban_imperviousness(year = as.character(c(2021, 2019, 2016)))
 }
 \arguments{
 \item{x}{a vector of s2 cell identifiers (\code{s2_cell} object)}
@@ -15,6 +18,8 @@ get_urban_imperviousness(x, year, buffer = 400)
 }
 \value{
 for \code{get_urban_imperviousness()}, a numeric vector the same length as \code{x}
+
+for \code{install_impervious()}, a character string path to impervious raster data
 }
 \description{
 The percent urban imperviousness of each NLCD 30 x 30 m cell within \code{buffer} meters of
