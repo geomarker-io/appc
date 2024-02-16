@@ -18,5 +18,5 @@ a tibble of tracts with a s2_geography column
 Get census tract geographic boundaries
 }
 \examples{
-s2_tracts("OH", 2022)
+s2_tracts("OH", "2023")
 }

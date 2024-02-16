@@ -51,9 +51,7 @@ get_census_tract_id <- function(x, year = as.character(2010:2023)) {
 #' @param year character data year passed to tigris to get tract boundaries
 #' @export
 #' @examples
-#' s2_states(year = 2020)
-#' s2_states(year = 2023)
-#' s2_states(year = 2010)
+#' s2_states(year = "2020")
 s2_states <- function(year = as.character(2010:2023)) {
   year <- rlang::arg_match(year)
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
@@ -70,7 +68,7 @@ s2_states <- function(year = as.character(2010:2023)) {
 #' @return a tibble of tracts with a s2_geography column
 #' @export
 #' @examples
-#' s2_tracts("OH", 2022)
+#' s2_tracts("OH", "2023")
 s2_tracts <- function(state,  year = as.character(2010:2023)) {
   year <- rlang::arg_match(year)
   tigris::tracts(state = state, year = year, progress_bar = FALSE, keep_zipped_shapefile = TRUE) |>

@@ -13,7 +13,5 @@ s2_states(year = as.character(2010:2023))
 Get states geographic boundaries
 }
 \examples{
-s2_states(year = 2020)
-s2_states(year = 2023)
-s2_states(year = 2010)
+s2_states(year = "2020")
 }
