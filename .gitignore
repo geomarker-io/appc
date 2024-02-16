@@ -1,12 +1,3 @@
-/data/
-/s3_downloads/
-/narr_downloads/
-/nlcd_downloads/
-/PRISM_us_dem_800m_bil/
-/data-raw/
-/model/*.rds
-/inst/training_data.rds
-/inst/rf_pm.rds
 /.env
 docs
 /rf_pm.rds
