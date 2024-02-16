@@ -39,10 +39,9 @@ install_elevation_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "PRISM_us_dem_800m_bil.bil")
   if (fs::file_exists(dest_file)) return(dest_file)
   elevation_zip <- tempfile("elevation", fileext = ".zip")
-  paste0("https://prism.oregonstate.edu/fetchData.php",
-         "?type=bil&kind=normals&spatial=800m&elem=dem&temporal=annual") |>
-    utils::download.file(destfile = elevation_zip)
+  utils::download.file("https://prism.oregonstate.edu/downloads/data/PRISM_us_dem_800m_bil.zip",
+    destfile = elevation_zip
+  )
   utils::unzip(elevation_zip, exdir = tools::R_user_dir("appc", "data"))
   return(dest_file)
 }
-
