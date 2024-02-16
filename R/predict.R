@@ -97,7 +97,7 @@ predict_pm25 <- function(x, dates) {
     dplyr::rename(date = dates)
 
   message("adding smoke via census tract...")
-  suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010))
+  suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010"))
   d_smoke <- readRDS(install_smoke_pm_data())
   d <-
     d |>

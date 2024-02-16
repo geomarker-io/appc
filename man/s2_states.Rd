@@ -4,14 +4,16 @@
 \alias{s2_states}
 \title{Get states geographic boundaries}
 \usage{
-s2_states(year)
+s2_states(year = as.character(2010:2023))
 }
 \arguments{
-\item{year}{numeric data year passed to tigris to get tract boundaries}
+\item{year}{character data year passed to tigris to get tract boundaries}
 }
 \description{
 Get states geographic boundaries
 }
 \examples{
 s2_states(year = 2020)
+s2_states(year = 2023)
+s2_states(year = 2010)
 }
