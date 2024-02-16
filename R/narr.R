@@ -50,7 +50,7 @@ install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m",
     "{narr_var}.{narr_year}.nc",
     .sep = "/"
   ) |>
-    utils::download.file(destfile = dest_file)
+    utils::download.file(destfile = dest_file, mode = "wb")
   return(dest_file)
 }
 
