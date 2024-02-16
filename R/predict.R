@@ -5,7 +5,6 @@
 #' @return a list of tibbles the same length as `x`, each containing
 #' columns for the predicted (`pm25`) and its standard error (`pm25_se`)
 #' with one row per date in `dates`
-#' @importFrom grf predict.regression_forest
 #' @export
 #' @examples
 #' \dontrun{
@@ -17,9 +16,10 @@
 #' }
 predict_pm25 <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
-
+  grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
+  if(!file.exists(grf_file)) install_released_data("rf_pm.rds")
   message("loading random forest model...")
-  grf <- readRDS(fs::path(fs::path_package("appc"), "rf_pm.rds"))
+  grf <- readRDS(grf_file)
   required_predictors <- names(grf$X.orig)
 
   # create all columns required for rf_model
@@ -39,8 +39,8 @@ predict_pm25 <- function(x, dates) {
   d$y <- s2::s2_y(s2::s2_cell_to_lnglat(d$s2))
 
   message("adding elevation...")
-  d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = median, buffer = 800)
-  d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = sd, buffer = 800)
+  d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = stats::median, buffer = 800)
+  d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = stats::sd, buffer = 800)
 
   message("adding AADT...")
   d$traffic_400 <- get_traffic_summary(d$s2, buffer = 400)
@@ -69,27 +69,19 @@ predict_pm25 <- function(x, dates) {
   ## d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
   d$merra <- NULL
 
-  message("adding NLCD imperviousness...")
-  impervious_years <- c("2016", "2019")
-  d$impervious_400 <-
-    purrr::map(impervious_years, \(x) get_nlcd_summary(d$s2, product = "impervious", year = x, buffer = 400)) |>
-    setNames(impervious_years) |>
+  message("adding NLCD urban imperviousness...")
+  impervious_years <- c("2016", "2019", "2021")
+  d$urban_imperviousness_400 <-
+    purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 400)) |>
+    stats::setNames(impervious_years) |>
     purrr::list_transpose()
-  d$impervious_400 <- purrr::map2(d$dates, d$impervious_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
-
-  message("adding NLCD treecanopy...")
-  treecanopy_years <- as.character(2021:2016)
-  d$treecanopy_400 <-
-    purrr::map(treecanopy_years, \(x) get_nlcd_summary(d$s2, product = "treecanopy", year = x, buffer = 400)) |>
-    setNames(treecanopy_years) |>
-    purrr::list_transpose()
-  d$treecanopy_400 <- purrr::map2(d$dates, d$treecanopy_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual treecanopy")
+  d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
 
   message("adding NEI...")
   nei_years <- c("2017", "2020")
   d$nei_point_id2w_1000 <-
     purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
-    setNames(nei_years) |>
+    stats::setNames(nei_years) |>
     purrr::list_transpose()
   d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual NEI")
 
@@ -99,7 +91,7 @@ predict_pm25 <- function(x, dates) {
       dates, air.2m, hpbl, acpcp,
       rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
       merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
-      impervious_400, treecanopy_400,
+      urban_imperviousness_400,
       nei_point_id2w_1000
     )) |>
     dplyr::rename(date = dates)
@@ -124,8 +116,9 @@ predict_pm25 <- function(x, dates) {
   stopifnot(inherits(grf, "regression_forest")) # grf package will be avail as dependency of appc? or just rlang::is_installed for predicting air pollution?
 
   # return predictions
+  foofy <- grf::regression_forest
   d_pred <-
-    predict(grf,
+    stats::predict(grf,
       dplyr::select(d, dplyr::all_of(required_predictors)),
       estimate.variance = TRUE
     ) |>
@@ -145,3 +138,9 @@ predict_pm25 <- function(x, dates) {
 
   return(out)
 }
+
+utils::globalVariables(c("air.2m", "hpbl", "acpcp", "rhum.2m",
+                         "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
+                         "urban_imperviousness_400",
+                         "nei_point_id2w_1000", "census_tract_id_2010",
+                         "predictions", "variance.estimates"))

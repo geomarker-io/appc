@@ -1,9 +1,9 @@
 ^LICENSE\.md$
-inst/training_data.rds
-inst/rf_pm.rds
 justfile
 Dockerfile
 model
+rf_pm.rds
+training_data.rds
 ^\.github$
 ^codecov\.yml$
 ^.env$

@@ -7,7 +7,7 @@ date: "`r Sys.Date()`"
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # load development version if developing (instead of currently installed version)
-if (basename(getwd()) == "inst") {
+if (file.exists("./inst") || basename(getwd()) == "inst") {
   devtools::load_all()
 } else {
   library(appc)
@@ -30,8 +30,8 @@ the_theme <-
 ```
 
 ```{r "load model and predictions"}
-grf <- readRDS(fs::path(fs::path_package("appc"), "rf_pm.rds"))
-d_train <- readRDS(fs::path(fs::path_package("appc"), "training_data.rds"))
+grf <- readRDS(fs::path_wd("rf_pm.rds"))
+d_train <- readRDS(fs::path_wd("training_data.rds"))
 ```
 
 ## Variable Importance

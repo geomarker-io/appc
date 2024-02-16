@@ -8,10 +8,13 @@ reference:
   - get_elevation_summary
   - get_narr_data
   - get_nei_point_summary
-  - get_nlcd_summary
+  - get_urban_imperviousness
   - get_traffic_summary
   - get_merra_data
   - install_smoke_pm_data
+- title: Air pollution assessment
+  contents:
+  - predict_pm25
 - title: Helpers
   contents:
   - contiguous_us

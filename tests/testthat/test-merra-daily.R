@@ -1,6 +1,8 @@
 if (file.exists(".env")) dotenv::load_dot_env()
 earthdata_secrets <- Sys.getenv(c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"), unset = NA)
 skip_if(any(is.na(earthdata_secrets)), message = "no earthdata credentials found")
+skip_if_offline()
+skip_if(Sys.getenv("CI") == "", "not on a CI platform")
 
 test_that("getting daily merra from GES DISC works", {
   # "normal" pattern

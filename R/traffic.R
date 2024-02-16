@@ -4,7 +4,7 @@
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates
-#' @details A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
+#' @details A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms.cfm>
 #' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf>
@@ -32,7 +32,7 @@ get_traffic_summary <- function(x, buffer = 400) {
   # s2 level 15 are 260 m sq
   # s2 level 14 are 521 m sq
   xx <- unique(x)
-  message("intersecting with AADT data using level 14 s2 approximation ( ~ 260 sq m)")
+  message("intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
   summarize_traffic <- function(i) {
     aadt_data[withins[[i]], ] |>
@@ -93,4 +93,5 @@ install_traffic <- function() {
   return(as.character(out_path))
 }
 
-utils::globalVariables(c("total_aadt_m", "truck_aadt_m", "Shape"))
+utils::globalVariables(c("aadt_total", "aadt_total_m", "aadt_truck", "aadt_truck_m",
+                         "AADT", "AADT_COMBINATION", "AADT_SINGLE_UNIT", "Shape", "s2_centroid"))

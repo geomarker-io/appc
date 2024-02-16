@@ -76,23 +76,15 @@ d$merra_so4 <- purrr::map(d$merra, "merra_so4")
 d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
 d$merra <- NULL
 
-## impervious
-impervious_years <- c("2016", "2019")
-d$impervious_400 <-
-  purrr::map(impervious_years, \(x) get_nlcd_summary(d$s2, product = "impervious", year = x, buffer = 400)) |>
+# urban imperviousness
+impervious_years <- c("2016", "2019", "2021")
+d$urban_imperviousness_400 <-
+  purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 400)) |>
   setNames(impervious_years) |>
   purrr::list_transpose()
-d$impervious_400 <- map2(d$dates, d$impervious_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
+d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
 
-# treecanopy
-treecanopy_years <- as.character(2021:2016)
-d$treecanopy_400 <-
-  purrr::map(treecanopy_years, \(x) get_nlcd_summary(d$s2, product = "treecanopy", year = x, buffer = 400)) |>
-  setNames(treecanopy_years) |>
-  purrr::list_transpose()
-d$treecanopy_400 <- map2(d$dates, d$treecanopy_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual treecanopy")
-
-## nei
+# nei
 nei_years <- c("2017", "2020")
 d$nei_point_id2w_1000 <-
   purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
@@ -106,7 +98,7 @@ d <-
   tidyr::unnest(cols = c(dates, conc, air.2m, hpbl, acpcp,
                          rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
                          merra_dust, merra_oc, merra_bc, merra_ss, merra_so4, merra_pm25,
-                         impervious_400, treecanopy_400,
+                         urban_imperviousness_400,
                          nei_point_id2w_1000)) |>
   rename(date = dates)
 
@@ -123,4 +115,4 @@ d$year <- as.numeric(format(d$date, "%Y"))
 d$doy <- as.numeric(format(d$date, "%j"))
 d$month <- as.numeric(format(d$date, "%m"))
 
-saveRDS(d, fs::path(fs::path_package("appc"), "training_data.rds"))
+saveRDS(d, fs::path_wd("training_data.rds"))

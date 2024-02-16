@@ -21,7 +21,7 @@ a list the same length as \code{x}, which each element having a list of \code{to
 Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the sum of the total (and truck-only) average annual daily vehicle-meter counts within \code{buffer} meters of each s2 geohash.
 }
 \details{
-A s2 level 15 approximation (~ 260 m sq) is used to simplify the intersection calculation with traffic summary data
+A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data
 }
 \examples{
 \dontrun{
