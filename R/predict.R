@@ -141,6 +141,6 @@ predict_pm25 <- function(x, dates) {
 
 utils::globalVariables(c("air.2m", "hpbl", "acpcp", "rhum.2m",
                          "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
-                         "impervious_400", "treecanopy_400",
+                         "urban_imperviousness_400",
                          "nei_point_id2w_1000", "census_tract_id_2010",
                          "predictions", "variance.estimates"))

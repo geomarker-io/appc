@@ -35,7 +35,7 @@ get_urban_imperviousness <- function(x, year, buffer = 400) {
     ) |>
     sf::st_as_sf() |>
     terra::vect() |>
-    terra::project(the_raster) |>
+    terra::project(terra::crs(the_raster)) |>
     terra::buffer(buffer)
   my_mean <- function(x) {
     backgrounds <- which(x > 100)
@@ -79,4 +79,3 @@ install_urban_imperviousness <- function(year = as.character(c(2021, 2019, 2016)
   return(dest_file)
 }
 
-utils::globalVariables(c("urban_imperviousness_400"))
