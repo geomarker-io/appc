@@ -20,11 +20,9 @@ with one row per date in \code{dates}
 Get daily PM2.5 model predictions
 }
 \examples{
-\dontrun{
 d <- list(
   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 )
 predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
-}
 }
