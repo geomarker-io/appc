@@ -40,10 +40,10 @@
     <loc>http://geomarker.io/appc/reference/get_nei_point_summary.html</loc>
   </url>
   <url>
-    <loc>http://geomarker.io/appc/reference/get_nlcd_summary.html</loc>
+    <loc>http://geomarker.io/appc/reference/get_traffic_summary.html</loc>
   </url>
   <url>
-    <loc>http://geomarker.io/appc/reference/get_traffic_summary.html</loc>
+    <loc>http://geomarker.io/appc/reference/get_urban_imperviousness.html</loc>
   </url>
   <url>
     <loc>http://geomarker.io/appc/reference/index.html</loc>
@@ -56,6 +56,9 @@
   </url>
   <url>
     <loc>http://geomarker.io/appc/reference/install_source_preference.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/appc/reference/predict_pm25.html</loc>
   </url>
   <url>
     <loc>http://geomarker.io/appc/reference/s2_states.html</loc>
