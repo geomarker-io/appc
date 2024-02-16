@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_tracts</span><span class="op">(</span><span class="va">state</span>, <span class="va">year</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">s2_tracts</span><span class="op">(</span><span class="va">state</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fl">2010</span><span class="op">:</span><span class="fl">2023</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,7 +58,7 @@
 
 
 <dt>year</dt>
-<dd><p>numeric data year passed to tigris to get tract boundaries</p></dd>
+<dd><p>character data year passed to tigris to get tract boundaries</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -70,22 +70,22 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">s2_tracts</span><span class="op">(</span><span class="st">"OH"</span>, <span class="fl">2022</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,168 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    STATEFP COUNTYFP TRACTCE GEOID    NAME  NAMELSAD MTFCC FUNCSTAT  ALAND AWATER</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 39      025      041105  3902504… 411.… Census … G5020 S        7.75<span style="color: #949494;">e</span>6 1.44<span style="color: #949494;">e</span>3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 39      025      041001  3902504… 410.… Census … G5020 S        4.22<span style="color: #949494;">e</span>7 4.38<span style="color: #949494;">e</span>6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 39      025      042002  3902504… 420.… Census … G5020 S        9.97<span style="color: #949494;">e</span>7 1.40<span style="color: #949494;">e</span>6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 39      025      042001  3902504… 420.… Census … G5020 S        9.46<span style="color: #949494;">e</span>7 2.45<span style="color: #949494;">e</span>6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 39      025      041104  3902504… 411.… Census … G5020 S        3.88<span style="color: #949494;">e</span>6 3.82<span style="color: #949494;">e</span>4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 39      025      040704  3902504… 407.… Census … G5020 S        4.11<span style="color: #949494;">e</span>6 0   <span style="color: #949494;"> </span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 39      025      040206  3902504… 402.… Census … G5020 S        2.36<span style="color: #949494;">e</span>7 3.07<span style="color: #949494;">e</span>4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 39      025      040703  3902504… 407.… Census … G5020 S        3.96<span style="color: #949494;">e</span>6 1.83<span style="color: #949494;">e</span>3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 39      025      041506  3902504… 415.… Census … G5020 S        3.27<span style="color: #949494;">e</span>7 6.22<span style="color: #949494;">e</span>5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 39      025      040205  3902504… 402.… Census … G5020 S        3.08<span style="color: #949494;">e</span>6 0   <span style="color: #949494;"> </span> </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">s2_tracts</span><span class="op">(</span><span class="st">"OH"</span>, <span class="st">"2023"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 3,168 × 14</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    STATEFP COUNTYFP TRACTCE GEOID   GEOIDFQ NAME  NAMELSAD MTFCC FUNCSTAT  ALAND</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 39      025      041105  390250… 140000… 411.… Census … G5020 S        7.75<span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> 39      025      041001  390250… 140000… 410.… Census … G5020 S        4.22<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> 39      025      042002  390250… 140000… 420.… Census … G5020 S        9.97<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> 39      025      042001  390250… 140000… 420.… Census … G5020 S        9.46<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> 39      025      041104  390250… 140000… 411.… Census … G5020 S        3.88<span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> 39      025      040704  390250… 140000… 407.… Census … G5020 S        4.11<span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> 39      025      040206  390250… 140000… 402.… Census … G5020 S        2.36<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 39      025      040703  390250… 140000… 407.… Census … G5020 S        3.96<span style="color: #949494;">e</span>6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 39      025      041506  390250… 140000… 415.… Census … G5020 S        3.27<span style="color: #949494;">e</span>7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 39      025      040205  390250… 140000… 402.… Census … G5020 S        3.08<span style="color: #949494;">e</span>6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3,158 more rows</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: INTPTLAT &lt;chr&gt;, INTPTLON &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: AWATER &lt;dbl&gt;, INTPTLAT &lt;chr&gt;, INTPTLON &lt;chr&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   s2_geography &lt;s2_geography&gt;</span></span>
 </code></pre></div>
     </div>
