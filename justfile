@@ -21,6 +21,9 @@ dl_geomarker_data:
 docker_test:
   docker build -t appc .
 
+# data > train > report
+model_refresh: dl_geomarker_data make_training_data train report
+
 # make training data
 make_training_data:
   Rscript --verbose inst/make_training_data.R
@@ -30,7 +33,8 @@ train:
   Rscript --verbose inst/train_model.R
 
 # upload grf model to current github release
-upload_grf:
+release_grf:
+  cp rf_pm.rds "{{geomarker_folder}}"/rf_pm.rds
   gh release upload v{{pkg_version}} "rf_pm.rds"
 
 # create CV accuracy report
