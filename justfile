@@ -35,7 +35,7 @@ upload_grf:
 
 # create CV accuracy report
 report:
-  R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd')"
+  R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd', knit_root_dir = getwd())"
   open inst/APPC_prediction_evaluation.html
 
 # install nlcd urban imperviousness data from source and upload to github release
