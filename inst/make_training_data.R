@@ -103,7 +103,7 @@ d <-
   rename(date = dates)
 
 # smoke
-d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010)
+d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010")
 d_smoke <- readRDS(install_smoke_pm_data())
 d <-
   d |>

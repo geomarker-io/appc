@@ -40,7 +40,7 @@ install_elevation_data <- function() {
   if (fs::file_exists(dest_file)) return(dest_file)
   elevation_zip <- tempfile("elevation", fileext = ".zip")
   utils::download.file("https://prism.oregonstate.edu/downloads/data/PRISM_us_dem_800m_bil.zip",
-    destfile = elevation_zip
+    destfile = elevation_zip, mode = "wb"
   )
   utils::unzip(elevation_zip, exdir = tools::R_user_dir("appc", "data"))
   return(dest_file)

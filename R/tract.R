@@ -3,7 +3,7 @@
 #' The identifier of the closest census tract geography (retrieved from the US Census API)
 #' for the supplied year are returned for each s2 geohash.
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
-#' @param year a numeric data year passed to tigris to get state and tract boundaries
+#' @param year a character data year passed to tigris to get state and tract boundaries
 #' @details `tigris::tracts()` powers this, so set `options(tigris_use_cache = TRUE)`
 #' to benefit from its caching.
 #' According to <https://github.com/walkerke/tigris>, available years for tracts
@@ -12,8 +12,9 @@
 #' @export
 #' @examples
 #' get_census_tract_id(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
-get_census_tract_id <- function(x, year) {
+get_census_tract_id <- function(x, year = as.character(2010:2023)) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  year <- rlang::arg_match(year)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))
   states <- s2_states(year = year)
   d <- 
@@ -21,7 +22,7 @@ get_census_tract_id <- function(x, year) {
                    state = states[s2::s2_closest_feature(x_s2_geography, states$s2_geography), "GEOID", drop = TRUE]) |>
     dplyr::nest_by(state) |>
     dplyr::ungroup()
-  message("Found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
+  message("  found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
           "across ", nrow(d), " states")
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
   d <-
@@ -47,12 +48,12 @@ get_census_tract_id <- function(x, year) {
 
 
 #' Get states geographic boundaries
-#' @param year numeric data year passed to tigris to get tract boundaries
+#' @param year character data year passed to tigris to get tract boundaries
 #' @export
 #' @examples
-#' s2_states(year = 2020)
-s2_states <- function(year) {
-  stopifnot(year %in% c(1990, 2000, 2010:2022))
+#' s2_states(year = "2020")
+s2_states <- function(year = as.character(2010:2023)) {
+  year <- rlang::arg_match(year)
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
     tigris::states(year = year, progress_bar = FALSE) |>
     dplyr::select(GEOID = dplyr::all_of(geoid_col_name)) |>
@@ -63,17 +64,18 @@ s2_states <- function(year) {
 
 #' Get census tract geographic boundaries
 #' @param state character string of state number or abbreviation
-#' @param year numeric data year passed to tigris to get tract boundaries
+#' @param year character data year passed to tigris to get tract boundaries
 #' @return a tibble of tracts with a s2_geography column
 #' @export
 #' @examples
-#' s2_tracts("OH", 2022)
-s2_tracts <- function(state,  year) {
-  stopifnot(year %in% as.character(c(1990, 2000, 2010:2022)))
+#' s2_tracts("OH", "2023")
+s2_tracts <- function(state,  year = as.character(2010:2023)) {
+  year <- rlang::arg_match(year)
   tigris::tracts(state = state, year = year, progress_bar = FALSE, keep_zipped_shapefile = TRUE) |>
     dplyr::mutate(s2_geography = s2::as_s2_geography(geometry)) |>
     tibble::as_tibble() |>
-    dplyr::select(-geometry)
+    dplyr::select(-geometry) |>
+    suppressWarnings()
 }
 
 utils::globalVariables(c("census_tract_id", "s2_geography", "s2", "state", "data", "state_tracts", "geometry"))

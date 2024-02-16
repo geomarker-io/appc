@@ -7,13 +7,11 @@
 #' with one row per date in `dates`
 #' @export
 #' @examples
-#' \dontrun{
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
-#' }
 predict_pm25 <- function(x, dates) {
   if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
@@ -97,7 +95,7 @@ predict_pm25 <- function(x, dates) {
     dplyr::rename(date = dates)
 
   message("adding smoke via census tract...")
-  suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = 2010))
+  suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010"))
   d_smoke <- readRDS(install_smoke_pm_data())
   d <-
     d |>

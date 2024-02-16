@@ -4,12 +4,12 @@
 \alias{s2_tracts}
 \title{Get census tract geographic boundaries}
 \usage{
-s2_tracts(state, year)
+s2_tracts(state, year = as.character(2010:2023))
 }
 \arguments{
 \item{state}{character string of state number or abbreviation}
 
-\item{year}{numeric data year passed to tigris to get tract boundaries}
+\item{year}{character data year passed to tigris to get tract boundaries}
 }
 \value{
 a tibble of tracts with a s2_geography column
@@ -18,5 +18,5 @@ a tibble of tracts with a s2_geography column
 Get census tract geographic boundaries
 }
 \examples{
-s2_tracts("OH", 2022)
+s2_tracts("OH", "2023")
 }

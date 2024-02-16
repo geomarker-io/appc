@@ -66,7 +66,7 @@ install_urban_imperviousness <- function(year = as.character(c(2021, 2019, 2016)
     year == "2019" ~ "https://s3-us-west-2.amazonaws.com/mrlc/nlcd_2019_impervious_l48_20210604.zip",
     year == "2016" ~ "https://s3-us-west-2.amazonaws.com/mrlc/nlcd_2016_impervious_l48_20210604.zip"
   ) |>
-    utils::download.file(nlcd_zip_path)
+    utils::download.file(nlcd_zip_path, mode = "wb")
   nlcd_raw_paths <- utils::unzip(nlcd_zip_path, exdir = tempdir())
   message(glue::glue("converting {year} NLCD impervious raster"))
   system2(
