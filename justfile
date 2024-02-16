@@ -19,11 +19,11 @@ dl_geomarker_data:
   
 # run tests without cached release files
 docker_test:
-  docker build -t appc-test Dockerfile.testing
+  docker build -t appc-test -f Dockerfile.testing .
 
 # build docker image preloaded with {appc} and data
 docker_tool:
-  docker build -t appc Dockerfile.tool
+  docker build -t appc -f Dockerfile.tool .
 
 # data > train > report
 model_refresh: dl_geomarker_data make_training_data train report
