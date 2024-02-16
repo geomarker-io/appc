@@ -1,4 +1,4 @@
-skip_on_ci("temporarily skipping predict related tests on gha")
+skip_on_ci()
 test_that("predict_pm25() works", {
   d <- list(
     "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
