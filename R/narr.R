@@ -29,11 +29,9 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
     terra::vect(geom = c("x", "y"), crs = "+proj=longlat +datum=WGS84") |>
     terra::project(narr_raster)
   narr_cells <- terra::cells(narr_raster[[1]], x_vect)[, "cell"]
-  xx <- terra::extract(narr_raster, narr_cells)
-  purrr::imap(dates,
-    \(x, idx) unlist(xx[idx, as.character(x)]),
-    .progress = paste0("calculating ", narr_var)
-  )
+  xx <- as.data.frame(t(terra::extract(narr_raster, narr_cells)))
+  purrr::map2(1:ncol(xx), dates, \(.x, .y) xx[as.character(.y), .x]) |>
+    stats::setNames(as.character(x))
 }
 
 #' Installs NARR raster data into user's data directory for the `appc` package
