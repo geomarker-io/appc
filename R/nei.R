@@ -56,7 +56,7 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
   dl_url <-
     dplyr::case_when(year == "2020" ~ "https://gaftp.epa.gov/air/nei/2020/data_summaries/Facility%20Level%20by%20Pollutant.zip",
                      year == "2017" ~ "https://gaftp.epa.gov/air/nei/2017/data_summaries/2017v1/2017neiJan_facility.zip")
-  utils::download.file(dl_url, zip_path, quiet = FALSE)
+  utils::download.file(dl_url, zip_path, quiet = FALSE, mode = "wb")
   nei_raw_paths <- utils::unzip(zip_path, exdir = tempdir())
   grep(".csv", nei_raw_paths, fixed = TRUE, value = TRUE) |>
     readr::read_csv(col_types = readr::cols_only(

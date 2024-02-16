@@ -27,7 +27,7 @@ install_released_data <- function(released_data_name, package_version = utils::p
     released_data_name,
     .sep = "/"
   )
-  utils::download.file(dl_url, dest_file, quiet = FALSE)
+  utils::download.file(dl_url, dest_file, quiet = FALSE, mode = "wb")
 }
 
 #' install_source_preference()
