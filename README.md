@@ -18,46 +18,20 @@ The appc package contains functions for generating geomarker predictors and the 
 
 Installed geomarker data sources and the grf model are hosted as release assets on GitHub, so the package can be used for quick geomarker assessment, including prediction of ambient air pollution concentrations at exact s2 locations on specific dates:
 
-```r
-appc::predict_pm25(s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-                   list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15"))))
-
-#> loading random forest model...
-#> adding coordinates...
-#> adding elevation...
-#> adding AADT...
-#> intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)
-#> adding NARR...
-#> adding MERRA...
-#> adding NLCD urban imperviousness...
-#> adding NEI...
-#> adding smoke via census tract...
-#>   found 2 unique locations across 2 states
-#> adding time components...
-#> $`8841b39a7c46e25f`
-#> # A tibble: 2 × 2
-#>    pm25 pm25_se
-#>   <dbl>   <dbl>
-#> 1  8.40   0.548
-#> 2  9.90   1.52 
-#> 
-#> $`8841a45555555555`
-#> # A tibble: 2 × 2
-#>    pm25 pm25_se
-#>   <dbl>   <dbl>
-#> 1  5.29   0.541
-#> 2  6.98   1.16 
+```{r}
+appc::predict_pm25(
+  x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
+  dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
+)
 ```
+
 ## S2 geohash
 
 The [s2 geohash](https://s2geometry.io/) is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview). The appc package uses s2 cells via the [s2](https://r-spatial.github.io/s2/) package to specify geospatial locations.
 In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples) using their character string representation, or by specifying latitude and longitude coordinates; e.g.:
 
-```r
+```{r}
 s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
-
-#> <s2_cell[2]>
-#> [1] 8841ad122d9774a7 88404ebdac3ea7d1
 ```
 
 ## Start and stop dates example
@@ -77,12 +51,6 @@ tibble::tribble(
       \(.s, .e) seq(from = .s, to = .e, by = 1)
     )
   )
-
-#> # A tibble: 2 × 4
-#>   s2               start_date end_date   dates      
-#>   <s2cell>         <chr>      <chr>      <list>     
-#> 1 8841b39a7c46e25f 2023-02-20 2023-04-01 <date [41]>
-#> 2 8841a45555555555 2021-12-30 2022-01-10 <date [12]>
 ```
 
 ## Developing
