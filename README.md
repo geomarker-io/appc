@@ -14,6 +14,8 @@ This is achieved by training a generalized random forest on several geomarkers t
 
 The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Source files included with the package create a training dataset, train the model, and create a cross-validation accuracy report. The predictive model can be updated with any release to use more recent AQS measurements and/or geomarker predictors.
 
+## Example
+
 Installed geomarker data sources and the grf model are hosted as release assets on GitHub, so the package can be used for quick geomarker assessment, including prediction of ambient air pollution concentrations at exact s2 locations on specific dates:
 
 ```r
@@ -46,10 +48,9 @@ appc::predict_pm25(s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
 #> 1  5.29   0.541
 #> 2  6.98   1.16 
 ```
-### S2 geohash
+## S2 geohash
 
 The [s2 geohash](https://s2geometry.io/) is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview). The appc package uses s2 cells via the [s2](https://r-spatial.github.io/s2/) package to specify geospatial locations.
-
 In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples) using their character string representation, or by specifying latitude and longitude coordinates; e.g.:
 
 ```r
@@ -59,7 +60,7 @@ s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 #> [1] 8841ad122d9774a7 88404ebdac3ea7d1
 ```
 
-### Start and stop dates
+## Start and stop dates example
 
 Translate start and stop dates representing a range of days into a list-col of days within each range:
 
