@@ -85,6 +85,8 @@ tibble::tribble(
 
 ## Developing
 
+> Please note that the appc project is released with a [Contributor Code of Conduct](http://geomarker.io/appc/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+
 To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, use [`just`](https://just.systems/man/en/) to execute recipes in the `justfile`.
 
 ```sh
