@@ -11,3 +11,4 @@ training_data.rds
 ^docs$
 ^pkgdown$
 ^CODE_OF_CONDUCT\.md$
+^README\.Rmd$
