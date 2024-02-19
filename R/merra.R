@@ -33,7 +33,7 @@
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
 #' }
 get_merra_data <- function(x, dates) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  check_s2_dates(x, dates)
   d_merra <-
     dates |>
     unlist() |>

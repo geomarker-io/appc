@@ -13,7 +13,7 @@
 #' )
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
 predict_pm25 <- function(x, dates) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  check_s2_dates(x, dates)
   grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
   if(!file.exists(grf_file)) install_released_data("rf_pm.rds")
   message("loading random forest model...")

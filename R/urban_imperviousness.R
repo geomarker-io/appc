@@ -24,7 +24,7 @@
 #' )
 #' }
 get_urban_imperviousness <- function(x, year, buffer = 400) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  check_s2_dates(x)
   the_raster <-
     install_urban_imperviousness(year = year) |>
     terra::rast()

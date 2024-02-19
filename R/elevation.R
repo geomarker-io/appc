@@ -13,7 +13,7 @@
 #' get_elevation_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
 #' }
 get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  check_s2_dates(x)
   elevation_raster <- terra::rast(install_elevation_data())
   x_vect <-
     tibble::tibble(
