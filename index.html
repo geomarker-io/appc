@@ -63,39 +63,57 @@
 <!-- badges: start -->
 
 <div class="section level2">
-<h2 id="air-pollution-exposure-assessment-in-r">Air pollution exposure assessment in R<a class="anchor" aria-label="anchor" href="#air-pollution-exposure-assessment-in-r"></a>
+<h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a>
 </h2>
-<p><code>get_{geomarker}_summary()</code> functions (e.g., <code><a href="reference/get_narr_data.html">get_narr_data()</a></code>, <code><a href="reference/get_census_tract_id.html">get_census_tract_id()</a></code>) take a vector of <code>s2</code> geographic cell identifers (and sometimes a calendar year or a list of date vectors). If required, the <code>year</code> argument specifies the calendar year to be used for geomarker assessment. If <code>dates</code> are required, each item in the list of date vectors corresponds to one of the <code>s2</code> cell identifiers in the vector and can contain multiple dates.</p>
+<p>The goal of the {appc} package is to provide daily, high resolution, near real-time model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present. The {appc} package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Source files included with the package create a training dataset, train the model, and create a cross-validation accuracy report. Installed geomarker data sources and the grf model are hosted as release assets on GitHub, so the package can be used for quick geomarker assessment, including prediction of ambient air pollution concentrations at exact s2 locations on specific dates.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/geomarker-io/appc" class="external-link">appc</a></span><span class="op">)</span></span>
-<span><span class="co"># get_census_tract_id(year = "2019")</span></span>
-<span><span class="co"># get_traffic_summary(x, buffer = 400)</span></span>
-<span><span class="co"># get_nei_point_summary(x, year = "2020", pollutant_code = "PM25-PRI", buffer = 1000)</span></span>
-<span><span class="co"># get_narr_data(x, dates, narr_var = "air.2m")</span></span>
-<span><span class="co"># get_nlcd_summary(x, "treecanopy", buffer = 750)</span></span></code></pre></div>
-<p>Pre-installed geomarker data for years in the air pollution models (2017 - current) are included in the GitHub release. Older years for some data can still be used with <code>install_xxxxxxx()</code> functions, but will install directly from the source.</p>
+<code class="sourceCode R"><span><span class="co"># show short example of air pollution exposure assessment</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="s2-locations">s2 locations<a class="anchor" aria-label="anchor" href="#s2-locations"></a>
+</h3>
+<p>about using s2 to define location</p>
+</div>
+<div class="section level3">
+<h3 id="describe-input-format-for-predict_pm25-and-show-example">describe input format for predict_pm25 and show example<a class="anchor" aria-label="anchor" href="#describe-input-format-for-predict_pm25-and-show-example"></a>
+</h3>
+<p>longer example where we convert start date and end date into a list of dates and put in a tibble to define new column of pm25 and pm25_se</p>
+</div>
 <div class="section level3">
 <h3 id="exposure-assessment-model-details">Exposure Assessment Model Details<a class="anchor" aria-label="anchor" href="#exposure-assessment-model-details"></a>
 </h3>
 <ul>
 <li>Exact s2 location, contiguous United States</li>
 <li>Daily, 2017 - 2023</li>
+<li>summarize predictors used</li>
+<li>add model statement on overall accuracy?</li>
 </ul>
 </div>
 </div>
 <div class="section level2">
+<h2 id="geomarker-assessment">Geomarker assessment<a class="anchor" aria-label="anchor" href="#geomarker-assessment"></a>
+</h2>
+<p>Cover individual geomarker examples? vignette??</p>
+</div>
+<div class="section level2">
 <h2 id="developing">Developing<a class="anchor" aria-label="anchor" href="#developing"></a>
 </h2>
-<p>Use <a href="https://just.systems/man/en/" class="external-link"><code>just</code></a>; e.g., <code>just --list</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Available</span> recipes:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">build_site</span>         <span class="co"># build documentation website</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">check</span>              <span class="co"># check R package</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">document</span>           <span class="co"># document R package</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">make_training_data</span> <span class="co"># make training data</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">report</span>             <span class="co"># create CV accuracy report</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">train</span>              <span class="co"># train grf model</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">upload_geo_data</span>    <span class="co"># upload precomputed geomarker data to current github release</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">upload_grf</span>         <span class="co"># upload grf model to current github release</span></span></code></pre></div>
+<p>To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, use <a href="https://just.systems/man/en/" class="external-link"><code>just</code></a> to execute recipes in the <code>justfile</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> just <span class="ex">--list</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Available</span> recipes:</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">model_refresh</span>        <span class="co"># data &gt; train &gt; report</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">dl_geomarker_data</span>    <span class="co"># download all geomarker ahead of time, if not already cached</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">make_training_data</span>   <span class="co"># make training data</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">train</span>                <span class="co"># train grf model</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">report</span>               <span class="co"># create CV accuracy report</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_grf</span>          <span class="co"># upload grf model to current github release</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_test</span>          <span class="co"># run tests without cached release files</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_tool</span>          <span class="co"># build docker image preloaded with {appc} and data</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_merra_data</span>   <span class="co"># upload merra data to github release</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_nei_data</span>     <span class="co"># install nei data from source and upload to github release</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_smoke_data</span>   <span class="co"># install smoke data from source and upload to github release</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_traffic_data</span> <span class="co"># install traffic data from source and upload to github release</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_urban_imperviousness_data</span> <span class="co"># install nlcd urban imperviousness data from source and upload to github release</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
