@@ -6,40 +6,54 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
   <!-- badges: end -->
- 
-## Air pollution exposure assessment in R
 
-`get_{geomarker}_summary()` functions (e.g., `get_narr_data()`, `get_census_tract_id()`) take a vector of `s2` geographic cell identifers (and sometimes a calendar year or a list of date vectors). If required, the `year` argument specifies the calendar year to be used for geomarker assessment. If `dates` are required, each item in the list of date vectors corresponds to one of the `s2` cell identifiers in the vector and can contain multiple dates.
+## About
 
-```R
-library(appc)
-# get_census_tract_id(year = "2019")
-# get_traffic_summary(x, buffer = 400)
-# get_nei_point_summary(x, year = "2020", pollutant_code = "PM25-PRI", buffer = 1000)
-# get_narr_data(x, dates, narr_var = "air.2m")
-# get_nlcd_summary(x, "treecanopy", buffer = 750)
+The goal of the {appc} package is to provide daily, high resolution, near real-time model-based ambient air pollution exposure assessments.
+This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present. The {appc} package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Source files included with the package create a training dataset, train the model, and create a cross-validation accuracy report.
+Installed geomarker data sources and the grf model are hosted as release assets on GitHub, so the package can be used for quick geomarker assessment, including prediction of ambient air pollution concentrations at exact s2 locations on specific dates.
+
+```r
+# show short example of air pollution exposure assessment
 ```
+### s2 locations
 
-Pre-installed geomarker data for years in the air pollution models (2017 - current) are included in the GitHub release. 
-Older years for some data can still be used with `install_xxxxxxx()` functions, but will install directly from the source.
+about using s2 to define location
+
+### describe input format for predict_pm25 and show example
+
+longer example where we convert start date and end date into a list of dates and put in a tibble to define new column of pm25 and pm25_se
 
 ### Exposure Assessment Model Details
 
 - Exact s2 location, contiguous United States
 - Daily, 2017 - 2023
+- summarize predictors used
+- add model statement on overall accuracy?
+
+## Geomarker assessment
+
+Cover individual geomarker examples? vignette??
 
 ## Developing
 
-Use [`just`](https://just.systems/man/en/); e.g., `just --list`:
+To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, use [`just`](https://just.systems/man/en/) to execute recipes in the `justfile`.
 
 ```sh
+> just --list
+
 Available recipes:
-    build_site         # build documentation website
-    check              # check R package
-    document           # document R package
-    make_training_data # make training data
-    report             # create CV accuracy report
-    train              # train grf model
-    upload_geo_data    # upload precomputed geomarker data to current github release
-    upload_grf         # upload grf model to current github release
+    model_refresh        # data > train > report
+    dl_geomarker_data    # download all geomarker ahead of time, if not already cached
+    make_training_data   # make training data
+    train                # train grf model
+    report               # create CV accuracy report
+    release_grf          # upload grf model to current github release
+    docker_test          # run tests without cached release files
+    docker_tool          # build docker image preloaded with {appc} and data
+    release_merra_data   # upload merra data to github release
+    release_nei_data     # install nei data from source and upload to github release
+    release_smoke_data   # install smoke data from source and upload to github release
+    release_traffic_data # install traffic data from source and upload to github release
+    release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
 ```
