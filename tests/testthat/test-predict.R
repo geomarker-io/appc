@@ -8,5 +8,11 @@ test_that("predict_pm25() works", {
   out |>
     expect_named() |>
     expect_length(2)
+
+  # missing s2 location errors
+  predict_pm25(s2::as_s2_cell(c("8841b39a7c46e25f", NA)),
+               list(as.Date(c("2023-05-18", "2023-11-06")),
+                    as.Date(c("2023-06-22", "2023-08-15")))) |>
+    expect_error("not contain any missing values")
 })
 

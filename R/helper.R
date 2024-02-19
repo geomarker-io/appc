@@ -40,3 +40,13 @@ get_closest_year <- function(date, years) {
   date_year <- as.numeric(format(date, "%Y"))
   purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))
 }
+
+check_s2_dates <- function(s2, dates = NULL) {
+  if (!inherits(s2, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  if (any(is.na(s2))) stop("s2 must not contain any missing values", call. = FALSE)
+  if (!is.null(dates)) {
+    if (length(s2) != length(dates)) stop("s2 and dates must be the same length", call. = FALSE)
+    if (!inherits(dates, "list")) stop("dates must be a list", call. = FALSE)
+    if (!all(sapply(dates, \(.) inherits(., "Date")))) stop("everything in the dates list must be `Date` objects")
+  }
+}

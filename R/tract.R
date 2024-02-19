@@ -13,7 +13,7 @@
 #' @examples
 #' get_census_tract_id(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
 get_census_tract_id <- function(x, year = as.character(2010:2023)) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  check_s2_dates(x)
   year <- rlang::arg_match(year)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))
   states <- s2_states(year = year)
