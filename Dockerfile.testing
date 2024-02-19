@@ -22,4 +22,4 @@ RUN R CMD INSTALL appc_*.tar.gz
 
 RUN R CMD check --as-cran --no-manual --no-vignettes appc_*.tar.gz
 
-RUN R -e "example(predict_pm25, package = 'appc')"
+RUN R -e "example('predict_pm25', package = 'appc')"

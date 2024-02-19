@@ -22,4 +22,4 @@ RUN R \
   -e "install_smoke_pm_data()" \
   -e "purrr::map_chr(as.character(2017:2023), install_merra_data)"
 
-RUN R -e "example(predict_pm25, package = 'appc')"
+RUN R -e "example('predict_pm25', package = 'appc')"
