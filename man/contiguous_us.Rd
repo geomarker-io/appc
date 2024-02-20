@@ -13,7 +13,5 @@ s2_geography object
 Get the geography of the 2020 contiguous United States
 }
 \examples{
-\dontrun{
 contiguous_us()
-}
 }

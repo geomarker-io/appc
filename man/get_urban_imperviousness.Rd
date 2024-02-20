@@ -34,12 +34,10 @@ the values of 0-100 are the only real populated values, in addition to a backgro
 greater than 100 are changed to 0 before averaging.
 }
 \examples{
-\dontrun{
 get_urban_imperviousness(
   x = s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
   year = "2021"
 )
-}
 }
 \references{
 \url{https://www.mrlc.gov/data/type/urban-imperviousness}

@@ -10,3 +10,5 @@ training_data.rds
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^CODE_OF_CONDUCT\.md$
+^README\.Rmd$

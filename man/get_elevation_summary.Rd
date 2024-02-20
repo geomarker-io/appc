@@ -26,9 +26,7 @@ The \code{fun} (e.g. \code{median()} or \code{sd()}) of the elevations (captured
 the buffer distance of each s2 geohash.
 }
 \examples{
-\dontrun{
 get_elevation_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
-}
 }
 \references{
 \url{https://prism.oregonstate.edu/normals/}

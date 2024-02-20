@@ -25,13 +25,11 @@
 #' `merra_ss`, `merra_so4`, `merra_pm25`) with one row per date in `dates`
 #' @export
 #' @examples
-#' \dontrun{
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-#' }
 get_merra_data <- function(x, dates) {
   check_s2_dates(x, dates)
   d_merra <-
