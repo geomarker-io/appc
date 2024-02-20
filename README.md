@@ -33,10 +33,8 @@ predictors.
 
 ## Example
 
-Installed geomarker data sources and the grf model are hosted as release
-assets on GitHub, so the package can be used for quick geomarker
-assessment, including prediction of ambient air pollution concentrations
-at exact s2 locations on specific dates:
+In R, create model-based predictions of ambient air pollution
+concentrations at exact locations on specific dates:
 
 ``` r
 appc::predict_pm25(
@@ -70,6 +68,13 @@ appc::predict_pm25(
 #> 1  5.29   0.541
 #> 2  6.98   1.16
 ```
+
+Installed geomarker data sources and the grf model are hosted as release
+assets on GitHub and are downloaded locally to the package-specific R
+user data directory (i.e., `tools::R_user_dir("appc", "data")`). These
+files are cached across all of an R user’s sessions and projects.
+(Specify an alternative download location by setting the
+`R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
 
 ## S2 geohash
 
@@ -105,8 +110,26 @@ tibble::tribble(
     dates = purrr::map2(
       as.Date(start_date), as.Date(end_date),
       \(.s, .e) seq(from = .s, to = .e, by = 1)
-    )
+    ),
+    pm25 = appc::predict_pm25(s2, dates)
   )
+#> loading random forest model...
+#> adding coordinates...
+#> adding elevation...
+#> adding AADT...
+#> intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)
+#> adding NARR...
+#> adding MERRA...
+#> adding NLCD urban imperviousness...
+#> adding NEI...
+#> adding smoke via census tract...
+#>   found 2 unique locations across 2 states
+#> adding time components...
+#> # A tibble: 2 × 5
+#>   s2               start_date end_date   dates       pm25             
+#>   <s2cell>         <chr>      <chr>      <list>      <named list>     
+#> 1 8841b39a7c46e25f 2023-02-20 2023-04-01 <date [41]> <tibble [41 × 2]>
+#> 2 8841a45555555555 2021-12-30 2022-01-10 <date [12]> <tibble [12 × 2]>
 ```
 
 ## Developing

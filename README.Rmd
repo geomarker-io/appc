@@ -31,7 +31,7 @@ The appc package contains functions for generating geomarker predictors and the 
 
 ## Example
 
-Installed geomarker data sources and the grf model are hosted as release assets on GitHub, so the package can be used for quick geomarker assessment, including prediction of ambient air pollution concentrations at exact s2 locations on specific dates:
+In R, create model-based predictions of ambient air pollution concentrations at exact locations on specific dates:
 
 ```{r}
 appc::predict_pm25(
@@ -39,6 +39,8 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 ```
+Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data
+directory (i.e., `tools::R_user_dir("appc", "data")`). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
 
 ## S2 geohash
 
@@ -53,7 +55,7 @@ s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 
 Translate start and stop dates representing a range of days into a list-col of days within each range:
 
-```r
+```{r}
 tibble::tribble(
   ~s2, ~start_date, ~end_date,
   "8841b39a7c46e25f", "2023-02-20", "2023-04-01",
@@ -64,7 +66,8 @@ tibble::tribble(
     dates = purrr::map2(
       as.Date(start_date), as.Date(end_date),
       \(.s, .e) seq(from = .s, to = .e, by = 1)
-    )
+    ),
+    pm25 = appc::predict_pm25(s2, dates)
   )
 ```
 

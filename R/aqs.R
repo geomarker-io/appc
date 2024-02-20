@@ -20,12 +20,11 @@
 #' Get all the files on the page and the date they were last updated:
 #' `readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
 #' @examples
-#' \dontrun{
-#' get_daily_aqs("pm25", "2021")
-#' }
+#' get_daily_aqs("pm25", "2023")
 #' @export
-get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = "2021") {
+get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = as.character(2017:2023)) {
   pollutant <- rlang::arg_match(pollutant)
+  year <- rlang::arg_match(year)
   pollutant_code <-
     c(
       "pm25" = "88101",

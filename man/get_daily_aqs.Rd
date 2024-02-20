@@ -4,7 +4,10 @@
 \alias{get_daily_aqs}
 \title{Get daily AQS concentrations}
 \usage{
-get_daily_aqs(pollutant = c("pm25", "ozone", "no2"), year = "2021")
+get_daily_aqs(
+  pollutant = c("pm25", "ozone", "no2"),
+  year = as.character(2017:2023)
+)
 }
 \arguments{
 \item{pollutant}{one of "pm25", "ozone", or "no2"}
@@ -34,7 +37,5 @@ Get all the files on the page and the date they were last updated:
 \code{readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")}
 }
 \examples{
-\dontrun{
-get_daily_aqs("pm25", "2021")
-}
+get_daily_aqs("pm25", "2023")
 }
