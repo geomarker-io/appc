@@ -65,55 +65,114 @@
 <div class="section level2">
 <h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a>
 </h2>
-<p>The goal of the {appc} package is to provide daily, high resolution, near real-time model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present. The {appc} package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Source files included with the package create a training dataset, train the model, and create a cross-validation accuracy report. Installed geomarker data sources and the grf model are hosted as release assets on GitHub, so the package can be used for quick geomarker assessment, including prediction of ambient air pollution concentrations at exact s2 locations on specific dates.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># show short example of air pollution exposure assessment</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="s2-locations">s2 locations<a class="anchor" aria-label="anchor" href="#s2-locations"></a>
-</h3>
-<p>about using s2 to define location</p>
-</div>
-<div class="section level3">
-<h3 id="describe-input-format-for-predict_pm25-and-show-example">describe input format for predict_pm25 and show example<a class="anchor" aria-label="anchor" href="#describe-input-format-for-predict_pm25-and-show-example"></a>
-</h3>
-<p>longer example where we convert start date and end date into a list of dates and put in a tibble to define new column of pm25 and pm25_se</p>
-</div>
-<div class="section level3">
-<h3 id="exposure-assessment-model-details">Exposure Assessment Model Details<a class="anchor" aria-label="anchor" href="#exposure-assessment-model-details"></a>
-</h3>
-<ul>
-<li>Exact s2 location, contiguous United States</li>
-<li>Daily, 2017 - 2023</li>
-<li>summarize predictors used</li>
-<li>add model statement on overall accuracy?</li>
-</ul>
-</div>
+<p>The goal of the appc package is to provide daily, high resolution, near real-time model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present at exact locations across the contiguous United States. Predictor geomarkers include weather and atmospheric information, traffic on primary roadways, urban imperviousness, wildfire smoke, industrial emissions, elevation, spatiotemporal indicators, and satellite-based aerosol diagnostics data.</p>
+<p>The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Source files included with the package create a training dataset, train the model, and create a cross-validation accuracy report. The predictive model can be updated with any release to use more recent AQS measurements and/or geomarker predictors.</p>
 </div>
 <div class="section level2">
-<h2 id="geomarker-assessment">Geomarker assessment<a class="anchor" aria-label="anchor" href="#geomarker-assessment"></a>
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Cover individual geomarker examples? vignette??</p>
+<p>In R, create model-based predictions of ambient air pollution concentrations at exact locations on specific dates:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">appc</span><span class="fu">::</span><span class="fu"><a href="reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b39a7c46e25f"</span>, <span class="st">"8841a45555555555"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-05-18"</span>, <span class="st">"2023-11-06"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; loading random forest model...</span></span>
+<span><span class="co">#&gt; adding coordinates...</span></span>
+<span><span class="co">#&gt; adding elevation...</span></span>
+<span><span class="co">#&gt; adding AADT...</span></span>
+<span><span class="co">#&gt; intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)</span></span>
+<span><span class="co">#&gt; adding NARR...</span></span>
+<span><span class="co">#&gt; adding MERRA...</span></span>
+<span><span class="co">#&gt; adding NLCD urban imperviousness...</span></span>
+<span><span class="co">#&gt; adding NEI...</span></span>
+<span><span class="co">#&gt; adding smoke via census tract...</span></span>
+<span><span class="co">#&gt;   found 2 unique locations across 2 states</span></span>
+<span><span class="co">#&gt; (down)loading 2010 tracts ■■■■■■■■■■■■■■■■                  50% |  ETA:  2s</span></span>
+<span><span class="co">#&gt; adding time components...</span></span>
+<span><span class="co">#&gt; $`8841b39a7c46e25f`</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
+<span><span class="co">#&gt;    pm25 pm25_se</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  8.40   0.548</span></span>
+<span><span class="co">#&gt; 2  9.90   1.52 </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $`8841a45555555555`</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
+<span><span class="co">#&gt;    pm25 pm25_se</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1  5.29   0.541</span></span>
+<span><span class="co">#&gt; 2  6.98   1.16</span></span></code></pre></div>
+<p>Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data directory (i.e., <code>tools::R_user_dir("appc", "data")</code>). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the <code>R_USER_DATA_DIR</code> environment variable; see <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">?tools::R_user_dir</a></code>.)</p>
+</div>
+<div class="section level2">
+<h2 id="s2-geohash">S2 geohash<a class="anchor" aria-label="anchor" href="#s2-geohash"></a>
+</h2>
+<p>The <a href="https://s2geometry.io/" class="external-link">s2 geohash</a> is a <a href="https://s2geometry.io/devguide/s2cell_hierarchy.html" class="external-link">hierarchical</a> geospatial index that uses <a href="https://s2geometry.io/about/overview" class="external-link">spherical geometry</a>. The appc package uses s2 cells via the <a href="https://r-spatial.github.io/s2/" class="external-link">s2</a> package to specify geospatial locations. In R, s2 cells can be <a href="https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples" class="external-link">created</a> using their character string representation, or by specifying latitude and longitude coordinates; e.g.:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_lnglat.html" class="external-link">s2_lnglat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">84.4126</span>, <span class="op">-</span><span class="fl">84.5036</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">39.1582</span>, <span class="fl">39.2875</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;s2_cell[2]&gt;</span></span>
+<span><span class="co">#&gt; [1] 8841ad122d9774a7 88404ebdac3ea7d1</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="start-and-stop-dates-example">Start and stop dates example<a class="anchor" aria-label="anchor" href="#start-and-stop-dates-example"></a>
+</h2>
+<p>Translate start and stop dates representing a range of days into a list-col of days within each range:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html" class="external-link">tribble</a></span><span class="op">(</span></span>
+<span>  <span class="op">~</span><span class="va">s2</span>, <span class="op">~</span><span class="va">start_date</span>, <span class="op">~</span><span class="va">end_date</span>,</span>
+<span>  <span class="st">"8841b39a7c46e25f"</span>, <span class="st">"2023-02-20"</span>, <span class="st">"2023-04-01"</span>,</span>
+<span>  <span class="st">"8841a45555555555"</span>, <span class="st">"2021-12-30"</span>, <span class="st">"2022-01-10"</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    s2 <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="va">s2</span><span class="op">)</span>,</span>
+<span>    dates <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html" class="external-link">map2</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">start_date</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">end_date</span><span class="op">)</span>,</span>
+<span>      \<span class="op">(</span><span class="va">.s</span>, <span class="va">.e</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">.s</span>, to <span class="op">=</span> <span class="va">.e</span>, by <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    pm25 <span class="op">=</span> <span class="fu">appc</span><span class="fu">::</span><span class="fu"><a href="reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dates</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="co">#&gt; loading random forest model...</span></span>
+<span><span class="co">#&gt; adding coordinates...</span></span>
+<span><span class="co">#&gt; adding elevation...</span></span>
+<span><span class="co">#&gt; adding AADT...</span></span>
+<span><span class="co">#&gt; intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)</span></span>
+<span><span class="co">#&gt; adding NARR...</span></span>
+<span><span class="co">#&gt; adding MERRA...</span></span>
+<span><span class="co">#&gt; adding NLCD urban imperviousness...</span></span>
+<span><span class="co">#&gt; adding NEI...</span></span>
+<span><span class="co">#&gt; adding smoke via census tract...</span></span>
+<span><span class="co">#&gt;   found 2 unique locations across 2 states</span></span>
+<span><span class="co">#&gt; adding time components...</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 5</span></span>
+<span><span class="co">#&gt;   s2               start_date end_date   dates       pm25             </span></span>
+<span><span class="co">#&gt;   &lt;s2cell&gt;         &lt;chr&gt;      &lt;chr&gt;      &lt;list&gt;      &lt;named list&gt;     </span></span>
+<span><span class="co">#&gt; 1 8841b39a7c46e25f 2023-02-20 2023-04-01 &lt;date [41]&gt; &lt;tibble [41 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 2 8841a45555555555 2021-12-30 2022-01-10 &lt;date [12]&gt; &lt;tibble [12 × 2]&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="developing">Developing<a class="anchor" aria-label="anchor" href="#developing"></a>
 </h2>
+<blockquote>
+<p>Please note that the appc project is released with a <a href="http://geomarker.io/appc/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+</blockquote>
 <p>To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, use <a href="https://just.systems/man/en/" class="external-link"><code>just</code></a> to execute recipes in the <code>justfile</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> just <span class="ex">--list</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Available</span> recipes:</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">model_refresh</span>        <span class="co"># data &gt; train &gt; report</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">dl_geomarker_data</span>    <span class="co"># download all geomarker ahead of time, if not already cached</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">make_training_data</span>   <span class="co"># make training data</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">train</span>                <span class="co"># train grf model</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">report</span>               <span class="co"># create CV accuracy report</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_grf</span>          <span class="co"># upload grf model to current github release</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_test</span>          <span class="co"># run tests without cached release files</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_tool</span>          <span class="co"># build docker image preloaded with {appc} and data</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_merra_data</span>   <span class="co"># upload merra data to github release</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_nei_data</span>     <span class="co"># install nei data from source and upload to github release</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_smoke_data</span>   <span class="co"># install smoke data from source and upload to github release</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_traffic_data</span> <span class="co"># install traffic data from source and upload to github release</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_urban_imperviousness_data</span> <span class="co"># install nlcd urban imperviousness data from source and upload to github release</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> just <span class="ex">--list</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Available</span> recipes:</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">model_refresh</span>        <span class="co"># data &gt; train &gt; report</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">dl_geomarker_data</span>    <span class="co"># download all geomarker ahead of time, if not already cached</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">make_training_data</span>   <span class="co"># make training data</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">train</span>                <span class="co"># train grf model</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">report</span>               <span class="co"># create CV accuracy report</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_grf</span>          <span class="co"># upload grf model to current github release</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_test</span>          <span class="co"># run tests without cached release files</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_tool</span>          <span class="co"># build docker image preloaded with {appc} and data</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_merra_data</span>   <span class="co"># upload merra data to github release</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_nei_data</span>     <span class="co"># install nei data from source and upload to github release</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_smoke_data</span>   <span class="co"># install smoke data from source and upload to github release</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_traffic_data</span> <span class="co"># install traffic data from source and upload to github release</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_urban_imperviousness_data</span> <span class="co"># install nlcd urban imperviousness data from source and upload to github release</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -131,6 +190,12 @@
 </ul>
 </div>
 
+<div class="community">
+<h2 data-toc-skip>Community</h2>
+<ul class="list-unstyled">
+<li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
+</ul>
+</div>
 
 <div class="citation">
 <h2 data-toc-skip>Citation</h2>
