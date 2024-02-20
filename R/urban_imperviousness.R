@@ -17,12 +17,10 @@
 #' greater than 100 are changed to 0 before averaging.
 #' @export
 #' @examples
-#' \dontrun{
 #' get_urban_imperviousness(
 #'   x = s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
 #'   year = "2021"
 #' )
-#' }
 get_urban_imperviousness <- function(x, year, buffer = 400) {
   check_s2_dates(x)
   the_raster <-

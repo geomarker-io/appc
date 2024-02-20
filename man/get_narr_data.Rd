@@ -41,6 +41,13 @@ Installs NARR raster data into user's data directory for the \code{appc} package
 NARR data comes as 0.3 degrees gridded data, which is about 32 sq km resolution. s2 geohashes
 are intersected with this 0.3 degree grid for matching with daily weather values.
 }
+\examples{
+d <- list(
+  "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
+  "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+)
+get_narr_data(x = s2::as_s2_cell(names(d)), dates = d, narr_var = "air.2m")
+}
 \references{
 \url{https://psl.noaa.gov/data/gridded/data.narr.html}
 

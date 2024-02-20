@@ -24,9 +24,10 @@ Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the
 A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data
 }
 \examples{
-\dontrun{
-get_traffic_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), buffer = 1500)
-}
+get_traffic_summary(
+  s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+  buffer = 1500
+)
 }
 \references{
 \url{https://www.fhwa.dot.gov/policyinformation/hpms.cfm}

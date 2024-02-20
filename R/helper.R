@@ -8,9 +8,7 @@
 #' @return s2_geography object
 #' @export
 #' @examples
-#' \dontrun{
 #' contiguous_us()
-#' }
 contiguous_us <- function() {
   tigris::states(year = 2020, progress_bar = FALSE) |>
     dplyr::filter(!NAME %in% c(
@@ -33,9 +31,7 @@ utils::globalVariables("NAME")
 #' @details To find the closest year, each date is converted to a year
 #' and the differences with the provided years is minimzed. This is a problem....
 #' @examples
-#' \dontrun{
 #' get_closest_year(as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
-#' }
 get_closest_year <- function(date, years) {
   date_year <- as.numeric(format(date, "%Y"))
   purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))
