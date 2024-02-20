@@ -16,7 +16,7 @@
 #' )
 #' get_narr_data(x = s2::as_s2_cell(names(d)), dates = d, narr_var = "air.2m")
 get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")) {
-  if (!inherits(x, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
+  check_s2_dates(x, dates)
   narr_var <- rlang::arg_match(narr_var)
   narr_raster <-
     dates |>
