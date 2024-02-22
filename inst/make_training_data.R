@@ -15,7 +15,7 @@ d <-
   tidyr::expand_grid(
     ## pollutant = c("pm25", "ozone", "no2"),
     pollutant = "pm25",
-    year = 2017:2023
+    year = as.character(2017:2023)
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
