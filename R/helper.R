@@ -33,7 +33,7 @@ utils::globalVariables("NAME")
 #' @details To find the closest year, each date is converted to a year
 #' and the differences with the provided years is minimzed. This is a problem....
 #' @examples
-#' get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
+#' get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c("2020", "2022"))
 get_closest_year <- function(x, years = as.character(1800:2400)) {
   years <- rlang::arg_match(years, multiple = TRUE)
   if (!inherits(x, "Date")) stop("x must be a date vector", call. = FALSE)
