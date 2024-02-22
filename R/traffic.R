@@ -34,7 +34,6 @@ get_traffic_summary <- function(x, buffer = 400) {
   # s2 level 15 are 260 m sq
   # s2 level 14 are 521 m sq
   xx <- unique(x)
-  message("intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
   summarize_traffic <- function(i) {
     aadt_data[withins[[i]], ] |>

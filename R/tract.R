@@ -4,6 +4,7 @@
 #' for the supplied year are returned for each s2 geohash.
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param year a character data year passed to tigris to get state and tract boundaries
+#' @param quiet silence progress messages?
 #' @details `tigris::tracts()` powers this, so set `options(tigris_use_cache = TRUE)`
 #' to benefit from its caching.
 #' According to <https://github.com/walkerke/tigris>, available years for tracts
@@ -12,7 +13,7 @@
 #' @export
 #' @examples
 #' get_census_tract_id(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
-get_census_tract_id <- function(x, year = as.character(2010:2023)) {
+get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = TRUE) {
   check_s2_dates(x)
   year <- rlang::arg_match(year)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))
