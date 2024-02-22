@@ -4,23 +4,23 @@
 \alias{get_closest_year}
 \title{Get the closest years to a vector of dates}
 \usage{
-get_closest_year(date, years)
+get_closest_year(x, years = as.character(1800:2400))
 }
 \arguments{
-\item{date}{a vector of date objects}
+\item{x}{a date vector}
 
 \item{years}{vector of characters (or numerics) representing years to choose from}
 }
 \value{
-a character vector of the closest year in \code{years} for each date in \code{date}
+a character vector of the closest year in \code{years} for each date in \code{x}
 }
 \description{
-Get the closest years to a vector of dates
+The time between a date and year is calculated using July 1st of the year.
 }
 \details{
 To find the closest year, each date is converted to a year
 and the differences with the provided years is minimzed. This is a problem....
 }
 \examples{
-get_closest_year(as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
+get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
 }

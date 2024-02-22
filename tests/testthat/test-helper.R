@@ -44,3 +44,16 @@ test_that("check_s2_dates() works", {
   ) |>
     expect_error("must be `Date` objects")
 })
+
+test_that("get_closest_year() works", {
+
+  get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022)) |>
+    expect_error("must be a character vector")
+
+  get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c("2020", "2022")) |>
+    expect_equal(c("2022", "2022"))
+
+  get_closest_year(x = as.Date(c("2021-03-15", "2022-09-01")), years = c("2020", "2022")) |>
+    expect_equal(c("2020", "2022"))
+
+})
