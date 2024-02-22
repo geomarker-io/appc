@@ -8,11 +8,13 @@ RUN apt-get update \
     libssl-dev libudunits2-dev \
     && apt-get clean
 
-RUN R --quiet -e "install.packages('pak', repos = c(CRAN = 'https://packagemanager.rstudio.com/all/__linux__/focal/latest'))"
+RUN Rscript -e "install.packages('pak')"
 
-RUN R --quiet -e "pak::pak('geomarker-io/appc')"
+RUN Rscript --quiet \
+      # -e "options(repos = c(CRAN = 'https://p3m.dev/cran/__linux__/jammy/latest'))" \
+      -e "pak::pak('geomarker-io/appc')"
 
-RUN R \
+RUN Rscript \
   -e "library(appc)" \
   -e "install_elevation_data()" \
   -e "install_traffic()" \
@@ -22,4 +24,4 @@ RUN R \
   -e "install_smoke_pm_data()" \
   -e "purrr::map_chr(as.character(2017:2023), install_merra_data)"
 
-RUN R -e "example('predict_pm25', package = 'appc')"
+RUN Rscript -e "library(appc)" -e "example(predict_pm25)"
