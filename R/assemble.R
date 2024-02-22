@@ -2,6 +2,8 @@
 #' 
 #' @param x a vector of s2 cell identifers (`s2_cell` object); currently required to be within the contiguous united states
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
+#' @param quiet silence progress messages?
+#' @param pollutant ignored now, but reserved for future sets of predictors specific to different pollutants
 #' @return a tibble with one row for each unique s2 location - date combination where columns
 #' are predictors required for the exposure assessment model
 #' @export
