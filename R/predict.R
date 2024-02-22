@@ -73,7 +73,7 @@ predict_pm25 <- function(x, dates) {
     purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 400)) |>
     stats::setNames(impervious_years) |>
     purrr::list_transpose()
-  d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
+  d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(x = x, years = names(y[1]))], .progress = "matching annual impervious")
 
   message("adding NEI...")
   nei_years <- c("2017", "2020")
@@ -81,7 +81,7 @@ predict_pm25 <- function(x, dates) {
     purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
     stats::setNames(nei_years) |>
     purrr::list_transpose()
-  d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual NEI")
+  d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(x = x, years = names(y[1]))], .progress = "matching annual NEI")
 
   d <-
     d |>

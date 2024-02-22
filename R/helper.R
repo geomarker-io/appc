@@ -24,17 +24,28 @@ contiguous_us <- function() {
 utils::globalVariables("NAME")
 
 #' Get the closest years to a vector of dates
-#' @param date a vector of date objects
+#'
+#' The time between a date and year is calculated using July 1st of the year. 
+#' @param x a date vector
 #' @param years vector of characters (or numerics) representing years to choose from
-#' @return a character vector of the closest year in `years` for each date in `date`
+#' @return a character vector of the closest year in `years` for each date in `x`
 #' @export
 #' @details To find the closest year, each date is converted to a year
 #' and the differences with the provided years is minimzed. This is a problem....
 #' @examples
-#' get_closest_year(as.Date(c("2021-09-15", "2022-09-01")), years = c(2020, 2022))
-get_closest_year <- function(date, years) {
-  date_year <- as.numeric(format(date, "%Y"))
-  purrr::map_chr(date_year, \(x) as.character(years[which.min(abs(as.numeric(years) - x))]))
+#' get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c("2020", "2022"))
+get_closest_year <- function(x, years = as.character(1800:2400)) {
+  years <- rlang::arg_match(years, multiple = TRUE)
+  if (!inherits(x, "Date")) stop("x must be a date vector", call. = FALSE)
+  year_midpoints <-
+    years |>
+    as.character() |>
+    paste0("-07-01")
+  which_year <- sapply(x, \(.) which.min(abs(difftime(., year_midpoints))))
+  the_closest_years <-
+    years[which_year] |>
+    as.character()
+  return(the_closest_years)
 }
 
 check_s2_dates <- function(s2, dates = NULL) {

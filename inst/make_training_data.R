@@ -15,7 +15,7 @@ d <-
   tidyr::expand_grid(
     ## pollutant = c("pm25", "ozone", "no2"),
     pollutant = "pm25",
-    year = 2017:2023
+    year = as.character(2017:2023)
   ) |>
   purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
 
@@ -82,7 +82,7 @@ d$urban_imperviousness_400 <-
   purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 400)) |>
   setNames(impervious_years) |>
   purrr::list_transpose()
-d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual impervious")
+d$urban_imperviousness_400 <- purrr::map2(d$dates, d$urban_imperviousness_400, \(x, y) y[get_closest_year(x = x, years = names(y[1]))], .progress = "matching annual impervious")
 
 # nei
 nei_years <- c("2017", "2020")
@@ -90,7 +90,7 @@ d$nei_point_id2w_1000 <-
   purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
   setNames(nei_years) |>
   purrr::list_transpose()
-d$nei_point_id2w_1000 <- map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(date = x, years = names(y[1]))], .progress = "matching annual NEI")
+d$nei_point_id2w_1000 <- map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(x = x, years = names(y[1]))], .progress = "matching annual NEI")
 
 # unnest
 d <-
