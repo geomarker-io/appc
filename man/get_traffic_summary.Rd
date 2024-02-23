@@ -5,11 +5,7 @@
 \alias{install_traffic}
 \title{Get traffic summary}
 \usage{
-get_traffic_summary(
-  x,
-  buffer = 400,
-  s2_approx_level = c("13", "14", "15", "16")
-)
+get_traffic_summary(x, buffer = 400, s2_approx_level = c("14", "15", "16"))
 
 install_traffic()
 }

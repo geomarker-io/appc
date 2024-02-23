@@ -3,6 +3,18 @@ set dotenv-load
 pkg_version := `Rscript -e "cat(desc::desc_get('Version'))"`
 geomarker_folder := `Rscript -e "cat(tools::R_user_dir('appc', 'data'))"`
 
+# CRAN check package
+check:
+  #!/usr/bin/env Rscript
+  devtools::document()
+  devtools::check()
+
+# build readme and webpage
+build_site:
+  #!/usr/bin/env Rscript
+  devtools::document()
+  pkgdown::build_site()
+
 # download all geomarker ahead of time, if not already cached
 dl_geomarker_data:
   #!/usr/bin/env Rscript
