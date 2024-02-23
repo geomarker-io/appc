@@ -3,8 +3,11 @@
 #' Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the sum of the total (and truck-only) average annual daily vehicle-meter counts within `buffer` meters of each s2 geohash.
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param buffer distance from s2 cell (in meters) to summarize data
+#' @param s2_approx_level the level of approximation used for geospatial intersections, see details
 #' @return a list the same length as `x`, which each element having a list of `total_aadt_m` and `truck_aadt_m` estimates
-#' @details A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data
+#' @details By default, an s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with
+#' traffic summary data. The median areas of the s2 cells in the contiguous United States by s2 level is
+#' 16: 130 m sq, 15: 260 m sq, 14: 521 m sq.
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms.cfm>
 #' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf>
@@ -12,10 +15,10 @@
 #' @examples
 #' get_traffic_summary(
 #'   s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
-#'   buffer = 1500
-#' )
-get_traffic_summary <- function(x, buffer = 400) {
+#'   buffer = 1500)
+get_traffic_summary <- function(x, buffer = 400, s2_approx_level = c("14", "15", "16")) {
   check_s2_dates(x)
+  s2_approx_level <- rlang::arg_match(s2_approx_level)
   aadt_data <-
     readRDS(install_traffic()) |>
     dplyr::transmute(
@@ -24,15 +27,11 @@ get_traffic_summary <- function(x, buffer = 400) {
       aadt_total = AADT,
       aadt_truck = sum(AADT_SINGLE_UNIT, AADT_COMBINATION, na.rm = TRUE)
     ) |>
-    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2_centroid, level = 14)) |>
+    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2_centroid, level = as.numeric(s2_approx_level))) |>
     dplyr::summarize(
       aadt_total_m = sum(aadt_total * length, na.rm = TRUE),
       aadt_truck_m = sum(aadt_truck * length, na.rm = TRUE)
     )
-  ## sqrt(median(s2::s2_cell_area(aadt_data$s2_parent)))
-  # s2 level 16 are 130 m sq
-  # s2 level 15 are 260 m sq
-  # s2 level 14 are 521 m sq
   xx <- unique(x)
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
   summarize_traffic <- function(i) {
