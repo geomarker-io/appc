@@ -74,6 +74,9 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
     purrr::list_transpose()
   d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(x = x, years = names(y[1]))])
 
+  if (!quiet) message("adding smoke plume data")
+  d$plume_smoke <- get_smoke_data(x = d$s2, dates = d$dates)
+
   d <-
     d |>
     tidyr::unnest(cols = c(
@@ -81,18 +84,18 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
       rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
       merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
       urban_imperviousness_400,
-      nei_point_id2w_1000
+      nei_point_id2w_1000, plume_smoke
     )) |>
     dplyr::rename(date = dates)
 
-  if (!quiet) message("adding smoke via census tract")
-  suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010", quiet = quiet))
-  d_smoke <- readRDS(install_smoke_pm_data())
-  d <-
-    d |>
-    dplyr::left_join(d_smoke, by = c("census_tract_id_2010", "date")) |>
-    tidyr::replace_na(list(smoke_pm = 0)) |>
-    dplyr::select(-census_tract_id_2010)
+  ## if (!quiet) message("adding smoke via census tract")
+  ## suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010", quiet = quiet))
+  ## d_smoke <- readRDS(install_smoke_pm_data())
+  ## d <-
+  ##   d |>
+  ##   dplyr::left_join(d_smoke, by = c("census_tract_id_2010", "date")) |>
+  ##   tidyr::replace_na(list(smoke_pm = 0)) |>
+  ##   dplyr::select(-census_tract_id_2010)
 
   if (!quiet) message("adding time components")
   d$year <- as.numeric(format(d$date, "%Y"))

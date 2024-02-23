@@ -56,7 +56,8 @@ pred_names <-
     ## "merra_pm25",
     "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "nei_point_id2w_1000",
-    "smoke_pm"
+    "plume_smoke"
+    ## "smoke_pm"
   )
 
 message("training GRF...")
