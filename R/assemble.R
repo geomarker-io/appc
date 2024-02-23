@@ -22,8 +22,13 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), contiguous_us())
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
   if (!quiet) message("adding coordinates")
-  d$x <- s2::s2_x(s2::s2_cell_to_lnglat(d$s2))
-  d$y <- s2::s2_y(s2::s2_cell_to_lnglat(d$s2))
+  conus_coords <-
+    sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
+    sf::st_transform(sf::st_crs(5072)) |>
+    sf::st_coordinates() |>
+    tibble::as_tibble()
+  d$x <- conus_coords$X
+  d$y <- conus_coords$Y
   if (!quiet) message("adding elevation")
   d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = stats::median, buffer = 800)
   d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = stats::sd, buffer = 800)
@@ -93,6 +98,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   d$year <- as.numeric(format(d$date, "%Y"))
   d$doy <- as.numeric(format(d$date, "%j"))
   d$month <- as.numeric(format(d$date, "%m"))
+  d$dow <- as.numeric(format(d$date, "%u"))
 
   return(d)
 }

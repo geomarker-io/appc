@@ -48,7 +48,7 @@ d_train$conc <- unlist(d$conc)
 pred_names <-
   c(
     "x", "y",
-    "doy", "year", "month",
+    "doy", "year", "month", "dow",
     "elevation_median_800", "elevation_sd_800",
     "aadt_total_m_400", "aadt_truck_m_400",
     "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
