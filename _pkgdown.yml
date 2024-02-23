@@ -4,7 +4,6 @@ template:
 reference:
 - title: Geomarker assessment
   contents:
-  - get_census_tract_id
   - get_elevation_summary
   - get_narr_data
   - get_nei_point_summary
@@ -15,11 +14,16 @@ reference:
 - title: Air pollution assessment
   contents:
   - predict_pm25
-- title: Helpers
+  - assemble_predictors
+- title: Census geography
   contents:
+  - get_census_tract_id
   - contiguous_us
   - s2_states
   - s2_tracts
+- title: Helpers
+  contents:
   - get_closest_year
   - get_daily_aqs
+  - assemble_predictors
 
