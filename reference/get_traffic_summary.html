@@ -48,7 +48,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_traffic_summary</span><span class="op">(</span><span class="va">x</span>, buffer <span class="op">=</span> <span class="fl">400</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_traffic_summary</span><span class="op">(</span><span class="va">x</span>, buffer <span class="op">=</span> <span class="fl">400</span>, s2_approx_level <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"14"</span>, <span class="st">"15"</span>, <span class="st">"16"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">install_traffic</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -62,6 +62,10 @@
 <dt>buffer</dt>
 <dd><p>distance from s2 cell (in meters) to summarize data</p></dd>
 
+
+<dt>s2_approx_level</dt>
+<dd><p>the level of approximation used for geospatial intersections, see details</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -71,7 +75,9 @@
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data</p>
+    <p>By default, an s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with
+traffic summary data. The median areas of the s2 cells in the contiguous United States by s2 level is
+16: 130 m sq, 15: 260 m sq, 14: 521 m sq.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -84,8 +90,7 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_traffic_summary</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b399ced97c47"</span>, <span class="st">"8841b38578834123"</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  buffer <span class="op">=</span> <span class="fl">1500</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span>  buffer <span class="op">=</span> <span class="fl">1500</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841b399ced97c47`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841b399ced97c47`$aadt_total_m</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 657047536</span>
