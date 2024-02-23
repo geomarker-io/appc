@@ -93,6 +93,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   d$year <- as.numeric(format(d$date, "%Y"))
   d$doy <- as.numeric(format(d$date, "%j"))
   d$month <- as.numeric(format(d$date, "%m"))
+  d$dow <- as.numeric(format(d$date, "%u"))
 
   return(d)
 }
