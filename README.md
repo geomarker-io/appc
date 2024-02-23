@@ -42,15 +42,15 @@ appc::predict_pm25(
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  8.40   0.548
-#> 2  9.90   1.52 
+#> 1  8.36    1.21
+#> 2 10.9     2.21
 #> 
 #> $`8841a45555555555`
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.29   0.541
-#> 2  6.98   1.16
+#> 1  5.39   0.496
+#> 2  7.99   3.21
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
@@ -112,8 +112,8 @@ themselves. View information and options about each geomarker:
 
 | geomarker                             | appc function                |
 |---------------------------------------|------------------------------|
-| 🌦 weather & atmospheric conditions    | `add_narr_data()`            |
-| 🛰 satellite-based aerosol diagnostics | `add_merra_data()`           |
+| 🌦 weather & atmospheric conditions    | `get_narr_data()`            |
+| 🛰 satellite-based aerosol diagnostics | `get_merra_data()`           |
 | 🚍 traffic densities                  | `get_traffic_summary()`      |
 | 🏙 urban imperviousness                | `get_urban_imperviousness()` |
 | 🔥 wildfire smoke                     | `install_smoke_pm_data()`    |

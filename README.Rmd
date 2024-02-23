@@ -79,8 +79,8 @@ Spatiotemporal geomarkers are used for predicting air pollution concentrations, 
 
 | geomarker | appc function |
 |-----------|---------------|
-| 🌦 weather & atmospheric conditions | `add_narr_data()` |
-| 🛰 satellite-based aerosol diagnostics | `add_merra_data()` |
+| 🌦 weather & atmospheric conditions | `get_narr_data()` |
+| 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🚍 traffic densities | `get_traffic_summary()` |
 | 🏙 urban imperviousness | `get_urban_imperviousness()` |
 | 🔥 wildfire smoke | `install_smoke_pm_data()` |
