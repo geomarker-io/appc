@@ -15,21 +15,18 @@ status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/p
 ## About
 
 The goal of the appc package is to provide daily, high resolution, near
-real-time model-based ambient air pollution exposure assessments. This
+real-time, model-based ambient air pollution exposure assessments. This
 is achieved by training a generalized random forest on several
 geomarkers to predict daily average EPA AQS concentrations from 2017
 until the present at exact locations across the contiguous United
-States. Predictor geomarkers include weather and atmospheric
-information, traffic on primary roadways, urban imperviousness, wildfire
-smoke, industrial emissions, elevation, spatiotemporal indicators, and
-satellite-based aerosol diagnostics data.
-
-The appc package contains functions for generating geomarker predictors
-and the ambient air pollution concentrations. Source files included with
-the package create a training dataset, train the model, and create a
-cross-validation accuracy report. The predictive model can be updated
-with any release to use more recent AQS measurements and/or geomarker
-predictors.
+States. The appc package contains functions for generating geomarker
+predictors and the ambient air pollution concentrations. Predictor
+geomarkers include weather and atmospheric information, traffic on
+primary roadways, urban imperviousness, wildfire smoke, industrial
+emissions, elevation, spatiotemporal indicators, and satellite-based
+aerosol diagnostics data. Source files included with the package train
+and evaluate models that can be updated with any release to use more
+recent AQS measurements and/or geomarker predictors.
 
 ## Example
 
@@ -41,19 +38,6 @@ appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
-#> loading random forest model...
-#> adding coordinates...
-#> adding elevation...
-#> adding AADT...
-#> intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)
-#> adding NARR...
-#> adding MERRA...
-#> adding NLCD urban imperviousness...
-#> adding NEI...
-#> adding smoke via census tract...
-#>   found 2 unique locations across 2 states
-#> (down)loading 2010 tracts ■■■■■■■■■■■■■■■■                  50% |  ETA:  2s
-#> adding time components...
 #> $`8841b39a7c46e25f`
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
@@ -113,24 +97,29 @@ tibble::tribble(
     ),
     pm25 = appc::predict_pm25(s2, dates)
   )
-#> loading random forest model...
-#> adding coordinates...
-#> adding elevation...
-#> adding AADT...
-#> intersecting with AADT data using level 14 s2 approximation ( ~ 521 sq m)
-#> adding NARR...
-#> adding MERRA...
-#> adding NLCD urban imperviousness...
-#> adding NEI...
-#> adding smoke via census tract...
-#>   found 2 unique locations across 2 states
-#> adding time components...
 #> # A tibble: 2 × 5
 #>   s2               start_date end_date   dates       pm25             
 #>   <s2cell>         <chr>      <chr>      <list>      <named list>     
 #> 1 8841b39a7c46e25f 2023-02-20 2023-04-01 <date [41]> <tibble [41 × 2]>
 #> 2 8841a45555555555 2021-12-30 2022-01-10 <date [12]> <tibble [12 × 2]>
 ```
+
+## Geomarker Assessment
+
+Spatiotemporal geomarkers are used for predicting air pollution
+concentrations, but also serve as exposures or confounding exposures
+themselves. View information and options about each geomarker:
+
+| geomarker                             | appc function                |
+|---------------------------------------|------------------------------|
+| 🌦 weather & atmospheric conditions    | `add_narr_data()`            |
+| 🛰 satellite-based aerosol diagnostics | `add_merra_data()`           |
+| 🚍 traffic densities                  | `get_traffic_summary()`      |
+| 🏙 urban imperviousness                | `get_urban_imperviousness()` |
+| 🔥 wildfire smoke                     | `install_smoke_pm_data()`    |
+| 🏭 industrial emissions               | `get_nei_point_summary()`    |
+| 🗻 elevation                          | `get_elevation_summary()`    |
+| 🔗 census tract identifier            | `get_census_tract_id()`      |
 
 ## Developing
 
@@ -147,17 +136,15 @@ recipes in the `justfile`.
 > just --list
 
 Available recipes:
-    model_refresh        # data > train > report
+    create_report        # create CV accuracy report
     dl_geomarker_data    # download all geomarker ahead of time, if not already cached
-    make_training_data   # make training data
-    train                # train grf model
-    report               # create CV accuracy report
-    release_grf          # upload grf model to current github release
     docker_test          # run tests without cached release files
     docker_tool          # build docker image preloaded with {appc} and data
     release_merra_data   # upload merra data to github release
+    release_model        # upload grf model to current github release
     release_nei_data     # install nei data from source and upload to github release
     release_smoke_data   # install smoke data from source and upload to github release
     release_traffic_data # install traffic data from source and upload to github release
     release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
+    train_model          # train grf model
 ```

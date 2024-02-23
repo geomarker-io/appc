@@ -25,24 +25,17 @@ docker_test:
 docker_tool:
   docker build -t appc -f Dockerfile.tool .
 
-# data > train > report
-model_refresh: dl_geomarker_data make_training_data train report
-
-# make training data
-make_training_data:
-  Rscript --verbose inst/make_training_data.R
-
 # train grf model
-train:
+train_model:
   Rscript --verbose inst/train_model.R
 
 # upload grf model to current github release
-release_grf:
+release_model:
   cp rf_pm.rds "{{geomarker_folder}}"/rf_pm.rds
   gh release upload v{{pkg_version}} "rf_pm.rds"
 
 # create CV accuracy report
-report:
+create_report:
   R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd', knit_root_dir = getwd())"
   open inst/APPC_prediction_evaluation.html
 

@@ -4,12 +4,14 @@
 \alias{get_census_tract_id}
 \title{Get census tract identifier}
 \usage{
-get_census_tract_id(x, year = as.character(2010:2023))
+get_census_tract_id(x, year = as.character(2010:2023), quiet = TRUE)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{year}{a character data year passed to tigris to get state and tract boundaries}
+
+\item{quiet}{silence progress messages?}
 }
 \description{
 The identifier of the closest census tract geography (retrieved from the US Census API)

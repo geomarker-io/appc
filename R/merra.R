@@ -63,9 +63,7 @@ get_merra_data <- function(x, dates) {
         tibble::tibble(date = dd) |>
           dplyr::left_join(xx, by = "date") |>
           dplyr::select(-date)
-      },
-      .progress = "extracting closest merra data"
-    )
+      })
   names(out) <- as.character(x)
   return(out)
 }

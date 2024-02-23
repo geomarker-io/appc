@@ -4,12 +4,14 @@
 \alias{predict_pm25}
 \title{Get daily PM2.5 model predictions}
 \usage{
-predict_pm25(x, dates)
+predict_pm25(x, dates, quiet = TRUE)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
+
+\item{quiet}{silence progress messages?}
 }
 \value{
 a list of tibbles the same length as \code{x}, each containing

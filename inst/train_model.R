@@ -1,5 +1,6 @@
 library(dplyr, warn.conflicts = FALSE)
 library(grf)
+
 # load development version if developing (instead of currently installed version)
 if (file.exists("./inst")) {
   devtools::load_all()
@@ -7,11 +8,42 @@ if (file.exists("./inst")) {
   library(appc)
 }
 
-message("loading training data...")
-message(fs::path_wd("training_data.rds"))
-d_train <-
-  readRDS(fs::path_wd("training_data.rds")) |>
-  filter(pollutant == "pm25")
+message("creating training data")
+
+# get AQS data
+d <-
+  tidyr::expand_grid(
+    ## pollutant = c("pm25", "ozone", "no2"),
+    pollutant = "pm25",
+    year = as.character(2017:2023)
+  ) |>
+  purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
+
+# structure for pipeline
+d <-
+  d |>
+  purrr::list_rbind() |>
+  dplyr::mutate(dplyr::across(c(pollutant), as.factor)) |>
+  dplyr::nest_by(s2, pollutant) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
+    dates = purrr::map(data, "date"),
+    conc = purrr::map(data, "conc")
+  ) |>
+  dplyr::select(-data)
+
+# subset to contiguous US
+d <- d |>
+  dplyr::filter(
+    s2::s2_intersects(
+      s2::as_s2_geography(s2::s2_cell_to_lnglat(s2)),
+      contiguous_us()
+    )
+  )
+
+d_train <- assemble_predictors(d$s2, d$dates, quiet = FALSE)
+
+d_train$conc <- unlist(d$conc)
 
 pred_names <-
   c(
@@ -51,7 +83,7 @@ grf <-
     equalize.cluster.weights = FALSE
   )
 
-message("saving GRF...")
+message("saving GRF")
 file_output_path <- fs::path_wd("rf_pm.rds")
 saveRDS(grf, file_output_path)
 message("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
