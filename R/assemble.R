@@ -32,8 +32,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   if (!quiet) message("adding elevation")
   d$elevation_median_800 <- get_elevation_summary(x = d$s2, fun = stats::median, buffer = 800)
   d$elevation_sd_800 <- get_elevation_summary(x = d$s2, fun = stats::sd, buffer = 800)
-  if (!quiet) message("adding AADT using level 15 s2 approximation (~ 260 m sq)")
-  d$traffic_400 <- get_traffic_summary(d$s2, buffer = 400, s2_approx_level = "15")
+  if (!quiet) message("adding AADT using level 14 s2 approximation (~ 260 m sq)")
+  d$traffic_400 <- get_traffic_summary(d$s2, buffer = 400, s2_approx_level = "14")
   d$aadt_total_m_400 <- purrr::map_dbl(d$traffic_400, "aadt_total_m")
   d$aadt_truck_m_400 <- purrr::map_dbl(d$traffic_400, "aadt_truck_m")
   d$traffic_400 <- NULL
