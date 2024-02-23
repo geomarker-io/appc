@@ -5,7 +5,11 @@
 \alias{install_traffic}
 \title{Get traffic summary}
 \usage{
-get_traffic_summary(x, buffer = 400)
+get_traffic_summary(
+  x,
+  buffer = 400,
+  s2_approx_level = c("13", "14", "15", "16")
+)
 
 install_traffic()
 }
@@ -13,6 +17,8 @@ install_traffic()
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
+
+\item{s2_approx_level}{the level of approximation used for geospatial intersections, see details}
 }
 \value{
 a list the same length as \code{x}, which each element having a list of \code{total_aadt_m} and \code{truck_aadt_m} estimates
@@ -21,12 +27,15 @@ a list the same length as \code{x}, which each element having a list of \code{to
 Highway Performance Monitoring System (HPMS) data from 2020 is summarized as the sum of the total (and truck-only) average annual daily vehicle-meter counts within \code{buffer} meters of each s2 geohash.
 }
 \details{
-A s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with traffic summary data
+By default, an s2 level 14 approximation (~ 521 m sq) is used to simplify the intersection calculation with
+traffic summary data. The median areas of the s2 cells in the contiguous United States by s2 level is
+16: 130 m sq, 15: 260 m sq, 14: 521 m sq.
 }
 \examples{
 get_traffic_summary(
   s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
-  buffer = 1500
+  buffer = 1500,
+  s2_approx_level = 
 )
 }
 \references{
