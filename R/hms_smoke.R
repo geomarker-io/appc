@@ -29,6 +29,7 @@ get_smoke_data <- function(x, dates) {
 #'   date = as.Date("2023-06-10")
 #' )
 get_daily_smoke <- function(x, date) {
+  # TODO if the file doesn't exist if fails; e.g., as.Date("2017-06-22")
   smoke_shapefile <-
     glue::glue(
       "/vsizip//vsicurl",
