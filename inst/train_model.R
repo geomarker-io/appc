@@ -41,7 +41,7 @@ d <- d |>
     )
   )
 
-d_train <- assemble_predictors(d$s2, d$dates, quiet = TRUE)
+d_train <- assemble_predictors(d$s2, d$dates, quiet = FALSE)
 
 d_train$conc <- unlist(d$conc)
 

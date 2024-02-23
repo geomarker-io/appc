@@ -98,17 +98,15 @@ To create and release geomarker data for release assets, as well as to create th
 > just --list
 
 Available recipes:
-    model_refresh        # data > train > report
+    create_report        # create CV accuracy report
     dl_geomarker_data    # download all geomarker ahead of time, if not already cached
-    make_training_data   # make training data
-    train                # train grf model
-    report               # create CV accuracy report
-    release_grf          # upload grf model to current github release
     docker_test          # run tests without cached release files
     docker_tool          # build docker image preloaded with {appc} and data
     release_merra_data   # upload merra data to github release
+    release_model        # upload grf model to current github release
     release_nei_data     # install nei data from source and upload to github release
     release_smoke_data   # install smoke data from source and upload to github release
     release_traffic_data # install traffic data from source and upload to github release
     release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
+    train_model          # train grf model
 ```

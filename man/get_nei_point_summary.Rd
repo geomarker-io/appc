@@ -9,7 +9,8 @@ get_nei_point_summary(
   x,
   year = c("2020", "2017"),
   pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"),
-  buffer = 1000
+  buffer = 1000,
+  quiet = TRUE
 )
 
 install_nei_point_data(year = c("2020", "2017"))
@@ -22,6 +23,8 @@ install_nei_point_data(year = c("2020", "2017"))
 \item{pollutant_code}{the NEI pollutant to summarize}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
+
+\item{quiet}{silence progress messages?}
 }
 \value{
 for \code{get_nei_point_summary()}, a numeric vector (the same length as \code{x})

@@ -43,7 +43,7 @@ get_traffic_summary <- function(x, buffer = 400) {
       ) |>
       as.list()
   }
-  withins_aadt <- purrr::map(1:length(withins), summarize_traffic, .progress = "summarizing AADT")
+  withins_aadt <- purrr::map(1:length(withins), summarize_traffic)
   names(withins_aadt) <- xx
   return(withins_aadt[as.character(x)])
 }
