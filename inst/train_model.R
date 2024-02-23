@@ -22,26 +22,27 @@ d <-
 # structure for pipeline
 d <-
   d |>
-  list_rbind() |>
-  mutate(across(c(pollutant), as.factor)) |>
-  nest_by(s2, pollutant) |>
-  ungroup() |>
-  mutate(
+  purrr::list_rbind() |>
+  dplyr::mutate(dplyr::across(c(pollutant), as.factor)) |>
+  dplyr::nest_by(s2, pollutant) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
     dates = purrr::map(data, "date"),
     conc = purrr::map(data, "conc")
   ) |>
-  select(-data)
+  dplyr::select(-data)
 
 # subset to contiguous US
 d <- d |>
-  filter(
-    s2_intersects(
-      as_s2_geography(s2_cell_to_lnglat(s2)),
+  dplyr::filter(
+    s2::s2_intersects(
+      s2::as_s2_geography(s2::s2_cell_to_lnglat(s2)),
       contiguous_us()
     )
   )
 
-d_train <- assemble_predictors(d$s2, d$dates)
+d_train <- assemble_predictors(d$s2, d$dates, quiet = TRUE)
+
 d_train$conc <- unlist(d$conc)
 
 pred_names <-
