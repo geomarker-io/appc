@@ -1,5 +1,5 @@
 #' Get census tract identifier
-#' 
+#'
 #' The identifier of the closest census tract geography (retrieved from the US Census API)
 #' for the supplied year are returned for each s2 geohash.
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
@@ -18,24 +18,34 @@ get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = TRUE)
   year <- rlang::arg_match(year)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))
   states <- s2_states(year = year)
-  d <- 
-    tibble::tibble(s2_geography = x_s2_geography,
-                   state = states[s2::s2_closest_feature(x_s2_geography, states$s2_geography), "GEOID", drop = TRUE]) |>
+  d <-
+    tibble::tibble(
+      s2_geography = x_s2_geography,
+      state = states[s2::s2_closest_feature(x_s2_geography, states$s2_geography), "GEOID", drop = TRUE]
+    ) |>
     dplyr::nest_by(state) |>
     dplyr::ungroup()
-  if (!quiet) message("  found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
-          "across ", nrow(d), " states")
+  if (!quiet) {
+    message(
+      "  found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
+      "across ", nrow(d), " states"
+    )
+  }
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
   d <-
     d |>
-    dplyr::mutate(state_tracts = purrr::map(state, \(.) s2_tracts(state = ., year = year),
-                                            .progress = paste0("(down)loading ", year, " tracts"))) |>
-    dplyr::mutate(census_tract_id =
-                    purrr::map2(
-                      data, state_tracts,
-                      \(d, st) st[s2::s2_closest_feature(d$s2_geography, st$s2_geography), geoid_col_name, drop = TRUE],
-                      .progress = paste0("intersecting ", year, " tracts")
-                    ))
+    dplyr::mutate(state_tracts = purrr::map(
+      state, \(.) s2_tracts(state = ., year = year),
+      .progress = ifelse(quiet, FALSE, paste0("(down)loading ", year, " tracts"))
+    )) |>
+    dplyr::mutate(
+      census_tract_id =
+        purrr::map2(
+          data, state_tracts,
+          \(d, st) st[s2::s2_closest_feature(d$s2_geography, st$s2_geography), geoid_col_name, drop = TRUE],
+          .progress = ifelse(quiet, FALSE, paste0("intersecting ", year, " tracts"))
+        )
+    )
   the_tracts <-
     d |>
     dplyr::select(data, census_tract_id) |>
@@ -56,7 +66,7 @@ get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = TRUE)
 s2_states <- function(year = as.character(2010:2023)) {
   year <- rlang::arg_match(year)
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
-    tigris::states(year = year, progress_bar = FALSE) |>
+  tigris::states(year = year, progress_bar = FALSE) |>
     dplyr::select(GEOID = dplyr::all_of(geoid_col_name)) |>
     dplyr::mutate(s2_geography = s2::as_s2_geography(geometry)) |>
     tibble::as_tibble() |>
@@ -70,7 +80,7 @@ s2_states <- function(year = as.character(2010:2023)) {
 #' @export
 #' @examples
 #' s2_tracts("OH", "2023")
-s2_tracts <- function(state,  year = as.character(2010:2023)) {
+s2_tracts <- function(state, year = as.character(2010:2023)) {
   year <- rlang::arg_match(year)
   tigris::tracts(state = state, year = year, progress_bar = FALSE, keep_zipped_shapefile = TRUE) |>
     dplyr::mutate(s2_geography = s2::as_s2_geography(geometry)) |>
