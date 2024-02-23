@@ -80,15 +80,15 @@
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  8.40   0.548</span></span>
-<span><span class="co">#&gt; 2  9.90   1.52 </span></span>
+<span><span class="co">#&gt; 1  8.36    1.21</span></span>
+<span><span class="co">#&gt; 2 10.9     2.21</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $`8841a45555555555`</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  5.29   0.541</span></span>
-<span><span class="co">#&gt; 2  6.98   1.16</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  5.39   0.496</span></span>
+<span><span class="co">#&gt; 2  7.99   3.21</span></span></code></pre></div>
 <p>Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data directory (i.e., <code>tools::R_user_dir("appc", "data")</code>). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the <code>R_USER_DATA_DIR</code> environment variable; see <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">?tools::R_user_dir</a></code>.)</p>
 </div>
 <div class="section level2">
@@ -136,11 +136,11 @@
 <tbody>
 <tr class="odd">
 <td>🌦 weather &amp; atmospheric conditions</td>
-<td><code>add_narr_data()</code></td>
+<td><code><a href="reference/get_narr_data.html">get_narr_data()</a></code></td>
 </tr>
 <tr class="even">
 <td>🛰 satellite-based aerosol diagnostics</td>
-<td><code>add_merra_data()</code></td>
+<td><code><a href="reference/get_merra_data.html">get_merra_data()</a></code></td>
 </tr>
 <tr class="odd">
 <td>🚍 traffic densities</td>
