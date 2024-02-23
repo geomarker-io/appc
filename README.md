@@ -31,7 +31,8 @@ recent AQS measurements and/or geomarker predictors.
 ## Example
 
 In R, create model-based predictions of ambient air pollution
-concentrations at exact locations on specific dates:
+concentrations at exact locations on specific dates using the
+`predict_pm25()` function:
 
 ``` r
 appc::predict_pm25(
