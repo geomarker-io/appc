@@ -23,7 +23,7 @@ get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = TRUE)
                    state = states[s2::s2_closest_feature(x_s2_geography, states$s2_geography), "GEOID", drop = TRUE]) |>
     dplyr::nest_by(state) |>
     dplyr::ungroup()
-  message("  found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
+  if (!quiet) message("  found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
           "across ", nrow(d), " states")
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
   d <-

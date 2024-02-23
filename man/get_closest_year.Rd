@@ -17,10 +17,6 @@ a character vector of the closest year in \code{years} for each date in \code{x}
 \description{
 The time between a date and year is calculated using July 1st of the year.
 }
-\details{
-To find the closest year, each date is converted to a year
-and the differences with the provided years is minimzed. This is a problem....
-}
 \examples{
-get_closest_year(x = as.Date(c("2021-09-15", "2022-09-01")), years = c("2020", "2022"))
+get_closest_year(x = as.Date(c("2021-05-15", "2022-09-01")), years = c("2020", "2022"))
 }
