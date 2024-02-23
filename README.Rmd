@@ -24,10 +24,11 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 ## About
 
-The goal of the appc package is to provide daily, high resolution, near real-time model-based ambient air pollution exposure assessments.
-This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present at exact locations across the contiguous United States. Predictor geomarkers include weather and atmospheric information, traffic on primary roadways, urban imperviousness, wildfire smoke, industrial emissions, elevation, spatiotemporal indicators, and satellite-based aerosol diagnostics data.
-
-The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Source files included with the package create a training dataset, train the model, and create a cross-validation accuracy report. The predictive model can be updated with any release to use more recent AQS measurements and/or geomarker predictors.
+The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments.
+This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present at exact locations across the contiguous United States.
+The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations.
+Predictor geomarkers include weather and atmospheric information, traffic on primary roadways, urban imperviousness, wildfire smoke, industrial emissions, elevation, spatiotemporal indicators, and satellite-based aerosol diagnostics data.
+Source files included with the package train and evaluate models that can be updated with any release to use more recent AQS measurements and/or geomarker predictors.
 
 ## Example
 
@@ -39,6 +40,7 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 ```
+
 Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data
 directory (i.e., `tools::R_user_dir("appc", "data")`). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
 
@@ -70,6 +72,21 @@ tibble::tribble(
     pm25 = appc::predict_pm25(s2, dates)
   )
 ```
+
+## Geomarker Assessment
+
+Spatiotemporal geomarkers are used for predicting air pollution concentrations, but also serve as exposures or confounding exposures themselves. View information and options about each geomarker:
+
+| geomarker | appc function |
+|-----------|---------------|
+| 🌦 weather & atmospheric conditions | `add_narr_data()` |
+| 🛰 satellite-based aerosol diagnostics | `add_merra_data()` |
+| 🚍 traffic densities | `get_traffic_summary()` |
+| 🏙 urban imperviousness | `get_urban_imperviousness()` |
+| 🔥 wildfire smoke | `install_smoke_pm_data()` |
+| 🏭 industrial emissions | `get_nei_point_summary()` |
+| 🗻 elevation | `get_elevation_summary()` |
+| 🔗 census tract identifier | `get_census_tract_id()` |
 
 ## Developing
 

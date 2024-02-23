@@ -15,21 +15,18 @@ status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/p
 ## About
 
 The goal of the appc package is to provide daily, high resolution, near
-real-time model-based ambient air pollution exposure assessments. This
+real-time, model-based ambient air pollution exposure assessments. This
 is achieved by training a generalized random forest on several
 geomarkers to predict daily average EPA AQS concentrations from 2017
 until the present at exact locations across the contiguous United
-States. Predictor geomarkers include weather and atmospheric
-information, traffic on primary roadways, urban imperviousness, wildfire
-smoke, industrial emissions, elevation, spatiotemporal indicators, and
-satellite-based aerosol diagnostics data.
-
-The appc package contains functions for generating geomarker predictors
-and the ambient air pollution concentrations. Source files included with
-the package create a training dataset, train the model, and create a
-cross-validation accuracy report. The predictive model can be updated
-with any release to use more recent AQS measurements and/or geomarker
-predictors.
+States. The appc package contains functions for generating geomarker
+predictors and the ambient air pollution concentrations. Predictor
+geomarkers include weather and atmospheric information, traffic on
+primary roadways, urban imperviousness, wildfire smoke, industrial
+emissions, elevation, spatiotemporal indicators, and satellite-based
+aerosol diagnostics data. Source files included with the package train
+and evaluate models that can be updated with any release to use more
+recent AQS measurements and/or geomarker predictors.
 
 ## Example
 
@@ -106,6 +103,23 @@ tibble::tribble(
 #> 1 8841b39a7c46e25f 2023-02-20 2023-04-01 <date [41]> <tibble [41 × 2]>
 #> 2 8841a45555555555 2021-12-30 2022-01-10 <date [12]> <tibble [12 × 2]>
 ```
+
+## Geomarker Assessment
+
+Spatiotemporal geomarkers are used for predicting air pollution
+concentrations, but also serve as exposures or confounding exposures
+themselves. View information and options about each geomarker:
+
+| geomarker                             | appc function                |
+|---------------------------------------|------------------------------|
+| 🌦 weather & atmospheric conditions    | `add_narr_data()`            |
+| 🛰 satellite-based aerosol diagnostics | `add_merra_data()`           |
+| 🚍 traffic densities                  | `get_traffic_summary()`      |
+| 🏙 urban imperviousness                | `get_urban_imperviousness()` |
+| 🔥 wildfire smoke                     | `install_smoke_pm_data()`    |
+| 🏭 industrial emissions               | `get_nei_point_summary()`    |
+| 🗻 elevation                          | `get_elevation_summary()`    |
+| 🔗 census tract identifier            | `get_census_tract_id()`      |
 
 ## Developing
 
