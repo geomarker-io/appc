@@ -55,7 +55,8 @@ buffer distance of each s2 geohash weighted by the inverse of the distance squar
 <span>  <span class="va">x</span>,</span>
 <span>  year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020"</span>, <span class="st">"2017"</span><span class="op">)</span>,</span>
 <span>  pollutant_code <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PM25-PRI"</span>, <span class="st">"EC"</span>, <span class="st">"OC"</span>, <span class="st">"SO4"</span>, <span class="st">"NO3"</span>, <span class="st">"PMFINE"</span><span class="op">)</span>,</span>
-<span>  buffer <span class="op">=</span> <span class="fl">1000</span></span>
+<span>  buffer <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">install_nei_point_data</span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020"</span>, <span class="st">"2017"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -77,6 +78,10 @@ buffer distance of each s2 geohash weighted by the inverse of the distance squar
 
 <dt>buffer</dt>
 <dd><p>distance from s2 cell (in meters) to summarize data</p></dd>
+
+
+<dt>quiet</dt>
+<dd><p>silence progress messages?</p></dd>
 
 </dl></div>
     <div class="section level2">
