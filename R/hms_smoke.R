@@ -76,3 +76,4 @@ download_daily_smoke_data <- function(date) {
     ) |>
     safe_st_read(quiet = TRUE)
 }
+
