@@ -23,20 +23,16 @@ get_hms_smoke_data <- function(x, dates, quiet = TRUE) {
   check_s2_dates(x, dates)
   d_smoke <- readRDS(install_hms_smoke_data())
   date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
-  if (!quiet) cli::cli_progress_bar("getting daily smoke data for each location", total = length(x))
   withr::with_options(list(sf_use_s2 = FALSE), {
-    out <- vector("list", length(x))
-    for (i in seq_along(x)) {
-      cli::cli_progress_update()
-      out[[i]] <-
+    out <-
+      mappp::mappp(seq_along(x), \(i) {
         purrr::map(date_smoke_geoms[[i]], \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .)) |>
-        suppressMessages() |>
-        purrr::map("Density") |>
-        purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
-        purrr::map_dbl(sum, na.rm = TRUE) |>
-        as.numeric()
-    }
-    cli::cli_progress_done()
+          suppressMessages() |>
+          purrr::map("Density") |>
+          purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
+          purrr::map_dbl(sum, na.rm = TRUE) |>
+          as.numeric()
+      }, parallel = TRUE)
   })
   return(out)
 }
