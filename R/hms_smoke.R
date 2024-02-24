@@ -20,13 +20,15 @@
 #' get_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
 get_smoke_data <- function(x, dates, quiet = TRUE) {
   check_s2_dates(x, dates)
-  purrr::map(seq_along(x), \(.i) {
+  mappp::mappp(seq_along(x), \(.i) {
     purrr::map_dbl(
       dates[[.i]],
-      \(.) get_daily_smoke(x[[.i]], .),
-      .progress = ifelse(quiet, FALSE, "getting smoke plume data")
+      \(.) get_daily_smoke(x[[.i]], .)
     )
-  })
+  },
+  parallel = TRUE
+  ## .progress = ifelse(quiet, FALSE, "getting smoke plume data")
+  )
 }
 
 #' get daily smoke data for a vector of s2 locations

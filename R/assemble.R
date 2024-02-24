@@ -21,6 +21,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   if (!quiet) message("checking that s2 locations are within the contiguous united states")
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), contiguous_us())
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
+  if (!quiet) message("adding smoke plume data")
+  d$plume_smoke <- get_smoke_data(x = d$s2, dates = d$dates, quiet = quiet)
   if (!quiet) message("adding coordinates")
   conus_coords <-
     sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
@@ -69,13 +71,10 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   if (!quiet) message("adding NEI")
   nei_years <- c("2017", "2020")
   d$nei_point_id2w_1000 <-
-    purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
+    purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000, quiet = quiet)) |>
     stats::setNames(nei_years) |>
     purrr::list_transpose()
   d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(x = x, years = names(y[1]))])
-
-  if (!quiet) message("adding smoke plume data")
-  d$plume_smoke <- get_smoke_data(x = d$s2, dates = d$dates, quiet = quiet)
 
   d <-
     d |>
