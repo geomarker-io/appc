@@ -26,5 +26,4 @@ reference:
   - get_closest_year
   - get_daily_aqs
   - assemble_predictors
-  - install_smoke_pm_data
 
