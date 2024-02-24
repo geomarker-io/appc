@@ -10,7 +10,7 @@ reference:
   - get_urban_imperviousness
   - get_traffic_summary
   - get_merra_data
-  - install_smoke_pm_data
+  - get_hms_smoke_data
 - title: Air pollution assessment
   contents:
   - predict_pm25
@@ -26,4 +26,5 @@ reference:
   - get_closest_year
   - get_daily_aqs
   - assemble_predictors
+  - install_smoke_pm_data
 

@@ -7,42 +7,69 @@
 #' @param x a vector of s2 cell identifers (`s2_cell` object); currently required to be within the contiguous united states
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
 #' @param quiet silence progress messages?
-#' @return a list of numeric vectors of smoke plume scores (the same length as `x` and `dates`)
+#' @return for `get_hms_smoke_data()`, a list of numeric vectors of smoke plume scores (the same length as `x` and `dates`)
 #' @references <https://www.ospo.noaa.gov/Products/land/hms.html#about>
-#' @details In rare cases, daily files are missing (e.g., "2017-06-22")
-#' and will return missing values.  If no smoke plumes intersect, then a zero is returned.
+#' @details Daily HMS shapefiles are missing for 7 days within 2017-2023 
+#' ("2017-04-27", "2017-05-31", "2017-06-01", "2017-06-01" "2017-06-22", "2017-11-12", "2018-12-31")
+#' and will return zero values.  If files are available but no smoke plumes intersect, then a zero values is also returned.
 #' @export
 #' @examples
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2017-11-06")),
 #'   "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15"))
 #' )
-#' get_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
-get_smoke_data <- function(x, dates, quiet = TRUE) {
+#' get_hms_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
+get_hms_smoke_data <- function(x, dates, quiet = TRUE) {
   check_s2_dates(x, dates)
-  mappp::mappp(seq_along(x), \(.i) {
-    purrr::map_dbl(
-      dates[[.i]],
-      \(.) get_daily_smoke(x[[.i]], .)
-    )
-  },
-  parallel = TRUE
-  ## .progress = ifelse(quiet, FALSE, "getting smoke plume data")
-  )
+  d_smoke <- readRDS(install_hms_smoke_data())
+  date_smoke_geoms <- lapply(dates, \(.) d_smoke[as.character(.)])
+  withr::with_options(list(sf_use_s2 = FALSE), {
+    out <- vector("list", length(x))
+    for (i in seq_along(x)) {
+      out[[i]] <-
+        purrr::map(
+          date_smoke_geoms[[i]],
+          \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .),
+          .progress = ifelse(quiet, FALSE, "joining each location to daily HMS smoke files")
+        ) |>
+        suppressMessages() |>
+        purrr::map("Density") |>
+        purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
+        purrr::map_dbl(sum, na.rm = TRUE) |>
+        as.numeric()
+    }
+  })
+  return(out)
 }
 
-#' get daily smoke data for a vector of s2 locations
-#' @examples
-#' get_daily_smoke(
-#'   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-#'   date = as.Date("2023-08-15")
-#' )
-#' get_daily_smoke(
-#'   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-#'   date = as.Date("2017-06-23")
-#' )
-get_daily_smoke <- function(x, date) {
-  safe_st_read <- purrr::safely(sf::st_read, otherwise = NULL)
+#' installs HMS smoke data into user's data directory for the `appc` package
+#' @return for `install_hms_smoke_data()`, a character string path to the installed RDS file
+#' @rdname get_hms_smoke_data
+#' @export
+install_hms_smoke_data <- function() {
+  dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
+  if (file.exists(dest_file)) {
+    return(as.character(dest_file))
+  }
+  if (!install_source_preference()) {
+    install_released_data(released_data_name = "hms_smoke.rds")
+    return(as.character(dest_file))
+  }
+  smoke_days <- seq(as.Date("2017-01-01"), as.Date("2023-12-31"), by = 1)
+  all_smoke_daily_data <-
+    purrr::map(
+      smoke_days,
+      download_daily_smoke_data,
+      .progress = "downloading all smoke data"
+    ) |>
+    purrr::map("result") |>
+    stats::setNames(smoke_days)
+  saveRDS(all_smoke_daily_data, dest_file)
+  return(as.character(dest_file))
+}
+
+download_daily_smoke_data <- function(date) {
+  safe_st_read <- purrr::safely(sf::st_read, otherwise = sf::st_sf(sf::st_sfc(crs = sf::st_crs("epsg:4326"))))
   smoke_shapefile <-
     glue::glue(
       "/vsizip//vsicurl",
@@ -53,23 +80,4 @@ get_daily_smoke <- function(x, date) {
       .sep = "/"
     ) |>
     safe_st_read(quiet = TRUE)
-  if (is.null(smoke_shapefile$result)) {
-    return(rep(NA, times = length(x)))
-  } else {
-    smoke_shapefile <- smoke_shapefile$result
-  }
-  x_points <-
-    x |>
-    s2::s2_cell_to_lnglat() |>
-    sf::st_as_sf() |>
-    tibble::rownames_to_column(".row")
-  # assign 1, 2, 3 to Light Medium and Heavy in order to summarize
-  suppressMessages(sf::sf_use_s2(FALSE))
-  intersection_summary <-
-    sf::st_join(x_points, smoke_shapefile) |>
-    suppressMessages() |>
-    sf::st_drop_geometry() |>
-    dplyr::mutate(density = as.numeric(factor(Density, levels = c("Light", "Medium", "Heavy")))) |>
-    dplyr::summarize(smoke_plume = sum(density, na.rm = TRUE), .by = .row)
-  return(intersection_summary$smoke_plume)
 }

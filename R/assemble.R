@@ -21,8 +21,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   if (!quiet) message("checking that s2 locations are within the contiguous united states")
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), contiguous_us())
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
-  if (!quiet) message("adding smoke plume data")
-  d$plume_smoke <- get_smoke_data(x = d$s2, dates = d$dates, quiet = quiet)
+  if (!quiet) message("adding HMS smoke data")
+  d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates, quiet = quiet)
   if (!quiet) message("adding coordinates")
   conus_coords <-
     sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
