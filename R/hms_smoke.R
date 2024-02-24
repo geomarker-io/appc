@@ -9,7 +9,7 @@
 #' @param quiet silence progress messages?
 #' @return for `get_hms_smoke_data()`, a list of numeric vectors of smoke plume scores (the same length as `x` and `dates`)
 #' @references <https://www.ospo.noaa.gov/Products/land/hms.html#about>
-#' @details Daily HMS shapefiles are missing for 7 days within 2017-2023 
+#' @details Daily HMS shapefiles are missing for 7 days within 2017-2023
 #' ("2017-04-27", "2017-05-31", "2017-06-01", "2017-06-01" "2017-06-22", "2017-11-12", "2018-12-31")
 #' and will return zero values.  If files are available but no smoke plumes intersect, then a zero values is also returned.
 #' @export
@@ -22,22 +22,21 @@
 get_hms_smoke_data <- function(x, dates, quiet = TRUE) {
   check_s2_dates(x, dates)
   d_smoke <- readRDS(install_hms_smoke_data())
-  date_smoke_geoms <- lapply(dates, \(.) d_smoke[as.character(.)])
+  date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
+  if (!quiet) cli::cli_progress_bar("getting daily smoke data for each location", total = length(x))
   withr::with_options(list(sf_use_s2 = FALSE), {
     out <- vector("list", length(x))
     for (i in seq_along(x)) {
+      cli::cli_progress_update()
       out[[i]] <-
-        purrr::map(
-          date_smoke_geoms[[i]],
-          \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .),
-          .progress = ifelse(quiet, FALSE, "joining each location to daily HMS smoke files")
-        ) |>
+        purrr::map(date_smoke_geoms[[i]], \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .)) |>
         suppressMessages() |>
         purrr::map("Density") |>
         purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
         purrr::map_dbl(sum, na.rm = TRUE) |>
         as.numeric()
     }
+    cli::cli_progress_done()
   })
   return(out)
 }
