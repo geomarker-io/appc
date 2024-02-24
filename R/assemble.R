@@ -75,7 +75,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(x = x, years = names(y[1]))])
 
   if (!quiet) message("adding smoke plume data")
-  d$plume_smoke <- get_smoke_data(x = d$s2, dates = d$dates)
+  d$plume_smoke <- get_smoke_data(x = d$s2, dates = d$dates, quiet = quiet)
 
   d <-
     d |>
