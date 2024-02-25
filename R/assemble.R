@@ -21,6 +21,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   if (!quiet) message("checking that s2 locations are within the contiguous united states")
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), contiguous_us())
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
+  if (!quiet) message("adding HMS smoke data")
+  d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates, quiet = quiet)
   if (!quiet) message("adding coordinates")
   conus_coords <-
     sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
@@ -69,7 +71,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
   if (!quiet) message("adding NEI")
   nei_years <- c("2017", "2020")
   d$nei_point_id2w_1000 <-
-    purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000)) |>
+    purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 1000, quiet = quiet)) |>
     stats::setNames(nei_years) |>
     purrr::list_transpose()
   d$nei_point_id2w_1000 <- purrr::map2(d$dates, d$nei_point_id2w_1000, \(x, y) y[get_closest_year(x = x, years = names(y[1]))])
@@ -81,18 +83,18 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25"), quiet = TRUE) {
       rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
       merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
       urban_imperviousness_400,
-      nei_point_id2w_1000
+      nei_point_id2w_1000, plume_smoke
     )) |>
     dplyr::rename(date = dates)
 
-  if (!quiet) message("adding smoke via census tract")
-  suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010", quiet = quiet))
-  d_smoke <- readRDS(install_smoke_pm_data())
-  d <-
-    d |>
-    dplyr::left_join(d_smoke, by = c("census_tract_id_2010", "date")) |>
-    tidyr::replace_na(list(smoke_pm = 0)) |>
-    dplyr::select(-census_tract_id_2010)
+  ## if (!quiet) message("adding smoke via census tract")
+  ## suppressWarnings(d$census_tract_id_2010 <- get_census_tract_id(d$s2, year = "2010", quiet = quiet))
+  ## d_smoke <- readRDS(install_smoke_pm_data())
+  ## d <-
+  ##   d |>
+  ##   dplyr::left_join(d_smoke, by = c("census_tract_id_2010", "date")) |>
+  ##   tidyr::replace_na(list(smoke_pm = 0)) |>
+  ##   dplyr::select(-census_tract_id_2010)
 
   if (!quiet) message("adding time components")
   d$year <- as.numeric(format(d$date, "%Y"))
