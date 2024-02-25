@@ -85,6 +85,7 @@ are predictors required for the exposure assessment model</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">assemble_predictors</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   |                                          |   0%, ETA NA</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> downloading 2023 air.2m:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> downloading 2023 hpbl:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> downloading 2023 acpcp:</span>
@@ -97,6 +98,7 @@ are predictors required for the exposure assessment model</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Columns: 28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ s2                       <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span> 8841b39a7c46e25f, 8841b39a7c46e25f, 8841a4…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ date                     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2023-05-18, 2023-11-06, 2023-06-22, 2023-08-…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ plume_smoke              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9, 2, 1, 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ x                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 981664.4, 981664.4, 993445.3, 993445.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ y                        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1850030, 1850030, 1833221, 1833221</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ elevation_median_800     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 231.0, 231.0, 231.5, 231.5</span>
@@ -118,7 +120,6 @@ are predictors required for the exposure assessment model</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_so4                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.430319, 2.208039, 3.706336, 5.782006</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ urban_imperviousness_400 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 66.63441, 66.63441, 11.82796, 11.82796</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ nei_point_id2w_1000      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.87343e-05, 2.87343e-05, 0.00000e+00, 0.0000…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ smoke_pm                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 0, 0, 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ year                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2023, 2023, 2023, 2023</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ doy                      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 138, 310, 173, 227</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ month                    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 5, 11, 6, 8</span>

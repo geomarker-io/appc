@@ -37,6 +37,9 @@
     <loc>http://geomarker.io/appc/reference/get_elevation_summary.html</loc>
   </url>
   <url>
+    <loc>http://geomarker.io/appc/reference/get_hms_smoke_data.html</loc>
+  </url>
+  <url>
     <loc>http://geomarker.io/appc/reference/get_merra_data.html</loc>
   </url>
   <url>
@@ -56,9 +59,6 @@
   </url>
   <url>
     <loc>http://geomarker.io/appc/reference/install_released_data.html</loc>
-  </url>
-  <url>
-    <loc>http://geomarker.io/appc/reference/install_smoke_pm_data.html</loc>
   </url>
   <url>
     <loc>http://geomarker.io/appc/reference/install_source_preference.html</loc>

@@ -83,19 +83,20 @@ with one row per date in <code>dates</code></p>
 <span class="r-in"><span>  <span class="st">"8841a45555555555"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">predict_pm25</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   |                                          |   0%, ETA NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841b39a7c46e25f`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    pm25 pm25_se</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  8.36    1.21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> 10.9     2.21</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  8.30    1.54</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  9.89    1.06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841a45555555555`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    pm25 pm25_se</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  5.39   0.496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  7.99   3.21 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>  5.42   0.806</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>  7.68   1.15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
