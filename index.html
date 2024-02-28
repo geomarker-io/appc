@@ -38,6 +38,12 @@
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
 </li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/timeline-example.html">timeline-example</a>
+  </div>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -176,20 +182,20 @@
 <p>Please note that the appc project is released with a <a href="http://geomarker.io/appc/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </blockquote>
 <p>To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, use <a href="https://just.systems/man/en/" class="external-link"><code>just</code></a> to execute recipes in the <code>justfile</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> just <span class="ex">--list</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Available</span> recipes:</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="ex">create_report</span>        <span class="co"># create CV accuracy report</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">dl_geomarker_data</span>    <span class="co"># download all geomarker ahead of time, if not already cached</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_test</span>          <span class="co"># run tests without cached release files</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="ex">docker_tool</span>          <span class="co"># build docker image preloaded with {appc} and data</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_merra_data</span>   <span class="co"># upload merra data to github release</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_model</span>        <span class="co"># upload grf model to current github release</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_nei_data</span>     <span class="co"># install nei data from source and upload to github release</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_smoke_data</span>   <span class="co"># install smoke data from source and upload to github release</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_traffic_data</span> <span class="co"># install traffic data from source and upload to github release</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="ex">release_urban_imperviousness_data</span> <span class="co"># install nlcd urban imperviousness data from source and upload to github release</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="ex">train_model</span>          <span class="co"># train grf model</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="op">&gt;</span> just <span class="ex">--list</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="ex">Available</span> recipes:</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>    <span class="ex">create_report</span>        <span class="co"># create CV accuracy report</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>    <span class="ex">dl_geomarker_data</span>    <span class="co"># download all geomarker ahead of time, if not already cached</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    <span class="ex">docker_test</span>          <span class="co"># run tests without cached release files</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    <span class="ex">docker_tool</span>          <span class="co"># build docker image preloaded with {appc} and data</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    <span class="ex">release_merra_data</span>   <span class="co"># upload merra data to github release</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    <span class="ex">release_model</span>        <span class="co"># upload grf model to current github release</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    <span class="ex">release_nei_data</span>     <span class="co"># install nei data from source and upload to github release</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="ex">release_smoke_data</span>   <span class="co"># install smoke data from source and upload to github release</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    <span class="ex">release_traffic_data</span> <span class="co"># install traffic data from source and upload to github release</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    <span class="ex">release_urban_imperviousness_data</span> <span class="co"># install nlcd urban imperviousness data from source and upload to github release</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    <span class="ex">train_model</span>          <span class="co"># train grf model</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
