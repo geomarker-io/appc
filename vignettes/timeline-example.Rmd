@@ -1,0 +1,70 @@
+---
+title: "timeline-example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{timeline-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(appc)
+library(dplyr, warn.conflicts = FALSE)
+```
+
+This example details how to use the appc package to add air pollution exposure estimates for exact locations and time periods defined by geocoded coordinates and a "key" date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and dates of birth between 2019 and 2022, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
+
+```{r}
+#| warnings: false
+#| messages: false
+d <-
+  tigris::counties("MI", year = 2021, progress_bar = FALSE) |>
+  suppressWarnings() |>
+  filter(GEOID == 26163) |>
+  sf::st_sample(20) |>
+  sf::st_coordinates() |>
+  tibble::as_tibble() |>
+  rename(lat = Y, lon = X) |>
+  mutate(dob = sample(seq(as.Date("2019-01-01"), as.Date("2022-12-31"), by = 1), size = 20))
+
+d
+```
+
+For this example, we want to estimate the average fine particulate matter from 90 days prior to birth until 1 year after birth. We define these dates and create a list-col of dates for each location in our example data:
+
+```{r}
+d <- d |>
+  mutate(
+    start_date = dob - 90,
+    end_date = dob + 325.25
+  ) |>
+  rowwise() |>
+  mutate(dates = list(seq(start_date, end_date, by = 1))) |>
+  ungroup()
+```
+
+Next, we will use the `lon` and `lat` columns to create the s2 geohash:
+
+```{r}
+d <- d |> dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat)))
+```
+
+Directly use the `s2` and `dates` columns to call the `predict_pm25()` function:
+
+```{r}
+d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates, quiet = TRUE))
+```
+
+With daily exposures, we could average fine particulate matter throughout the study period:
+
+```{r}
+d |>
+  mutate(mean_pm25 = purrr::map_dbl(pm25, \(.) mean(.$pm25)))
+```
