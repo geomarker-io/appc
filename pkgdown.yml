@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   timeline-example: timeline-example.html
-last_built: 2024-02-28T20:12Z
+last_built: 2024-02-29T21:28Z
 urls:
   reference: http://geomarker.io/appc/reference
   article: http://geomarker.io/appc/articles
