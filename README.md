@@ -28,6 +28,15 @@ aerosol diagnostics data. Source files included with the package train
 and evaluate models that can be updated with any release to use more
 recent AQS measurements and/or geomarker predictors.
 
+## Installing
+
+Install the development version of appc from GitHub with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("geomarker-io/appc")
+```
+
 ## Example
 
 In R, create model-based predictions of ambient air pollution
@@ -43,15 +52,15 @@ appc::predict_pm25(
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  8.36    1.21
-#> 2 10.9     2.21
+#> 1  8.30    1.54
+#> 2  9.89    1.06
 #> 
 #> $`8841a45555555555`
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.39   0.496
-#> 2  7.99   3.21
+#> 1  5.42   0.806
+#> 2  7.68   1.15
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
@@ -117,7 +126,7 @@ themselves. View information and options about each geomarker:
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()`           |
 | 🚍 traffic densities                  | `get_traffic_summary()`      |
 | 🏙 urban imperviousness                | `get_urban_imperviousness()` |
-| 🔥 wildfire smoke                     | `install_smoke_pm_data()`    |
+| 🔥 wildfire smoke                     | `get_hms_smoke_data()`       |
 | 🏭 industrial emissions               | `get_nei_point_summary()`    |
 | 🗻 elevation                          | `get_elevation_summary()`    |
 | 🔗 census tract identifier            | `get_census_tract_id()`      |
@@ -136,16 +145,18 @@ recipes in the `justfile`.
 ``` sh
 > just --list
 
-Available recipes:
-    create_report        # create CV accuracy report
-    dl_geomarker_data    # download all geomarker ahead of time, if not already cached
-    docker_test          # run tests without cached release files
-    docker_tool          # build docker image preloaded with {appc} and data
-    release_merra_data   # upload merra data to github release
-    release_model        # upload grf model to current github release
-    release_nei_data     # install nei data from source and upload to github release
-    release_smoke_data   # install smoke data from source and upload to github release
-    release_traffic_data # install traffic data from source and upload to github release
+    build_site             # build readme and webpage
+    check                  # CRAN check package
+    create_report          # create CV accuracy report
+    dl_geomarker_data      # download all geomarker ahead of time, if not already cached
+    docker_test            # run tests without cached release files
+    docker_tool            # build docker image preloaded with {appc} and data
+    release_hms_smoke_data # install smoke data from source and upload to github release
+    release_merra_data     # upload merra data to github release
+    release_model          # upload grf model to current github release
+    release_nei_data       # install nei data from source and upload to github release
+    release_smoke_data     # install smoke data from source and upload to github release
+    release_traffic_data   # install traffic data from source and upload to github release
     release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
-    train_model          # train grf model
+    train_model            # train grf model
 ```
