@@ -41,10 +41,10 @@ docker_tool:
 train_model:
   Rscript --verbose inst/train_model.R
 
-# upload grf model to current github release
+# upload grf model and training data to current github release
 release_model:
-  cp rf_pm.rds "{{geomarker_folder}}"/rf_pm.rds
-  gh release upload v{{pkg_version}} "rf_pm.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}"/rf_pm.rds
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}"/training_data.rds
 
 # create CV accuracy report
 create_report:
