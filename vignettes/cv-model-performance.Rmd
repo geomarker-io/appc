@@ -35,11 +35,11 @@ the_theme <-
 
 ```{r "load model and predictions"}
 grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
-if(!file.exists(grf_file)) install_released_data("rf_pm.rds")
+if(!file.exists(grf_file)) appc:::install_released_data("rf_pm.rds")
 grf <- readRDS(fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds"))
 
 train_file <-fs::path(tools::R_user_dir("appc", "data"), "training_data.rds")
-if(!file.exists(train_file)) install_released_data("training_data.rds")
+if(!file.exists(train_file)) appc:::install_released_data("training_data.rds")
 d_train <- readRDS(fs::path(tools::R_user_dir("appc", "data"), "training_data.rds"))
 ```
 
