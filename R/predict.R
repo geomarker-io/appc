@@ -35,13 +35,14 @@ predict_pm25 <- function(x, dates, quiet = TRUE) {
       pm25_se = sqrt(variance.estimates)
     )
 
-  d_pred$s2 <- rep(x, times = sapply(dates, length))
+  d_pred$.rowid <- rep(seq_along(x), times = sapply(dates, length))
 
   out <-
     d_pred |>
-    dplyr::nest_by(s2) |>
+    dplyr::nest_by(.rowid) |>
     tibble::deframe() |>
     as.list()
+  names(out) <- NULL
 
   return(out)
 }
