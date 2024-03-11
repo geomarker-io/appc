@@ -46,7 +46,7 @@ d_train <- assemble_predictors(d$s2, d$dates, quiet = FALSE)
 d_train$conc <- unlist(d$conc)
 
 message("saving training_data")
-train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), "training_data.rds")
+train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
 saveRDS(d_train, train_file_output_path)
 message("saved training_data.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
 
@@ -90,7 +90,7 @@ grf <-
   )
 
 message("saving GRF")
-file_output_path <- fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
+file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
 saveRDS(grf, file_output_path)
 message("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
 

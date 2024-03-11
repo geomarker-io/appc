@@ -15,8 +15,8 @@
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
 predict_pm25 <- function(x, dates, quiet = TRUE) {
   check_s2_dates(x, dates)
-  grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
-  if(!file.exists(grf_file)) install_released_data("rf_pm.rds")
+  grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
+  if(!file.exists(grf_file)) install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
   if (!quiet) message("loading random forest model...")
   grf <- readRDS(grf_file)
   required_predictors <- names(grf$X.orig)
