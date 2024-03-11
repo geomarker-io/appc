@@ -2,7 +2,6 @@
 #'
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
-#' @param quiet silence progress messages?
 #' @return a list of tibbles the same length as `x`, each containing
 #' columns for the predicted (`pm25`) and its standard error (`pm25_se`)
 #' with one row per date in `dates`
@@ -13,14 +12,15 @@
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
-predict_pm25 <- function(x, dates, quiet = TRUE) {
+predict_pm25 <- function(x, dates) {
   check_s2_dates(x, dates)
+  cli::cli_progress_step("(down)loading random forest model")
   grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
   if(!file.exists(grf_file)) install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
-  if (!quiet) message("loading random forest model...")
   grf <- readRDS(grf_file)
+  cli::cli_progress_done()
   required_predictors <- names(grf$X.orig)
-  d <- assemble_predictors(x = x, dates = dates, pollutant = "pm25", quiet = quiet)
+  d <- assemble_predictors(x = x, dates = dates, pollutant = "pm25")
   stopifnot(all(required_predictors %in% names(d)))
   stopifnot(inherits(grf, "regression_forest"))
   foofy <- grf::regression_forest

@@ -13,7 +13,7 @@
 #' @export
 #' @examples
 #' get_census_tract_id(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
-get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = TRUE) {
+get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = FALSE) {
   check_s2_dates(x)
   year <- rlang::arg_match(year)
   x_s2_geography <- s2::as_s2_geography(s2::s2_cell_to_lnglat(unique(x)))
@@ -26,10 +26,7 @@ get_census_tract_id <- function(x, year = as.character(2010:2023), quiet = TRUE)
     dplyr::nest_by(state) |>
     dplyr::ungroup()
   if (!quiet) {
-    message(
-      "  found ", scales::number(length(unique(x)), big.mark = ","), " unique locations ",
-      "across ", nrow(d), " states"
-    )
+    cli::cli_alert_info("Found {length(unique(x))} unique location{?s} in {nrow(d)} state{?s}")
   }
   geoid_col_name <- ifelse(year == 2010, "GEOID10", "GEOID")
   d <-

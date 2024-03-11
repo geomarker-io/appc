@@ -6,7 +6,6 @@
 #' @param year a character string that is the year of the NEI data
 #' @param pollutant_code the NEI pollutant to summarize
 #' @param buffer distance from s2 cell (in meters) to summarize data
-#' @param quiet silence progress messages?
 #' @return for `get_nei_point_summary()`, a numeric vector (the same length as `x`)
 #' @references <https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei>
 #' @references <https://www.epa.gov/air-emissions-inventories/2020-national-emissions-inventory-nei-technical-support-document-tsd>
@@ -14,12 +13,11 @@
 #' @examples
 #' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
 #' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2017")
-get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000, quiet = TRUE) {
+get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = c("PM25-PRI", "EC", "OC", "SO4", "NO3", "PMFINE"), buffer = 1000) {
   year <- rlang::arg_match(year)
   check_s2_dates(x)
   nei_data <- readRDS(install_nei_point_data(year = year))
   pollutant_code <- rlang::arg_match(pollutant_code)
-  if (!quiet) message("intersecting ", year, " ", pollutant_code, " NEI point sources within ", buffer, " meters")
   withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(x), s2::s2_cell_to_lnglat(nei_data$s2), distance = buffer)
   summarize_emissions <- function(i) {
     nei_data[withins[[i]], ] |>
@@ -34,7 +32,7 @@ get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = 
   nei_pollutant_id2w <- purrr::map_dbl(
     1:length(withins),
     summarize_emissions,
-    .progress = ifelse(quiet, FALSE, "summarizing intersections")
+    .progress = "summarizing intersections"
   )
   # TODO set names of output object?
   return(nei_pollutant_id2w)
