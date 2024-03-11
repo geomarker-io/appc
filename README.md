@@ -49,39 +49,6 @@ appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
-#> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.6s]
-#> 
-#> ℹ checking that s2 locations are within the contiguous united states
-#> ✔ checking that s2 locations are within the contiguous united states [9.7s]
-#> 
-#> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [843ms]
-#> 
-#> ℹ adding coordinates
-#> ✔ adding coordinates [17ms]
-#> 
-#> ℹ adding elevation
-#> ✔ adding elevation [1.2s]
-#> 
-#> ℹ adding AADT using level 14 s2 approximation (~ 260 m sq)
-#> ✔ adding AADT using level 14 s2 approximation (~ 260 m sq) [37.9s]
-#> 
-#> ℹ adding NARR
-#> ✔ adding NARR [2.9s]
-#> 
-#> ℹ adding MERRA
-#> ✔ adding MERRA [1.2s]
-#> 
-#> ℹ adding NLCD urban imperviousness
-#> ✔ adding NLCD urban imperviousness [75ms]
-#> 
-#> ℹ adding NEI
-#> ✔ adding NEI [14s]
-#> 
-#> ℹ adding time components
-#> ✔ adding time components [22ms]
-#> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
@@ -155,18 +122,18 @@ recipes in the `justfile`.
 ``` sh
 > just --list
 
+Available recipes:
     build_site             # build readme and webpage
     check                  # CRAN check package
-    create_report          # create CV accuracy report
     dl_geomarker_data      # download all geomarker ahead of time, if not already cached
     docker_test            # run tests without cached release files
     docker_tool            # build docker image preloaded with {appc} and data
     release_hms_smoke_data # install smoke data from source and upload to github release
     release_merra_data     # upload merra data to github release
-    release_model          # upload grf model to current github release
+    release_model          # upload grf model and training data to current github release
     release_nei_data       # install nei data from source and upload to github release
     release_smoke_data     # install smoke data from source and upload to github release
     release_traffic_data   # install traffic data from source and upload to github release
     release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
-    train_model            # train grf model
+    train_model            # train grf model and render report
 ```
