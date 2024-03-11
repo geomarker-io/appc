@@ -26,7 +26,7 @@ dl_geomarker_data:
     purrr::pmap_chr(install_narr_data)
   purrr::map_chr(c("2017", "2020"), install_nei_point_data)
   purrr::map_chr(c("2016", "2019", "2021"), install_urban_imperviousness)
-  install_smoke_pm_data()
+  install_hms_smoke_data()
   purrr::map_chr(as.character(2017:2023), install_merra_data)
   
 # run tests without cached release files
@@ -37,19 +37,16 @@ docker_test:
 docker_tool:
   docker build -t appc -f Dockerfile.tool .
 
-# train grf model
+# train grf model and render report
 train_model:
   Rscript --verbose inst/train_model.R
+  R -e "rmarkdown::render('./vignettes/APPC_prediction_evaluation.Rmd', knit_root_dir = getwd())"
+  open vignettes/APPC_prediction_evaluation.html
 
 # upload grf model and training data to current github release
 release_model:
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/training_data_v{{pkg_version}}.rds"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/rf_pm_v{{pkg_version}}.rds"
-
-# create CV accuracy report
-create_report:
-  R -e "rmarkdown::render('./inst/APPC_prediction_evaluation.Rmd', knit_root_dir = getwd())"
-  open inst/APPC_prediction_evaluation.html
 
 # install nlcd urban imperviousness data from source and upload to github release
 release_urban_imperviousness_data:
