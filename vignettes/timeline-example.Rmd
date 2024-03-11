@@ -59,7 +59,7 @@ d <- d |> dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat)))
 Directly use the `s2` and `dates` columns to call the `predict_pm25()` function:
 
 ```{r}
-d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates, quiet = TRUE))
+d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates))
 ```
 
 With daily exposures, we could average fine particulate matter throughout the study period:
