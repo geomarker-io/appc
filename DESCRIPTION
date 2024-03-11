@@ -24,24 +24,24 @@ Imports:
     readr,
     rlang,
     s2,
-    scales,
     sf,
     terra,
     tibble,
     tidync,
     tidyr,
     tigris,
-    withr,
+    withr
 RoxygenNote: 7.2.3
 Suggests: 
-    ggplot2,
-    knitr,
-    rmarkdown,
     curl,
-    viridis,
+    ggplot2,
     hexbin,
+    knitr,
     lwgeom,
-    testthat (>= 3.0.0)
+    rmarkdown,
+    scales,
+    testthat (>= 3.0.0),
+    viridis
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr

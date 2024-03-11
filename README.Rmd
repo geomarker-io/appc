@@ -44,6 +44,7 @@ remotes::install_github("geomarker-io/appc")
 In R, create model-based predictions of ambient air pollution concentrations at exact locations on specific dates using the `predict_pm25()` function:
 
 ```{r}
+#| message: false
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
@@ -88,18 +89,18 @@ To create and release geomarker data for release assets, as well as to create th
 ```sh
 > just --list
 
+Available recipes:
     build_site             # build readme and webpage
     check                  # CRAN check package
-    create_report          # create CV accuracy report
     dl_geomarker_data      # download all geomarker ahead of time, if not already cached
     docker_test            # run tests without cached release files
     docker_tool            # build docker image preloaded with {appc} and data
     release_hms_smoke_data # install smoke data from source and upload to github release
     release_merra_data     # upload merra data to github release
-    release_model          # upload grf model to current github release
+    release_model          # upload grf model and training data to current github release
     release_nei_data       # install nei data from source and upload to github release
     release_smoke_data     # install smoke data from source and upload to github release
     release_traffic_data   # install traffic data from source and upload to github release
     release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
-    train_model            # train grf model
+    train_model            # train grf model and render report
 ```
