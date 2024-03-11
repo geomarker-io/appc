@@ -43,8 +43,8 @@ train_model:
 
 # upload grf model and training data to current github release
 release_model:
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}"/rf_pm.rds
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}"/training_data.rds
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/training_data_v{{pkg_version}}.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/rf_pm_v{{pkg_version}}.rds"
 
 # create CV accuracy report
 create_report:
