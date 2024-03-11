@@ -18,15 +18,16 @@ The goal of the appc package is to provide daily, high resolution, near
 real-time, model-based ambient air pollution exposure assessments. This
 is achieved by training a generalized random forest on several
 geomarkers to predict daily average EPA AQS concentrations from 2017
-until the present at exact locations across the contiguous United
-States. The appc package contains functions for generating geomarker
-predictors and the ambient air pollution concentrations. Predictor
-geomarkers include weather and atmospheric information, traffic on
-primary roadways, urban imperviousness, wildfire smoke, industrial
-emissions, elevation, spatiotemporal indicators, and satellite-based
-aerosol diagnostics data. Source files included with the package train
-and evaluate models that can be updated with any release to use more
-recent AQS measurements and/or geomarker predictors.
+until the present at exact locations across the contiguous United States
+(see `vignette("cv-model-performance")` for more details). The appc
+package contains functions for generating geomarker predictors and the
+ambient air pollution concentrations. Predictor geomarkers include
+weather and atmospheric information, traffic on primary roadways, urban
+imperviousness, wildfire smoke, industrial emissions, elevation,
+spatiotemporal indicators, and satellite-based aerosol diagnostics data.
+Source files included with the package train and evaluate models that
+can be updated with any release to use more recent AQS measurements
+and/or geomarker predictors.
 
 ## Installing
 
@@ -48,14 +49,47 @@ appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
-#> $`8841b39a7c46e25f`
+#> ℹ (down)loading random forest model
+#> ✔ (down)loading random forest model [9.6s]
+#> 
+#> ℹ checking that s2 locations are within the contiguous united states
+#> ✔ checking that s2 locations are within the contiguous united states [9.7s]
+#> 
+#> ℹ adding HMS smoke data
+#> ✔ adding HMS smoke data [843ms]
+#> 
+#> ℹ adding coordinates
+#> ✔ adding coordinates [17ms]
+#> 
+#> ℹ adding elevation
+#> ✔ adding elevation [1.2s]
+#> 
+#> ℹ adding AADT using level 14 s2 approximation (~ 260 m sq)
+#> ✔ adding AADT using level 14 s2 approximation (~ 260 m sq) [37.9s]
+#> 
+#> ℹ adding NARR
+#> ✔ adding NARR [2.9s]
+#> 
+#> ℹ adding MERRA
+#> ✔ adding MERRA [1.2s]
+#> 
+#> ℹ adding NLCD urban imperviousness
+#> ✔ adding NLCD urban imperviousness [75ms]
+#> 
+#> ℹ adding NEI
+#> ✔ adding NEI [14s]
+#> 
+#> ℹ adding time components
+#> ✔ adding time components [22ms]
+#> 
+#> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
 #> 1  8.30    1.54
 #> 2  9.89    1.06
 #> 
-#> $`8841a45555555555`
+#> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
@@ -69,6 +103,8 @@ user data directory (i.e., `tools::R_user_dir("appc", "data")`). These
 files are cached across all of an R user’s sessions and projects.
 (Specify an alternative download location by setting the
 `R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
+
+See more examples in `vignette("timeline-example")`.
 
 ## S2 geohash
 
@@ -86,32 +122,6 @@ and longitude coordinates; e.g.:
 s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 #> <s2_cell[2]>
 #> [1] 8841ad122d9774a7 88404ebdac3ea7d1
-```
-
-## Start and stop dates example
-
-Translate start and stop dates representing a range of days into a
-list-col of days within each range:
-
-``` r
-tibble::tribble(
-  ~s2, ~start_date, ~end_date,
-  "8841b39a7c46e25f", "2023-02-20", "2023-04-01",
-  "8841a45555555555", "2021-12-30", "2022-01-10"
-) |>
-  dplyr::mutate(
-    s2 = s2::as_s2_cell(s2),
-    dates = purrr::map2(
-      as.Date(start_date), as.Date(end_date),
-      \(.s, .e) seq(from = .s, to = .e, by = 1)
-    ),
-    pm25 = appc::predict_pm25(s2, dates)
-  )
-#> # A tibble: 2 × 5
-#>   s2               start_date end_date   dates       pm25             
-#>   <s2cell>         <chr>      <chr>      <list>      <named list>     
-#> 1 8841b39a7c46e25f 2023-02-20 2023-04-01 <date [41]> <tibble [41 × 2]>
-#> 2 8841a45555555555 2021-12-30 2022-01-10 <date [12]> <tibble [12 × 2]>
 ```
 
 ## Geomarker Assessment
