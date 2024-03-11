@@ -31,14 +31,9 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = as.chara
       "ozone" = "44201",
       "no2" = "42602"
     )[pollutant]
-  file_name <- glue::glue("daily_{pollutant_code}_{year}.zip")
-  on.exit(unlink(file_name))
-  glue::glue("https://aqs.epa.gov/aqsweb/airdata/{file_name}") |>
-    utils::download.file(destfile = file_name, quiet = TRUE)
-  unzipped_file_name <- gsub(pattern = ".zip", ".csv", file_name, fixed = TRUE)
-  on.exit(unlink(unzipped_file_name), add = TRUE)
-  utils::unzip(file_name)
-  d_in <- readr::read_csv(unzipped_file_name, show_col_types = FALSE)
+  tf <- tempfile()
+  utils::download.file(glue::glue("https://aqs.epa.gov/aqsweb/airdata/daily_{pollutant_code}_{year}.zip"), tf)
+  d_in <- readr::read_csv(tf, show_col_types = FALSE)
   if (pollutant_code %in% c("88101", "88502")) {
     d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")
   }
