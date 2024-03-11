@@ -4,7 +4,7 @@
 \alias{get_census_tract_id}
 \title{Get census tract identifier}
 \usage{
-get_census_tract_id(x, year = as.character(2010:2023), quiet = TRUE)
+get_census_tract_id(x, year = as.character(2010:2023), quiet = FALSE)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}

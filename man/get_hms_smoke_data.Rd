@@ -5,7 +5,7 @@
 \alias{install_hms_smoke_data}
 \title{Get smoke plume data from the NOAA's Hazard Mapping System}
 \usage{
-get_hms_smoke_data(x, dates, quiet = TRUE)
+get_hms_smoke_data(x, dates)
 
 install_hms_smoke_data()
 }
@@ -13,8 +13,6 @@ install_hms_smoke_data()
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object); currently required to be within the contiguous united states}
 
 \item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
-
-\item{quiet}{silence progress messages?}
 }
 \value{
 for \code{get_hms_smoke_data()}, a list of numeric vectors of smoke plume scores (the same length as \code{x} and \code{dates})

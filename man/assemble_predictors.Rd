@@ -4,7 +4,7 @@
 \alias{assemble_predictors}
 \title{Assemble a tibble of required predictors for the exposure assessment model}
 \usage{
-assemble_predictors(x, dates, pollutant = c("pm25"), quiet = TRUE)
+assemble_predictors(x, dates, pollutant = c("pm25"))
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object); currently required to be within the contiguous united states}
@@ -12,8 +12,6 @@ assemble_predictors(x, dates, pollutant = c("pm25"), quiet = TRUE)
 \item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
 
 \item{pollutant}{ignored now, but reserved for future sets of predictors specific to different pollutants}
-
-\item{quiet}{silence progress messages?}
 }
 \value{
 a tibble with one row for each unique s2 location - date combination where columns

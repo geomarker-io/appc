@@ -6,7 +6,6 @@
 #' "light" = 1, "medium" = 2, and "heavy" = 3.
 #' @param x a vector of s2 cell identifers (`s2_cell` object); currently required to be within the contiguous united states
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
-#' @param quiet silence progress messages?
 #' @return for `get_hms_smoke_data()`, a list of numeric vectors of smoke plume scores (the same length as `x` and `dates`)
 #' @references <https://www.ospo.noaa.gov/Products/land/hms.html#about>
 #' @details Daily HMS shapefiles are missing for 7 days within 2017-2023
@@ -19,7 +18,7 @@
 #'   "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15"))
 #' )
 #' get_hms_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
-get_hms_smoke_data <- function(x, dates, quiet = TRUE) {
+get_hms_smoke_data <- function(x, dates) {
   check_s2_dates(x, dates)
   d_smoke <- readRDS(install_hms_smoke_data())
   date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
@@ -32,7 +31,7 @@ get_hms_smoke_data <- function(x, dates, quiet = TRUE) {
           purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
           purrr::map_dbl(sum, na.rm = TRUE) |>
           as.numeric()
-      }, .progress = ifelse(quiet, FALSE, "extracting smoke data"))
+      }, .progress = "extracting smoke data")
   })
   return(out)
 }
