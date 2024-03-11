@@ -57,3 +57,26 @@ check_s2_dates <- function(s2, dates = NULL) {
     if (!all(lapply(dates, max) < as.Date("2024-01-01"))) stop("all dates must be earlier than 2024-01-01", call. = FALSE)
   }
 }
+
+#' delete all installed data files in the user's data directory for the `appc` package
+#' @return NULL
+#' @export
+appc_clean_data_directory <- function() {
+  fls <- fs::dir_info(tools::R_user_dir("appc", "data"))
+  cli::cli_alert_warning("Running this command will delete all {nrow(fls)} file{?s} in {tools::R_user_dir('appc', 'data')}")
+  ui_confirm()
+  fs::dir_delete(tools::R_user_dir("appc", "data"))
+  cli::cli_alert_success("Removed {sum(fls$size)}")
+  return(invisible(NULL))
+}
+
+ui_confirm <- function() {
+    if (!interactive()) {
+        cli::cli_alert_warning("User input requested, but session is not interactive.")
+        cli::cli_alert_info("Assuming this is okay.")
+        return(TRUE)
+    }
+    ans <- readline("Are you sure (y/n)? ")
+    if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
+    return(invisible(TRUE))
+}
