@@ -43,6 +43,19 @@ test_that("check_s2_dates() works", {
     list(c("2023-06-22", "2023-08-15"), c("2023-05-18", "2023-11-06", "2023-11-07"))
   ) |>
     expect_error("must be `Date` objects")
+
+  check_s2_dates(
+    s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+    list(as.Date(c("2016-06-22", "2023-08-15")), as.Date(c("2023-05-18", "2023-11-06", "2023-11-07")))
+  ) |>
+    expect_error("must be later than")
+
+  check_s2_dates(
+    s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+    list(as.Date(c("2017-06-22", "2023-08-15")), as.Date(c("2023-05-18", "2023-11-06", "2024-01-07")))
+  ) |>
+    expect_error("must be earlier than")
+  
 })
 
 test_that("get_closest_year() works", {
