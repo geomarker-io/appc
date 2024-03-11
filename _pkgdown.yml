@@ -23,7 +23,7 @@ reference:
   - s2_tracts
 - title: Helpers
   contents:
-  - get_closest_year
   - get_daily_aqs
-  - assemble_predictors
+  - get_closest_year
+  - appc_clean_data_directory
 
