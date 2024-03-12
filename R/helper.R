@@ -53,7 +53,7 @@ check_s2_dates <- function(s2, dates = NULL) {
     if (length(s2) != length(dates)) stop("s2 and dates must be the same length", call. = FALSE)
     if (!inherits(dates, "list")) stop("dates must be a list", call. = FALSE)
     if (!all(sapply(dates, \(.) inherits(., "Date")))) stop("everything in the dates list must be `Date` objects", call. = FALSE)
-    if (!all(lapply(dates, min) > as.Date("2017-01-01"))) stop("all dates must be later than 2017-01-01", call. = FALSE)
+    if (!all(lapply(dates, min) > as.Date("2016-12-31"))) stop("all dates must be later than 2017-01-01", call. = FALSE)
     if (!all(lapply(dates, max) < as.Date("2024-01-01"))) stop("all dates must be earlier than 2024-01-01", call. = FALSE)
   }
 }
