@@ -50,12 +50,12 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
 
   cli::cli_progress_step("adding MERRA")
   d$merra <- get_merra_data(d$s2, d$dates)
-  d$merra_dust <- purrr::map(d$merra, "merra_dust")
-  d$merra_oc <- purrr::map(d$merra, "merra_oc")
-  d$merra_bc <- purrr::map(d$merra, "merra_bc")
-  d$merra_ss <- purrr::map(d$merra, "merra_ss")
-  d$merra_so4 <- purrr::map(d$merra, "merra_so4")
-  ## d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
+  ## d$merra_dust <- purrr::map(d$merra, "merra_dust")
+  ## d$merra_oc <- purrr::map(d$merra, "merra_oc")
+  ## d$merra_bc <- purrr::map(d$merra, "merra_bc")
+  ## d$merra_ss <- purrr::map(d$merra, "merra_ss")
+  ## d$merra_so4 <- purrr::map(d$merra, "merra_so4")
+  d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
   d$merra <- NULL
 
   cli::cli_progress_step("adding NLCD urban imperviousness")

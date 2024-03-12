@@ -63,11 +63,10 @@ pred_names <-
     "aadt_total_m_400", "aadt_truck_m_400",
     "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
     "urban_imperviousness_400",
-    ## "merra_pm25",
-    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
+    "merra_pm25",
+    ## "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "nei_point_id2w_1000",
     "plume_smoke"
-    ## "smoke_pm"
   )
 
 cli::cli_progress_step("training GRF")
