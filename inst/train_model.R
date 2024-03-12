@@ -1,5 +1,9 @@
 library(dplyr, warn.conflicts = FALSE)
+library(purrr)
 library(grf)
+future::plan("multicore", workers = 6)
+cli::cli_alert_info("using `future::plan()`:")
+future::plan()
 
 # load development version if developing (instead of currently installed version)
 if (file.exists("./inst")) {
@@ -8,7 +12,7 @@ if (file.exists("./inst")) {
   library(appc)
 }
 
-message("creating training data")
+cli::cli_progress_step("creating training data")
 
 # get AQS data
 d <-
@@ -17,7 +21,7 @@ d <-
     pollutant = "pm25",
     year = as.character(2017:2023)
   ) |>
-  purrr::pmap(get_daily_aqs, .progress = "getting daily AQS data")
+  purrr::pmap(get_daily_aqs)
 
 # structure for pipeline
 d <-
@@ -41,14 +45,15 @@ d <- d |>
     )
   )
 
-d_train <- assemble_predictors(d$s2, d$dates, quiet = FALSE)
+cli::cli_progress_done()
+d_train <- assemble_predictors(d$s2, d$dates)
 
 d_train$conc <- unlist(d$conc)
 
-message("saving training_data")
+cli::cli_progress_step("saving training data")
 train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
 saveRDS(d_train, train_file_output_path)
-message("saved training_data.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
+cli::cli_alert_info("saved training_data.rds (", fs::file_info(train_file_output_path)$size, ") to ", train_file_output_path)
 
 pred_names <-
   c(
@@ -65,7 +70,7 @@ pred_names <-
     ## "smoke_pm"
   )
 
-message("training GRF...")
+cli::cli_progress_step("training GRF")
 grf <-
   regression_forest(
     X = select(d_train, all_of(pred_names)),
@@ -89,18 +94,19 @@ grf <-
     equalize.cluster.weights = FALSE
   )
 
-message("saving GRF")
+cli::cli_progress_step("training GRF")
 file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
 saveRDS(grf, file_output_path)
-message("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
+cli::cli_alert_info("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
 
-message("LLOOB estimates:")
-message("MAE = ", round(median(abs(grf$predictions - grf$Y.orig)), 3))
-message("Cor = ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3))
+cli::cli_alert_info(c("LLOOB estimates:",
+                      "MAE = ", round(median(abs(grf$predictions - grf$Y.orig)), 3),
+                      "Cor = ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3)))
 
-message("tuning output:")
+cli::cli_alert_info("tuning output:")
 grf$tuning.output
 
+cli::cli_alert_info("variable importance:")
 tibble(
   importance = round(variable_importance(grf), 3),
   variable = names(select(d_train, all_of(pred_names)))
