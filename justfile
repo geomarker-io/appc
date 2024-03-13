@@ -37,6 +37,10 @@ docker_test:
 docker_tool:
   docker build -t appc -f Dockerfile.tool .
 
+# make training data for GRF
+make_training_data:
+  Rscript --verbose inst/make_training_data.R
+
 # train grf model and render report
 train_model:
   Rscript --verbose inst/train_model.R
