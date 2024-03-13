@@ -80,12 +80,7 @@ grf <-
     num.trees = 100,
     compute.oob.predictions = TRUE,
     honesty = FALSE,
-    ## tune.parameters = "all",
-    ## tune.num.trees = 50,
-    ## tune.num.reps = 100,
-    ## tune.num.draws = 1000,
     tune.parameters = "none",
-    ## mtry = 17, # default effectively uses ncol(X)
     sample.fraction = 0.5,
     min.node.size = 5,
     alpha = 0.05,
@@ -99,12 +94,9 @@ file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_p
 saveRDS(grf, file_output_path)
 cli::cli_alert_info("saved rf_pm.rds ({fs::file_info(file_output_path)$size}) to {file_output_path}")
 
-cli::cli_alert_info(c("LLOOB estimates:",
-                      "MAE = ", round(median(abs(grf$predictions - grf$Y.orig)), 3),
-                      "Cor = ", round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3)))
-
-cli::cli_alert_info("tuning output:")
-grf$tuning.output
+cli::cli_alert_info("LOLO estimates (MAE and Cor):")
+round(median(abs(grf$predictions - grf$Y.orig)), 3)
+round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3)
 
 cli::cli_alert_info("variable importance:")
 tibble(
