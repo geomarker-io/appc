@@ -1,7 +1,8 @@
 library(dplyr, warn.conflicts = FALSE)
 library(purrr)
 library(grf)
-future::plan("multicore", workers = 8)
+
+future::plan("multicore")
 cli::cli_alert_info("using `future::plan()`:")
 future::plan()
 

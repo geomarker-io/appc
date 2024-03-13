@@ -3,7 +3,8 @@
 #' The HMS operates daily in near real-time by outlining the smoke polygon of each distinct smoke plume
 #' and classifying it as "light", "medium", and "heavy". Since multiple plumes of varying or the same classification
 #' can cover one another, the total smoke plume exposure is estimated as the weighted sum of all plumes, where
-#' "light" = 1, "medium" = 2, and "heavy" = 3.
+#' "light" = 1, "medium" = 2, and "heavy" = 3. Parallel processing via the `furrr` package can be used by
+#' setting the `future::plan()` evaluation strategy beforehand.
 #' @param x a vector of s2 cell identifers (`s2_cell` object); currently required to be within the contiguous united states
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
 #' @return for `get_hms_smoke_data()`, a list of numeric vectors of smoke plume scores (the same length as `x` and `dates`)
