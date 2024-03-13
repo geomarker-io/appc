@@ -34,22 +34,36 @@ the_theme <-
 ```
 
 ```{r "load model and predictions"}
-grf_file <-  fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds")
-if(!file.exists(grf_file)) appc:::install_released_data("rf_pm.rds")
-grf <- readRDS(fs::path(tools::R_user_dir("appc", "data"), "rf_pm.rds"))
+grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
+if(!file.exists(grf_file)) appc:::install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
+grf <- readRDS(grf_file)
 
-train_file <-fs::path(tools::R_user_dir("appc", "data"), "training_data.rds")
-if(!file.exists(train_file)) appc:::install_released_data("training_data.rds")
-d_train <- readRDS(fs::path(tools::R_user_dir("appc", "data"), "training_data.rds"))
+train_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
+if(!file.exists(train_file)) appc:::install_released_data(glue::glue("training_data_v{packageVersion('appc')}.rds"))
+d_train <- readRDS(train_file)
+```
+
+## Training data
+
+`r nrow(d_train)` daily $PM_{2.5}$ measurements on `r n_distinct(d_train$date)` different days across `r n_distinct(d_train$s2)` unique stations from `r min(d_train$date)` to `r max(d_train$date)`. Concentrations quantiles are:
+
+```{r "training data"}
+quantile(d_train$conc, c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1))
 ```
 
 ## Variable Importance
 
 ```{r "variable importance"}
 pred_names <- names(grf$X.orig)
+
 tibble(importance = round(variable_importance(grf), 3),
        variable = pred_names) |>
+  nest_by(importance) |>
   arrange(desc(importance)) |>
+  mutate(predictor = list(data$variable)) |>
+  select(-data) |>
+  mutate(predictor = list(paste(predictor, collapse = ", "))) |>
+  tidyr::unnest(cols = c(predictor)) |>
   knitr::kable()
 ```
 
