@@ -30,8 +30,8 @@ the_theme <-
 ```
 
 ```{r "load model and predictions"}
-grf <- readRDS(fs::path_wd("rf_pm.rds"))
-d_train <- readRDS(fs::path_wd("training_data.rds"))
+grf <- readRDS(fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds")))
+d_train <- readRDS(fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds")))
 ```
 
 ## Variable Importance
@@ -40,7 +40,12 @@ d_train <- readRDS(fs::path_wd("training_data.rds"))
 pred_names <- names(grf$X.orig)
 tibble(importance = round(variable_importance(grf), 3),
        variable = pred_names) |>
+  nest_by(importance) |>
   arrange(desc(importance)) |>
+  mutate(predictors = list(data$variable)) |>
+  select(-data) |>
+  mutate(predictors = list(paste(predictors, collapse = ", "))) |>
+  tidyr::unnest(cols = c(predictors)) |>
   knitr::kable()
 ```
 
