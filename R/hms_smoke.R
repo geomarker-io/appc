@@ -23,7 +23,7 @@ get_hms_smoke_data <- function(x, dates) {
   check_s2_dates(x, dates)
   d_smoke <- readRDS(install_hms_smoke_data())
   date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
-  withr::with_options(list(sf_use_s2 = FALSE), {
+  withr::with_options(list(sf_use_s2 = FALSE, future.rng.onMisuse = "ignore"), {
     out <-
       furrr::future_map(seq_along(x), \(i) {
         purrr::map(date_smoke_geoms[[i]], \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .)) |>
@@ -31,7 +31,8 @@ get_hms_smoke_data <- function(x, dates) {
           purrr::map("Density") |>
           purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
           purrr::map_dbl(sum, na.rm = TRUE) |>
-          as.numeric()
+          as.numeric() |>
+          suppressWarnings()
       }, .progress = TRUE)
   })
   return(out)
