@@ -75,7 +75,7 @@ d <- d |> dplyr::mutate(temperature = get_narr_data(s2, dates, "air.2m"),
                         humidity = get_narr_data(s2, dates, "rhum.2m"))
 
 
-d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates, quiet = FALSE))
+d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates))
 
 d
 ```
