@@ -13,8 +13,10 @@ predict_pm25(x, dates)
 }
 \value{
 a list of tibbles the same length as \code{x}, each containing
-columns for the predicted (\code{pm25}) and its standard error (\code{pm25_se})
-with one row per date in \code{dates}
+columns for the predicted (\code{pm25}) and its standard error (\code{pm25_se});
+with one row per date in \code{dates}. These numerics are the concentrations of fine
+particulate matter, measured in micrograms per cubic meter. See \code{vignette("cv-model-performance")}
+for more details on the cross validated accuracy of the daily PM2.5 model predictions.
 }
 \description{
 Get daily PM2.5 model predictions

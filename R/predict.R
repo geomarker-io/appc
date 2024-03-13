@@ -3,8 +3,10 @@
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
 #' @return a list of tibbles the same length as `x`, each containing
-#' columns for the predicted (`pm25`) and its standard error (`pm25_se`)
-#' with one row per date in `dates`
+#' columns for the predicted (`pm25`) and its standard error (`pm25_se`);
+#' with one row per date in `dates`. These numerics are the concentrations of fine
+#' particulate matter, measured in micrograms per cubic meter. See `vignette("cv-model-performance")`
+#' for more details on the cross validated accuracy of the daily PM2.5 model predictions.
 #' @export
 #' @examples
 #' d <- list(

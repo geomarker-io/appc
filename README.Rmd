@@ -44,7 +44,7 @@ remotes::install_github("geomarker-io/appc")
 In R, create model-based predictions of ambient air pollution concentrations at exact locations on specific dates using the `predict_pm25()` function:
 
 ```{r}
-#| message: false
+#| message: true
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
