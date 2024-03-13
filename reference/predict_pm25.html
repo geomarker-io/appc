@@ -73,10 +73,12 @@
     
 
 <p>a list of tibbles the same length as <code>x</code>, each containing
-columns for the predicted (<code>pm25</code>) and its standard error (<code>pm25_se</code>)
-with one row per date in <code>dates</code></p>
+columns for the predicted (<code>pm25</code>) and its standard error (<code>pm25_se</code>);
+with one row per date in <code>dates</code>. These numerics are the concentrations of fine
+particulate matter, measured in micrograms per cubic meter. See <code><a href="../articles/cv-model-performance.html">vignette("cv-model-performance")</a></code></p>
 
 
+<p>for more details on the cross validated accuracy of the daily PM2.5 model predictions.</p>
     </div>
 
     <div class="section level2">
@@ -87,37 +89,37 @@ with one row per date in <code>dates</code></p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">predict_pm25</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> (down)loading random forest model</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[15.2s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[15.4s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> checking that s2 locations are within the contiguous united states</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> checking that s2 locations are within the contiguous united states <span style="color: #B2B2B2;">[16.7s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> checking that s2 locations are within the contiguous united states <span style="color: #B2B2B2;">[16.8s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding coordinates</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[19ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding elevation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[113ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[114ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding AADT using level 14 s2 approximation (~ 260 m sq)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding AADT using level 14 s2 approximation (~ 260 m sq) <span style="color: #B2B2B2;">[3m 2.7s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding AADT using level 14 s2 approximation (~ 260 m sq) <span style="color: #B2B2B2;">[3m 23.4s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[1s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding NARR</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[6.1s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[6s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding MERRA</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[923ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[894ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding NLCD urban imperviousness</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NLCD urban imperviousness <span style="color: #B2B2B2;">[325ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NLCD urban imperviousness <span style="color: #B2B2B2;">[315ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding NEI</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NEI <span style="color: #B2B2B2;">[51.6s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NEI <span style="color: #B2B2B2;">[36s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding time components</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[19ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[17ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 2</span></span>
