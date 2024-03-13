@@ -49,6 +49,39 @@ appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
+#> ℹ (down)loading random forest model
+#> ✔ (down)loading random forest model [9.7s]
+#> 
+#> ℹ checking that s2 locations are within the contiguous united states
+#> ✔ checking that s2 locations are within the contiguous united states [10s]
+#> 
+#> ℹ adding coordinates
+#> ✔ adding coordinates [23ms]
+#> 
+#> ℹ adding elevation
+#> ✔ adding elevation [1.3s]
+#> 
+#> ℹ adding AADT using level 14 s2 approximation (~ 260 m sq)
+#> ✔ adding AADT using level 14 s2 approximation (~ 260 m sq) [35.6s]
+#> 
+#> ℹ adding HMS smoke data
+#> ✔ adding HMS smoke data [902ms]
+#> 
+#> ℹ adding NARR
+#> ✔ adding NARR [3s]
+#> 
+#> ℹ adding MERRA
+#> ✔ adding MERRA [1.6s]
+#> 
+#> ℹ adding NLCD urban imperviousness
+#> ✔ adding NLCD urban imperviousness [80ms]
+#> 
+#> ℹ adding NEI
+#> ✔ adding NEI [14.2s]
+#> 
+#> ℹ adding time components
+#> ✔ adding time components [20ms]
+#> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
