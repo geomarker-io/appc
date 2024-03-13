@@ -19,8 +19,6 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   cli::cli_progress_step("checking that s2 locations are within the contiguous united states")
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), contiguous_us())
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
-  cli::cli_progress_step("adding HMS smoke data")
-  d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
   cli::cli_progress_step("adding coordinates")
   conus_coords <-
     sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
@@ -37,6 +35,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   d$aadt_total_m_400 <- purrr::map_dbl(d$traffic_400, "aadt_total_m")
   d$aadt_truck_m_400 <- purrr::map_dbl(d$traffic_400, "aadt_truck_m")
   d$traffic_400 <- NULL
+  cli::cli_progress_step("adding HMS smoke data")
+  d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
   cli::cli_progress_step("adding NARR")
   my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
   d$air.2m <- my_narr("air.2m")
@@ -80,7 +80,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
     tidyr::unnest(cols = c(
       dates, air.2m, hpbl, acpcp,
       rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
-      merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
+      ## merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
+      merra_pm25,
       urban_imperviousness_400,
       nei_point_id2w_1000, plume_smoke
     )) |>
@@ -89,6 +90,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   d$doy <- as.numeric(format(d$date, "%j"))
   d$month <- as.numeric(format(d$date, "%m"))
   d$dow <- as.numeric(format(d$date, "%u"))
+  cli::cli_progress_done()
 
   return(d)
 }

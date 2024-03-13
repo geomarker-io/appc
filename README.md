@@ -53,15 +53,15 @@ appc::predict_pm25(
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  8.30    1.54
-#> 2  9.89    1.06
+#> 1  8.34   1.12 
+#> 2 10.6    0.868
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.42   0.806
-#> 2  7.68   1.15
+#> 1  6.37   0.924
+#> 2  9.40   2.17
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
