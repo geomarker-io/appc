@@ -53,10 +53,12 @@ quantile(d_train$conc, c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1))
 
 ## Variable Importance
 
+The variable importance is calculated as an exponentially-weighted sum of how many times each feature was selected within the first 6 splits of each tree in the forest.
+
 ```{r "variable importance"}
 pred_names <- names(grf$X.orig)
 
-tibble(importance = round(variable_importance(grf), 3),
+tibble(importance = round(variable_importance(grf, decay.exponent = 2, max.depth = 6), 3),
        variable = pred_names) |>
   nest_by(importance) |>
   arrange(desc(importance)) |>
