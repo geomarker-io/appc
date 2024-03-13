@@ -1,7 +1,7 @@
 library(dplyr, warn.conflicts = FALSE)
 library(purrr)
 library(grf)
-future::plan("multicore", workers = 6)
+future::plan("multicore", workers = 8)
 cli::cli_alert_info("using `future::plan()`:")
 future::plan()
 
@@ -12,7 +12,7 @@ if (file.exists("./inst")) {
   library(appc)
 }
 
-cli::cli_progress_step("creating training data")
+cli::cli_progress_step("creating AQS training data")
 
 # get AQS data
 d <-
@@ -44,16 +44,16 @@ d <- d |>
       contiguous_us()
     )
   )
-
 cli::cli_progress_done()
-d_train <- assemble_predictors(d$s2, d$dates)
+
+d_train <- assemble_predictors(x = d$s2, dates = d$dates)
 
 d_train$conc <- unlist(d$conc)
 
 cli::cli_progress_step("saving training data")
 train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
 saveRDS(d_train, train_file_output_path)
-cli::cli_alert_info("saved training_data.rds (", fs::file_info(train_file_output_path)$size, ") to ", train_file_output_path)
+cli::cli_alert_info("saved training_data.rds ({fs::file_info(train_file_output_path)$size}) to {train_file_output_path}")
 
 pred_names <-
   c(
@@ -93,10 +93,10 @@ grf <-
     equalize.cluster.weights = FALSE
   )
 
-cli::cli_progress_step("training GRF")
+cli::cli_progress_step("saving GRF")
 file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
 saveRDS(grf, file_output_path)
-cli::cli_alert_info("saved rf_pm.rds (", fs::file_info(file_output_path)$size, ") to ", file_output_path)
+cli::cli_alert_info("saved rf_pm.rds ({fs::file_info(file_output_path)$size}) to {file_output_path}")
 
 cli::cli_alert_info(c("LLOOB estimates:",
                       "MAE = ", round(median(abs(grf$predictions - grf$Y.orig)), 3),
