@@ -18,7 +18,6 @@ reference:
 - title: Helpers
   contents:
   - get_daily_aqs
-  - contiguous_us
   - get_closest_year
   - appc_clean_data_directory
 
