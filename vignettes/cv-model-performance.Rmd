@@ -34,9 +34,9 @@ the_theme <-
 ```
 
 ```{r "load model and predictions"}
-grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
-if(!file.exists(grf_file)) appc:::install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
-grf <- readRDS(grf_file)
+grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
+if(!file.exists(grf_file)) appc:::install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
+grf <- qs::qread(grf_file)
 
 train_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
 if(!file.exists(train_file)) appc:::install_released_data(glue::glue("training_data_v{packageVersion('appc')}.rds"))
