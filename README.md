@@ -52,28 +52,28 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9s]
+#> ✔ (down)loading random forest model [8.3s]
 #> 
 #> ℹ checking that s2 locations are within the contiguous united states
-#> ✔ checking that s2 locations are within the contiguous united states [10.6s]
+#> ✔ checking that s2 locations are within the contiguous united states [54ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [31ms]
+#> ✔ adding coordinates [1.3s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.3s]
+#> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [985ms]
+#> ✔ adding HMS smoke data [986ms]
 #> 
 #> ℹ adding NARR
 #> ✔ adding NARR [3.1s]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [528ms]
+#> ✔ adding MERRA [556ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [23ms]
+#> ✔ adding time components [24ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2

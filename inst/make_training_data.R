@@ -41,7 +41,7 @@ d <- d |>
   dplyr::filter(
     s2::s2_intersects(
       s2::as_s2_geography(s2::s2_cell_to_lnglat(s2)),
-      contiguous_us()
+      s2::as_s2_geography(contiguous_us)
     )
   )
 cli::cli_progress_done()

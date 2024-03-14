@@ -2,7 +2,6 @@
 
 export(appc_clean_data_directory)
 export(assemble_predictors)
-export(contiguous_us)
 export(create_daily_merra_data)
 export(get_closest_year)
 export(get_daily_aqs)
