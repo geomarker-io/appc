@@ -92,6 +92,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
   )
   message(glue::glue("downloading and subsetting daily MERRA files for {merra_year}"))
   # takes a long time, so cache intermediate daily downloads and extractions
+  rlang::check_installed("mappp", "to cache the processing of daily MERRA files.")
   merra_data <- mappp::mappp(date_seq, create_daily_merra_data, cache = TRUE, cache_name = "merra_cache")
   names(merra_data) <- date_seq
   tibble::enframe(merra_data, name = "date") |>
@@ -128,6 +129,7 @@ create_daily_merra_data <- function(merra_date) {
     httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
     httr::write_disk(tf)
   )
+  rlang::check_installed("tidync", "to read daily MERRA files.")
   out <-
     tidync::tidync(tf) |>
     tidync::hyper_filter(

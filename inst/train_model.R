@@ -16,7 +16,8 @@ pred_names <-
   c(
     "x", "y",
     "doy", "year", "month",
-    "merra_pm25",
+    ## "merra_pm25",
+    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "elevation_median", "elevation_sd",
     "plume_smoke",
     "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
