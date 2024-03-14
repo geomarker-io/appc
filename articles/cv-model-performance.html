@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,11 +81,53 @@
 <div class="section level2">
 <h2 id="training-data">Training data<a class="anchor" aria-label="anchor" href="#training-data"></a>
 </h2>
-<p>464208 daily <span class="math inline">\(PM_{2.5}\)</span>
-measurements on 2464 different days across 760 unique stations from
-2017-01-01 to 2023-09-30. Concentrations quantiles are:</p>
-<pre><code><span><span class="co">##    0%    5%   25%   50%   75%   95%  100% </span></span>
-<span><span class="co">##   0.0   2.4   4.7   7.0  10.2  17.7 593.0</span></span></code></pre>
+<p>464,208 daily PM<span class="math inline">\(_{2.5}\)</span>
+measurements on 2,464 different days across 760 unique stations from
+2017-01-01 to 2023-09-30.</p>
+<p>Measured PM<span class="math inline">\(_{2.5}\)</span> concentration
+(<span class="math inline">\(\mu g/ m^3\)</span>) quantiles are:</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">percentile</th>
+<th align="right">concentration</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">0%</td>
+<td align="right">0.0</td>
+</tr>
+<tr class="even">
+<td align="left">5%</td>
+<td align="right">2.4</td>
+</tr>
+<tr class="odd">
+<td align="left">25%</td>
+<td align="right">4.7</td>
+</tr>
+<tr class="even">
+<td align="left">50%</td>
+<td align="right">7.0</td>
+</tr>
+<tr class="odd">
+<td align="left">75%</td>
+<td align="right">10.2</td>
+</tr>
+<tr class="even">
+<td align="left">95%</td>
+<td align="right">17.7</td>
+</tr>
+<tr class="odd">
+<td align="left">100%</td>
+<td align="right">593.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="random-forest">Random Forest<a class="anchor" aria-label="anchor" href="#random-forest"></a>
+</h2>
+<p>The generalized regression forest has 200 trees and was trained using
+a sample fraction of 0.5, a minimum node size of 5, and an <span class="math inline">\(m_{try}\)</span> value of 20.</p>
 </div>
 <div class="section level2">
 <h2 id="variable-importance">Variable Importance<a class="anchor" aria-label="anchor" href="#variable-importance"></a>
@@ -94,68 +136,62 @@ measurements on 2464 different days across 760 unique stations from
 sum of how many times each feature was selected within the first 6
 splits of each tree in the forest.</p>
 <table class="table">
-<colgroup>
-<col width="12%">
-<col width="87%">
-</colgroup>
 <thead><tr class="header">
 <th align="right">importance</th>
 <th align="left">predictor</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.762</td>
-<td align="left">merra_pm25</td>
+<td align="right">0.719</td>
+<td align="left">merra_oc</td>
 </tr>
 <tr class="even">
-<td align="right">0.088</td>
+<td align="right">0.096</td>
+<td align="left">merra_bc</td>
+</tr>
+<tr class="odd">
+<td align="right">0.077</td>
 <td align="left">hpbl</td>
 </tr>
-<tr class="odd">
-<td align="right">0.071</td>
+<tr class="even">
+<td align="right">0.032</td>
 <td align="left">plume_smoke</td>
 </tr>
-<tr class="even">
-<td align="right">0.019</td>
+<tr class="odd">
+<td align="right">0.021</td>
 <td align="left">x</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="right">0.015</td>
 <td align="left">air.2m</td>
 </tr>
-<tr class="even">
-<td align="right">0.010</td>
-<td align="left">vis</td>
-</tr>
 <tr class="odd">
-<td align="right">0.009</td>
-<td align="left">doy</td>
+<td align="right">0.013</td>
+<td align="left">merra_so4</td>
 </tr>
 <tr class="even">
-<td align="right">0.005</td>
-<td align="left">y, rhum.2m</td>
+<td align="right">0.006</td>
+<td align="left">doy</td>
 </tr>
 <tr class="odd">
 <td align="right">0.004</td>
-<td align="left">vwnd.10m</td>
+<td align="left">y</td>
 </tr>
 <tr class="even">
 <td align="right">0.003</td>
-<td align="left">year</td>
+<td align="left">merra_dust, rhum.2m</td>
 </tr>
 <tr class="odd">
 <td align="right">0.002</td>
-<td align="left">elevation_sd_800, acpcp</td>
+<td align="left">elevation_sd, acpcp, vis, vwnd.10m</td>
 </tr>
 <tr class="even">
 <td align="right">0.001</td>
-<td align="left">month, elevation_median_800, pres.sfc, uwnd.10m,
-urban_imperviousness_400</td>
+<td align="left">merra_ss, pres.sfc</td>
 </tr>
 <tr class="odd">
 <td align="right">0.000</td>
-<td align="left">dow, aadt_total_m_400, aadt_truck_m_400,
-nei_point_id2w_1000</td>
+<td align="left">year, elevation_median, uwnd.10m</td>
 </tr>
 </tbody>
 </table>
@@ -165,18 +201,23 @@ nei_point_id2w_1000</td>
 </h2>
 <p>Leave-one-location-out (LOLO) accuracy is calculated by using out of
 bag predictions from the trained random forest with resample clustering
-by the location.</p>
-<p>Accuracy metrics are calculated for each left out location and then
-summarized using the median accuracy statistic across all locations.
-This most closely captures the performance in a real-world scenario
-where we are trying to predict air pollution between 2017 and 2023 in a
-place where it was not measured.</p>
+by the location. Accuracy is characterized using median absolute error
+(<code>mae</code>) and the Spearman’s correlation coefficient
+(<code>rho</code>). Accuracy metrics are calculated for each left out
+location and then summarized using the median accuracy statistic across
+all locations. This most closely captures the performance in a
+real-world scenario where we are trying to predict air pollution between
+2017 and 2023 in a place where it was not measured.</p>
 <p>Each left-out location, or AQS monitor, contains a variable number of
 days with air pollution measurements. This depends on the frequency of
 the daily measurements as well as when the monitoring station was
 initiated or deprecated. Some stations-time groupings only have a single
 measurement; exclude any station or station-time grouping that has 4 or
-less observations.</p>
+less observations. In the tables below, <code>median_n</code> represents
+the median number of observations used in each station grouping to
+calculate the overall median accuracy metrics. <code>ci_coverage</code>
+is the percentage of the time that the 95% CI interval of the predicted
+concentration contained the measured concentration.</p>
 <div class="section level3">
 <h3 id="daily">Daily<a class="anchor" aria-label="anchor" href="#daily"></a>
 </h3>
@@ -185,12 +226,12 @@ less observations.</p>
 <th align="right">mae</th>
 <th align="right">rho</th>
 <th align="left">ci_coverage</th>
-<th align="right">median_n_obs_per_grouping</th>
+<th align="right">median_n</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">1.3</td>
-<td align="right">0.83</td>
-<td align="left">73%</td>
+<td align="right">1.2</td>
+<td align="right">0.85</td>
+<td align="left">69%</td>
 <td align="right">569</td>
 </tr></tbody>
 </table>
@@ -208,56 +249,56 @@ less observations.</p>
 <th align="right">mae</th>
 <th align="right">rho</th>
 <th align="left">ci_coverage</th>
-<th align="right">median_n_obs_per_grouping</th>
+<th align="right">median_n</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="right">2017</td>
-<td align="right">1.20</td>
-<td align="right">0.84</td>
-<td align="left">74%</td>
+<td align="right">1.10</td>
+<td align="right">0.86</td>
+<td align="left">70%</td>
 <td align="right">117</td>
 </tr>
 <tr class="even">
 <td align="right">2018</td>
-<td align="right">1.20</td>
-<td align="right">0.83</td>
-<td align="left">74%</td>
+<td align="right">1.15</td>
+<td align="right">0.86</td>
+<td align="left">71%</td>
 <td align="right">117</td>
 </tr>
 <tr class="odd">
 <td align="right">2019</td>
-<td align="right">1.30</td>
-<td align="right">0.83</td>
-<td align="left">74%</td>
+<td align="right">1.20</td>
+<td align="right">0.85</td>
+<td align="left">69%</td>
 <td align="right">116</td>
 </tr>
 <tr class="even">
 <td align="right">2020</td>
-<td align="right">1.26</td>
-<td align="right">0.80</td>
-<td align="left">73%</td>
+<td align="right">1.20</td>
+<td align="right">0.84</td>
+<td align="left">70%</td>
 <td align="right">115</td>
 </tr>
 <tr class="odd">
 <td align="right">2021</td>
-<td align="right">1.30</td>
-<td align="right">0.83</td>
-<td align="left">73%</td>
+<td align="right">1.20</td>
+<td align="right">0.86</td>
+<td align="left">70%</td>
 <td align="right">116</td>
 </tr>
 <tr class="even">
 <td align="right">2022</td>
-<td align="right">1.30</td>
-<td align="right">0.81</td>
-<td align="left">73%</td>
+<td align="right">1.20</td>
+<td align="right">0.84</td>
+<td align="left">69%</td>
 <td align="right">117</td>
 </tr>
 <tr class="odd">
 <td align="right">2023</td>
-<td align="right">1.40</td>
-<td align="right">0.84</td>
-<td align="left">74%</td>
+<td align="right">1.30</td>
+<td align="right">0.86</td>
+<td align="left">71%</td>
 <td align="right">60</td>
 </tr>
 </tbody>
@@ -273,12 +314,12 @@ less observations.</p>
 <th align="right">mae</th>
 <th align="right">rho</th>
 <th align="left">ci_coverage</th>
-<th align="right">median_n_obs_per_grouping</th>
+<th align="right">median_n</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">0.73</td>
-<td align="right">0.87</td>
-<td align="left">97%</td>
+<td align="right">0.72</td>
+<td align="right">0.89</td>
+<td align="left">96%</td>
 <td align="right">72</td>
 </tr></tbody>
 </table>
@@ -292,21 +333,25 @@ less observations.</p>
 <th align="right">mae</th>
 <th align="right">rho</th>
 <th align="left">ci_coverage</th>
-<th align="right">median_n_obs_per_grouping</th>
+<th align="right">median_n</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">0.53</td>
-<td align="right">0.83</td>
+<td align="right">0.61</td>
+<td align="right">0.86</td>
 <td align="left">100%</td>
 <td align="right">7</td>
 </tr></tbody>
 </table>
 </div>
-</div>
-<div class="section level2">
-<h2 id="median-lolo-accuracy-per-spatial-aggregation-period">Median LOLO Accuracy Per Spatial Aggregation Period<a class="anchor" aria-label="anchor" href="#median-lolo-accuracy-per-spatial-aggregation-period"></a>
-</h2>
+<div class="section level3">
+<h3 id="median-lolo-accuracy-per-spatial-aggregation-period">Median LOLO Accuracy Per Spatial Aggregation Period<a class="anchor" aria-label="anchor" href="#median-lolo-accuracy-per-spatial-aggregation-period"></a>
+</h3>
+<p>Station-specific estimates of crossvalidated MAE and Rho were
+spatially aggregated to level 5 s2 cells and summarized. The visualized
+result is a rough approximation of how model performance may differ in
+different parts of the country:</p>
 <p><img src="cv-model-performance_files/figure-html/spatial%20variation%20in%20accuracies-1.png" width="700"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

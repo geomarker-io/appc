@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,7 @@
 <div class="section level2">
 <h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a>
 </h2>
-<p>The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present at exact locations across the contiguous United States (see <code><a href="articles/cv-model-performance.html">vignette("cv-model-performance")</a></code> for more details). The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Predictor geomarkers include weather and atmospheric information, traffic on primary roadways, urban imperviousness, wildfire smoke, industrial emissions, elevation, spatiotemporal indicators, and satellite-based aerosol diagnostics data. Source files included with the package train and evaluate models that can be updated with any release to use more recent AQS measurements and/or geomarker predictors.</p>
+<p>The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present at exact locations across the contiguous United States (see <code><a href="articles/cv-model-performance.html">vignette("cv-model-performance")</a></code> for more details). The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations. Predictor geomarkers include weather and atmospheric information, wildfire smoke plumes, elevation, and satellite-based aerosol diagnostics products. Source files included with the package train and evaluate models that can be updated with any release to use more recent AQS measurements and/or geomarker predictors.</p>
 </div>
 <div class="section level2">
 <h2 id="installing">Installing<a class="anchor" aria-label="anchor" href="#installing"></a>
@@ -92,51 +92,42 @@
 <span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-05-18"</span>, <span class="st">"2023-11-06"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ (down)loading random forest model</span></span>
-<span><span class="co">#&gt; ✔ (down)loading random forest model [9.7s]</span></span>
+<span><span class="co">#&gt; ✔ (down)loading random forest model [8.2s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ checking that s2 locations are within the contiguous united states</span></span>
-<span><span class="co">#&gt; ✔ checking that s2 locations are within the contiguous united states [10s]</span></span>
+<span><span class="co">#&gt; ✔ checking that s2 locations are within the contiguous united states [55ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding coordinates</span></span>
-<span><span class="co">#&gt; ✔ adding coordinates [23ms]</span></span>
+<span><span class="co">#&gt; ✔ adding coordinates [1.3s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding elevation</span></span>
 <span><span class="co">#&gt; ✔ adding elevation [1.3s]</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ℹ adding AADT using level 14 s2 approximation (~ 260 m sq)</span></span>
-<span><span class="co">#&gt; ✔ adding AADT using level 14 s2 approximation (~ 260 m sq) [35.6s]</span></span>
-<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding HMS smoke data</span></span>
-<span><span class="co">#&gt; ✔ adding HMS smoke data [902ms]</span></span>
+<span><span class="co">#&gt; ✔ adding HMS smoke data [967ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding NARR</span></span>
-<span><span class="co">#&gt; ✔ adding NARR [3s]</span></span>
+<span><span class="co">#&gt; ✔ adding NARR [3.1s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding MERRA</span></span>
-<span><span class="co">#&gt; ✔ adding MERRA [1.6s]</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ℹ adding NLCD urban imperviousness</span></span>
-<span><span class="co">#&gt; ✔ adding NLCD urban imperviousness [80ms]</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; ℹ adding NEI</span></span>
-<span><span class="co">#&gt; ✔ adding NEI [14.2s]</span></span>
+<span><span class="co">#&gt; ✔ adding MERRA [569ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding time components</span></span>
-<span><span class="co">#&gt; ✔ adding time components [20ms]</span></span>
+<span><span class="co">#&gt; ✔ adding time components [24ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  8.34   1.12 </span></span>
-<span><span class="co">#&gt; 2 10.6    0.868</span></span>
+<span><span class="co">#&gt; 1  7.95   0.917</span></span>
+<span><span class="co">#&gt; 2  9.32   0.814</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  6.37   0.924</span></span>
-<span><span class="co">#&gt; 2  9.40   2.17</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  5.82   0.685</span></span>
+<span><span class="co">#&gt; 2  7.68   0.765</span></span></code></pre></div>
 <p>Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data directory (i.e., <code>tools::R_user_dir("appc", "data")</code>). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the <code>R_USER_DATA_DIR</code> environment variable; see <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">?tools::R_user_dir</a></code>.)</p>
 <p>See more examples in <code><a href="articles/timeline-example.html">vignette("timeline-example")</a></code>.</p>
 </div>
@@ -168,31 +159,16 @@
 <td><code><a href="reference/get_merra_data.html">get_merra_data()</a></code></td>
 </tr>
 <tr class="odd">
-<td>🚍 traffic densities</td>
-<td><code><a href="reference/get_traffic_summary.html">get_traffic_summary()</a></code></td>
-</tr>
-<tr class="even">
-<td>🏙 urban imperviousness</td>
-<td><code><a href="reference/get_urban_imperviousness.html">get_urban_imperviousness()</a></code></td>
-</tr>
-<tr class="odd">
 <td>🔥 wildfire smoke</td>
 <td><code><a href="reference/get_hms_smoke_data.html">get_hms_smoke_data()</a></code></td>
 </tr>
 <tr class="even">
-<td>🏭 industrial emissions</td>
-<td><code><a href="reference/get_nei_point_summary.html">get_nei_point_summary()</a></code></td>
-</tr>
-<tr class="odd">
 <td>🗻 elevation</td>
 <td><code><a href="reference/get_elevation_summary.html">get_elevation_summary()</a></code></td>
 </tr>
-<tr class="even">
-<td>🔗 census tract identifier</td>
-<td><code><a href="reference/get_census_tract_id.html">get_census_tract_id()</a></code></td>
-</tr>
 </tbody>
 </table>
+<p>Currently, <code>get_urban_imperviousness()</code>, <code>get_traffic()</code>, and <code>get_nei_point_summary()</code> are stashed in the <code>/inst</code> folder and not integrated into this package.</p>
 </div>
 <div class="section level2">
 <h2 id="developing">Developing<a class="anchor" aria-label="anchor" href="#developing"></a>
@@ -209,14 +185,11 @@
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>    <span class="ex">dl_geomarker_data</span>      <span class="co"># download all geomarker ahead of time, if not already cached</span></span>
 <span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>    <span class="ex">docker_test</span>            <span class="co"># run tests without cached release files</span></span>
 <span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>    <span class="ex">docker_tool</span>            <span class="co"># build docker image preloaded with {appc} and data</span></span>
-<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    <span class="ex">release_hms_smoke_data</span> <span class="co"># install smoke data from source and upload to github release</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    <span class="ex">release_merra_data</span>     <span class="co"># upload merra data to github release</span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="ex">release_model</span>          <span class="co"># upload grf model and training data to current github release</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    <span class="ex">release_nei_data</span>       <span class="co"># install nei data from source and upload to github release</span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    <span class="ex">release_smoke_data</span>     <span class="co"># install smoke data from source and upload to github release</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a>    <span class="ex">release_traffic_data</span>   <span class="co"># install traffic data from source and upload to github release</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a>    <span class="ex">release_urban_imperviousness_data</span> <span class="co"># install nlcd urban imperviousness data from source and upload to github release</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a>    <span class="ex">train_model</span>            <span class="co"># train grf model and render report</span></span></code></pre></div>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>    <span class="ex">make_training_data</span>     <span class="co"># make training data for GRF</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a>    <span class="ex">release_hms_smoke_data</span> <span class="co"># install smoke data from source and upload to github release</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a>    <span class="ex">release_merra_data</span>     <span class="co"># upload merra data to github release</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a>    <span class="ex">release_model</span>          <span class="co"># upload grf model and training data to current github release</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a>    <span class="ex">train_model</span>            <span class="co"># train grf model and render report</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -259,9 +232,9 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://CRAN.R-project.org/package=appc" class="external-link"><img src="https://www.r-pkg.org/badges/version/appc" alt="CRAN status"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
 </ul>
 </div>
 
