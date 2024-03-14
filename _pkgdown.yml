@@ -6,9 +6,6 @@ reference:
   contents:
   - get_elevation_summary
   - get_narr_data
-  - get_nei_point_summary
-  - get_urban_imperviousness
-  - get_traffic_summary
   - get_merra_data
   - get_hms_smoke_data
 - title: Air pollution assessment
