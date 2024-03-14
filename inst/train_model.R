@@ -16,7 +16,7 @@ d_train <- readRDS(train_file_output_path)
 pred_names <-
   c(
     "x", "y",
-    "doy", "year", "month",
+    "doy", "year",
     ## "merra_pm25",
     "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "elevation_median", "elevation_sd",

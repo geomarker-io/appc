@@ -92,7 +92,6 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
     dplyr::rename(date = dates)
   d$year <- as.numeric(format(d$date, "%Y"))
   d$doy <- as.numeric(format(d$date, "%j"))
-  d$month <- as.numeric(format(d$date, "%m"))
   cli::cli_progress_done()
 
   return(d)
