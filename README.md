@@ -10,6 +10,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 ## About
@@ -50,42 +52,42 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [8.8s]
+#> ✔ (down)loading random forest model [9s]
 #> 
 #> ℹ checking that s2 locations are within the contiguous united states
-#> ✔ checking that s2 locations are within the contiguous united states [11s]
+#> ✔ checking that s2 locations are within the contiguous united states [10.6s]
 #> 
 #> ℹ adding coordinates
 #> ✔ adding coordinates [31ms]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.4s]
+#> ✔ adding elevation [1.3s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [1s]
+#> ✔ adding HMS smoke data [985ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [3s]
+#> ✔ adding NARR [3.1s]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [532ms]
+#> ✔ adding MERRA [528ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [24ms]
+#> ✔ adding time components [23ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.60    1.70
-#> 2  9.19    1.48
+#> 1  7.95   0.917
+#> 2  9.32   0.814
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.83   0.692
-#> 2  8.51   0.733
+#> 1  5.82   0.685
+#> 2  7.68   0.765
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
