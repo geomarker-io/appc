@@ -55,9 +55,3 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = as.chara
   return(d_out)
 }
 
-utils::globalVariables(c(
-  "Sample Duration", "Observation Percent",
-  "State Code", "County Code", "Site Num",
-  "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
-  "lon", "lat", "conc"
-))
