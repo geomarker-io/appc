@@ -17,9 +17,9 @@
 predict_pm25 <- function(x, dates) {
   check_s2_dates(x, dates)
   cli::cli_progress_step("(down)loading random forest model")
-  grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
-  if(!file.exists(grf_file)) install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
-  grf <- readRDS(grf_file)
+  grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
+  if(!file.exists(grf_file)) install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
+  grf <- qs::qread(grf_file)
   cli::cli_progress_done()
   required_predictors <- names(grf$X.orig)
   d <- assemble_predictors(x = x, dates = dates, pollutant = "pm25")

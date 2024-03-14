@@ -45,18 +45,7 @@ grf <-
   )
 
 cli::cli_progress_step("saving GRF")
-file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.rds"))
-saveRDS(grf, file_output_path)
+file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
+qs::qsave(grf, file_output_path, preset = "fast")
 cli::cli_alert_info("saved rf_pm.rds ({fs::file_info(file_output_path)$size}) to {file_output_path}")
-
-cli::cli_alert_info("LOLO estimates (MAE and Cor):")
-round(median(abs(grf$predictions - grf$Y.orig)), 3)
-round(cor.test(grf$predictions, grf$Y.orig, method = "spearman", exact = FALSE)$estimate, 3)
-
-cli::cli_alert_info("variable importance:")
-tibble(
-  importance = round(variable_importance(grf), 3),
-  variable = names(select(d_train, all_of(pred_names)))
-) |>
-  arrange(desc(importance)) |>
-  knitr::kable()
+cli::cli_progress_done()

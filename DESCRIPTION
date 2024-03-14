@@ -22,6 +22,7 @@ Imports:
     httr,
     mappp,
     purrr,
+    qs,
     readr,
     rlang,
     s2,
