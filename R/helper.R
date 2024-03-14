@@ -7,8 +7,7 @@
 }
 
 utils::globalVariables(c(
-  "s2",
-  "NAME",
+  "s2", "NAME",
   "Sample Duration", "Observation Percent",
   "State Code", "County Code", "Site Num",
   "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
@@ -17,16 +16,11 @@ utils::globalVariables(c(
   "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
   "merra_bc", "merra_ss", "merra_so4", "value",
   "d", "pollutant code", "site longitude", "site latitude", "total_emissions",
-  "dist_to_point",
   "air.2m", "hpbl", "acpcp", "rhum.2m",
   "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
-  "urban_imperviousness",
   "merra_pm25",
   "plume_smoke", ".rowid",
-  "nei_point_id2w", "census_tract_id_2010",
-  "predictions", "variance.estimates",
-  "aadt_total", "aadt_total_m", "aadt_truck", "aadt_truck_m",
-  "AADT", "AADT_COMBINATION", "AADT_SINGLE_UNIT", "Shape", "s2_centroid"
+  "predictions", "variance.estimates"
 ))
 
 #' Get the closest years to a vector of dates

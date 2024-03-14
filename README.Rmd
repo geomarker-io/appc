@@ -16,8 +16,6 @@ knitr::opts_chunk$set(
 # Air Pollution Prediction Commons
 
 <!-- badges: start -->
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
@@ -28,7 +26,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments.
 This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the present at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
 The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations.
-Predictor geomarkers include weather and atmospheric information, traffic on primary roadways, urban imperviousness, wildfire smoke, industrial emissions, elevation, spatiotemporal indicators, and satellite-based aerosol diagnostics data.
+Predictor geomarkers include weather and atmospheric information, wildfire smoke plumes, elevation, and satellite-based aerosol diagnostics products.
 Source files included with the package train and evaluate models that can be updated with any release to use more recent AQS measurements and/or geomarker predictors.
 
 ## Installing
@@ -74,12 +72,10 @@ Spatiotemporal geomarkers are used for predicting air pollution concentrations, 
 |-----------|---------------|
 | 🌦 weather & atmospheric conditions | `get_narr_data()` |
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
-| 🚍 traffic densities | `get_traffic_summary()` |
-| 🏙 urban imperviousness | `get_urban_imperviousness()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
-| 🏭 industrial emissions | `get_nei_point_summary()` |
 | 🗻 elevation | `get_elevation_summary()` |
-| 🔗 census tract identifier | `get_census_tract_id()` |
+
+Currently, `get_urban_imperviousness()`, `get_traffic()`, and `get_nei_point_summary()` are stashed in the `/inst` folder and not integrated into this package.
 
 ## Developing
 
@@ -96,12 +92,9 @@ Available recipes:
     dl_geomarker_data      # download all geomarker ahead of time, if not already cached
     docker_test            # run tests without cached release files
     docker_tool            # build docker image preloaded with {appc} and data
+    make_training_data     # make training data for GRF
     release_hms_smoke_data # install smoke data from source and upload to github release
     release_merra_data     # upload merra data to github release
     release_model          # upload grf model and training data to current github release
-    release_nei_data       # install nei data from source and upload to github release
-    release_smoke_data     # install smoke data from source and upload to github release
-    release_traffic_data   # install traffic data from source and upload to github release
-    release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
     train_model            # train grf model and render report
 ```
