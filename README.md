@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
@@ -24,12 +22,10 @@ until the present at exact locations across the contiguous United States
 (see `vignette("cv-model-performance")` for more details). The appc
 package contains functions for generating geomarker predictors and the
 ambient air pollution concentrations. Predictor geomarkers include
-weather and atmospheric information, traffic on primary roadways, urban
-imperviousness, wildfire smoke, industrial emissions, elevation,
-spatiotemporal indicators, and satellite-based aerosol diagnostics data.
-Source files included with the package train and evaluate models that
-can be updated with any release to use more recent AQS measurements
-and/or geomarker predictors.
+weather and atmospheric information, wildfire smoke plumes, elevation,
+and satellite-based aerosol diagnostics products. Source files included
+with the package train and evaluate models that can be updated with any
+release to use more recent AQS measurements and/or geomarker predictors.
 
 ## Installing
 
@@ -52,25 +48,25 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [8.3s]
+#> ✔ (down)loading random forest model [8.2s]
 #> 
 #> ℹ checking that s2 locations are within the contiguous united states
-#> ✔ checking that s2 locations are within the contiguous united states [54ms]
+#> ✔ checking that s2 locations are within the contiguous united states [55ms]
 #> 
 #> ℹ adding coordinates
 #> ✔ adding coordinates [1.3s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.4s]
+#> ✔ adding elevation [1.3s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [986ms]
+#> ✔ adding HMS smoke data [967ms]
 #> 
 #> ℹ adding NARR
 #> ✔ adding NARR [3.1s]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [556ms]
+#> ✔ adding MERRA [569ms]
 #> 
 #> ℹ adding time components
 #> ✔ adding time components [24ms]
@@ -123,16 +119,16 @@ Spatiotemporal geomarkers are used for predicting air pollution
 concentrations, but also serve as exposures or confounding exposures
 themselves. View information and options about each geomarker:
 
-| geomarker                             | appc function                |
-|---------------------------------------|------------------------------|
-| 🌦 weather & atmospheric conditions    | `get_narr_data()`            |
-| 🛰 satellite-based aerosol diagnostics | `get_merra_data()`           |
-| 🚍 traffic densities                  | `get_traffic_summary()`      |
-| 🏙 urban imperviousness                | `get_urban_imperviousness()` |
-| 🔥 wildfire smoke                     | `get_hms_smoke_data()`       |
-| 🏭 industrial emissions               | `get_nei_point_summary()`    |
-| 🗻 elevation                          | `get_elevation_summary()`    |
-| 🔗 census tract identifier            | `get_census_tract_id()`      |
+| geomarker                             | appc function             |
+|---------------------------------------|---------------------------|
+| 🌦 weather & atmospheric conditions    | `get_narr_data()`         |
+| 🛰 satellite-based aerosol diagnostics | `get_merra_data()`        |
+| 🔥 wildfire smoke                     | `get_hms_smoke_data()`    |
+| 🗻 elevation                          | `get_elevation_summary()` |
+
+Currently, `get_urban_imperviousness()`, `get_traffic()`, and
+`get_nei_point_summary()` are stashed in the `/inst` folder and not
+integrated into this package.
 
 ## Developing
 
@@ -154,12 +150,9 @@ Available recipes:
     dl_geomarker_data      # download all geomarker ahead of time, if not already cached
     docker_test            # run tests without cached release files
     docker_tool            # build docker image preloaded with {appc} and data
+    make_training_data     # make training data for GRF
     release_hms_smoke_data # install smoke data from source and upload to github release
     release_merra_data     # upload merra data to github release
     release_model          # upload grf model and training data to current github release
-    release_nei_data       # install nei data from source and upload to github release
-    release_smoke_data     # install smoke data from source and upload to github release
-    release_traffic_data   # install traffic data from source and upload to github release
-    release_urban_imperviousness_data # install nlcd urban imperviousness data from source and upload to github release
     train_model            # train grf model and render report
 ```
