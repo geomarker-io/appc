@@ -50,7 +50,7 @@ train_model:
 # upload grf model and training data to current github release
 release_model:
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/training_data_v{{pkg_version}}.rds"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/rf_pm_v{{pkg_version}}.rds"
+  gh release upload v{{pkg_version}} "{{geomarker_folder}}/rf_pm_v{{pkg_version}}.qs"
 
 # install smoke data from source and upload to github release
 release_hms_smoke_data:

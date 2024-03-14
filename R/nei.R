@@ -47,6 +47,7 @@ get_nei_point_summary <- function(x, year = c("2020", "2017"), pollutant_code = 
 #' @rdname get_nei_point_summary
 #' @export
 install_nei_point_data <- function(year = c("2020", "2017")) {
+  rlang::check_installed("readr", "to read and install NEI CSV files from the EPA.")
   year <- rlang::arg_match(year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("nei_{year}.rds"))
   if (file.exists(dest_file)) {

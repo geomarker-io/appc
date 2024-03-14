@@ -108,6 +108,8 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
 #' @export
 #' @rdname get_merra_data
 create_daily_merra_data <- function(merra_date) {
+  rlang::check_installed("tidync", "to read daily MERRA files.")
+  rlang::check_installed("dotenv", "to read Earthdata credentials; see Details.")
   the_date <- as.Date(merra_date)
   if (file.exists(".env")) dotenv::load_dot_env()
   earthdata_secrets <- Sys.getenv(c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"), unset = NA)
@@ -129,7 +131,6 @@ create_daily_merra_data <- function(merra_date) {
     httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
     httr::write_disk(tf)
   )
-  rlang::check_installed("tidync", "to read daily MERRA files.")
   out <-
     tidync::tidync(tf) |>
     tidync::hyper_filter(
