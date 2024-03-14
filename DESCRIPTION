@@ -27,7 +27,6 @@ Imports:
     terra,
     tibble,
     tidyr,
-    tigris,
     withr
 RoxygenNote: 7.2.3
 Suggests: 
@@ -47,3 +46,5 @@ Suggests:
 Config/testthat/edition: 3
 Config/testthat/parallel: true
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

@@ -29,23 +29,6 @@ utils::globalVariables(c(
   "AADT", "AADT_COMBINATION", "AADT_SINGLE_UNIT", "Shape", "s2_centroid"
 ))
 
-#' Get the geography of the 2020 contiguous United States
-#' @return s2_geography object
-#' @export
-#' @examples
-#' contiguous_us()
-contiguous_us <- function() {
-  tigris::states(year = 2020, progress_bar = FALSE) |>
-    dplyr::filter(!NAME %in% c(
-      "United States Virgin Islands",
-      "Guam", "Commonwealth of the Northern Mariana Islands",
-      "American Samoa", "Puerto Rico",
-      "Alaska", "Hawaii"
-    )) |>
-    sf::st_as_s2() |>
-    s2::s2_union_agg()
-}
-
 #' Get the closest years to a vector of dates
 #'
 #' The time between a date and year is calculated using July 1st of the year.
