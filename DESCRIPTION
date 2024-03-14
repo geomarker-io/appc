@@ -13,7 +13,6 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports: 
     cli,
-    dotenv,
     dplyr,
     fs,
     furrr,
@@ -22,7 +21,6 @@ Imports:
     httr,
     purrr,
     qs,
-    readr,
     rlang,
     s2,
     sf,
@@ -34,15 +32,17 @@ Imports:
 RoxygenNote: 7.2.3
 Suggests: 
     curl,
+    dotenv,
     ggplot2,
     hexbin,
     knitr,
     lwgeom,
-    rmarkdown,
     mappp,
-    tidync,
+    readr,
+    rmarkdown,
     scales,
     testthat (>= 3.0.0),
+    tidync,
     viridis
 Config/testthat/edition: 3
 Config/testthat/parallel: true
