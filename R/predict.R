@@ -49,10 +49,3 @@ predict_pm25 <- function(x, dates) {
   return(out)
 }
 
-utils::globalVariables(c("air.2m", "hpbl", "acpcp", "rhum.2m",
-                         "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
-                         "urban_imperviousness",
-                         "merra_pm25",
-                         "plume_smoke", ".rowid",
-                         "nei_point_id2w", "census_tract_id_2010",
-                         "predictions", "variance.estimates"))
