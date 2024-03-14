@@ -15,14 +15,14 @@ d_train <- readRDS(train_file_output_path)
 pred_names <-
   c(
     "x", "y",
-    "doy", "year", "month", "dow",
-    "elevation_median", "elevation_sd",
-    "aadt_total_m", "aadt_truck_m",
-    "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
-    "urban_imperviousness",
+    "doy", "year", "month",
     "merra_pm25",
-    "nei_point_id2w",
-    "plume_smoke"
+    "elevation_median", "elevation_sd",
+    "plume_smoke",
+    "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
+    ## "urban_imperviousness",
+    ## "aadt_total_m", "aadt_truck_m",
+    ## "nei_point_id2w"
   )
 
 cli::cli_progress_step("training GRF")
