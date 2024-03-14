@@ -50,51 +50,42 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.7s]
+#> ✔ (down)loading random forest model [8.8s]
 #> 
 #> ℹ checking that s2 locations are within the contiguous united states
-#> ✔ checking that s2 locations are within the contiguous united states [10s]
+#> ✔ checking that s2 locations are within the contiguous united states [11s]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [23ms]
+#> ✔ adding coordinates [31ms]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.3s]
-#> 
-#> ℹ adding AADT using level 14 s2 approximation (~ 260 m sq)
-#> ✔ adding AADT using level 14 s2 approximation (~ 260 m sq) [35.6s]
+#> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [902ms]
+#> ✔ adding HMS smoke data [1s]
 #> 
 #> ℹ adding NARR
 #> ✔ adding NARR [3s]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1.6s]
-#> 
-#> ℹ adding NLCD urban imperviousness
-#> ✔ adding NLCD urban imperviousness [80ms]
-#> 
-#> ℹ adding NEI
-#> ✔ adding NEI [14.2s]
+#> ✔ adding MERRA [532ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [20ms]
+#> ✔ adding time components [24ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  8.34   1.12 
-#> 2 10.6    0.868
+#> 1  7.60    1.70
+#> 2  9.19    1.48
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  6.37   0.924
-#> 2  9.40   2.17
+#> 1  5.83   0.692
+#> 2  8.51   0.733
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
