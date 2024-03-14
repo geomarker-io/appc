@@ -1,6 +1,6 @@
 Package: appc
 Title: Air Pollution Predictor Commons
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(
     person("Cole", "Brokamp", , "cole@colebrokamp.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0289-3151")),
@@ -20,7 +20,6 @@ Imports:
     glue,
     grf,
     httr,
-    mappp,
     purrr,
     qs,
     readr,
@@ -29,7 +28,6 @@ Imports:
     sf,
     terra,
     tibble,
-    tidync,
     tidyr,
     tigris,
     withr
@@ -41,6 +39,8 @@ Suggests:
     knitr,
     lwgeom,
     rmarkdown,
+    mappp,
+    tidync,
     scales,
     testthat (>= 3.0.0),
     viridis, 

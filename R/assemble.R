@@ -19,6 +19,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   cli::cli_progress_step("checking that s2 locations are within the contiguous united states")
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), contiguous_us())
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
+
   cli::cli_progress_step("adding coordinates")
   conus_coords <-
     sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
@@ -27,6 +28,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
     tibble::as_tibble()
   d$x <- conus_coords$X
   d$y <- conus_coords$Y
+
   cli::cli_progress_step("adding elevation")
   d$elevation_median <- get_elevation_summary(x = d$s2, fun = stats::median, buffer = 1200)
   d$elevation_sd <- get_elevation_summary(x = d$s2, fun = stats::sd, buffer = 1200)
@@ -35,6 +37,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   ## d$aadt_total_m <- purrr::map_dbl(d$traffic, "aadt_total_m")
   ## d$aadt_truck_m <- purrr::map_dbl(d$traffic, "aadt_truck_m")
   ## d$traffic <- NULL
+
   cli::cli_progress_step("adding HMS smoke data")
   d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
   cli::cli_progress_step("adding NARR")
@@ -50,11 +53,11 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
 
   cli::cli_progress_step("adding MERRA")
   d$merra <- get_merra_data(d$s2, d$dates)
-  ## d$merra_dust <- purrr::map(d$merra, "merra_dust")
-  ## d$merra_oc <- purrr::map(d$merra, "merra_oc")
-  ## d$merra_bc <- purrr::map(d$merra, "merra_bc")
-  ## d$merra_ss <- purrr::map(d$merra, "merra_ss")
-  ## d$merra_so4 <- purrr::map(d$merra, "merra_so4")
+  d$merra_dust <- purrr::map(d$merra, "merra_dust")
+  d$merra_oc <- purrr::map(d$merra, "merra_oc")
+  d$merra_bc <- purrr::map(d$merra, "merra_bc")
+  d$merra_ss <- purrr::map(d$merra, "merra_ss")
+  d$merra_so4 <- purrr::map(d$merra, "merra_so4")
   d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
   d$merra <- NULL
 
@@ -81,6 +84,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
       dates, air.2m, hpbl, acpcp,
       rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
       merra_pm25,
+      merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
       ## urban_imperviousness,
       ## nei_point_id2w,
       plume_smoke
