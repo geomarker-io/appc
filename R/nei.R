@@ -84,6 +84,3 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
   return(as.character(dest_file))
 }
 
-utils::globalVariables(c("pollutant code", "site longitude", "site latitude", "total_emissions"))
-
-utils::globalVariables(c("dist_to_point"))

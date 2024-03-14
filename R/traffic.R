@@ -92,6 +92,3 @@ install_traffic <- function() {
   saveRDS(out, out_path)
   return(as.character(out_path))
 }
-
-utils::globalVariables(c("aadt_total", "aadt_total_m", "aadt_truck", "aadt_truck_m",
-                         "AADT", "AADT_COMBINATION", "AADT_SINGLE_UNIT", "Shape", "s2_centroid"))

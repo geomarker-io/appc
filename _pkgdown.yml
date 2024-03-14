@@ -15,15 +15,10 @@ reference:
   contents:
   - predict_pm25
   - assemble_predictors
-- title: Census geography
-  contents:
-  - get_census_tract_id
-  - contiguous_us
-  - s2_states
-  - s2_tracts
 - title: Helpers
   contents:
   - get_daily_aqs
+  - contiguous_us
   - get_closest_year
   - appc_clean_data_directory
 

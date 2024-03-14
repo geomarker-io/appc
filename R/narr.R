@@ -60,4 +60,3 @@ install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m",
   return(dest_file)
 }
 
-utils::globalVariables(c("d"))

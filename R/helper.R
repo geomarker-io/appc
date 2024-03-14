@@ -1,8 +1,33 @@
 .onLoad <- function(...) {
-  dir.create(tools::R_user_dir("appc", "data"), recursive = TRUE, showWarnings=FALSE)
-  options(timeout = max(2500, getOption("timeout")),
-          download.file.method = "libcurl")
+  dir.create(tools::R_user_dir("appc", "data"), recursive = TRUE, showWarnings = FALSE)
+  options(
+    timeout = max(2500, getOption("timeout")),
+    download.file.method = "libcurl"
+  )
 }
+
+utils::globalVariables(c(
+  "s2",
+  "NAME",
+  "Sample Duration", "Observation Percent",
+  "State Code", "County Code", "Site Num",
+  "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
+  "lon", "lat", "conc",
+  "DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25",
+  "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
+  "merra_bc", "merra_ss", "merra_so4", "value",
+  "d", "pollutant code", "site longitude", "site latitude", "total_emissions",
+  "dist_to_point",
+  "air.2m", "hpbl", "acpcp", "rhum.2m",
+  "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
+  "urban_imperviousness",
+  "merra_pm25",
+  "plume_smoke", ".rowid",
+  "nei_point_id2w", "census_tract_id_2010",
+  "predictions", "variance.estimates",
+  "aadt_total", "aadt_total_m", "aadt_truck", "aadt_truck_m",
+  "AADT", "AADT_COMBINATION", "AADT_SINGLE_UNIT", "Shape", "s2_centroid"
+))
 
 #' Get the geography of the 2020 contiguous United States
 #' @return s2_geography object
@@ -21,11 +46,9 @@ contiguous_us <- function() {
     s2::s2_union_agg()
 }
 
-utils::globalVariables("NAME")
-
 #' Get the closest years to a vector of dates
 #'
-#' The time between a date and year is calculated using July 1st of the year. 
+#' The time between a date and year is calculated using July 1st of the year.
 #' @param x a date vector
 #' @param years vector of characters (or numerics) representing years to choose from
 #' @return a character vector of the closest year in `years` for each date in `x`
@@ -71,12 +94,12 @@ appc_clean_data_directory <- function() {
 }
 
 ui_confirm <- function() {
-    if (!interactive()) {
-        cli::cli_alert_warning("User input requested, but session is not interactive.")
-        cli::cli_alert_info("Assuming this is okay.")
-        return(TRUE)
-    }
-    ans <- readline("Are you sure (y/n)? ")
-    if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
-    return(invisible(TRUE))
+  if (!interactive()) {
+    cli::cli_alert_warning("User input requested, but session is not interactive.")
+    cli::cli_alert_info("Assuming this is okay.")
+    return(TRUE)
+  }
+  ans <- readline("Are you sure (y/n)? ")
+  if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
+  return(invisible(TRUE))
 }

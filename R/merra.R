@@ -154,8 +154,3 @@ create_daily_merra_data <- function(merra_date) {
   return(out)
 }
 
-utils::globalVariables(c(
-  "DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25",
-  "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
-  "merra_bc", "merra_ss", "merra_so4", "value"
-))
