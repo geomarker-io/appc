@@ -2,15 +2,16 @@ library(dplyr, warn.conflicts = FALSE)
 library(purrr)
 library(grf)
 
+# load development version if developing (instead of currently installed version)
+if (file.exists("./inst")) {
+  devtools::load_all()
+} else {
+  library(appc)
+}
+
 train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
 d_train <- readRDS(train_file_output_path)
 
-## # load development version if developing (instead of currently installed version)
-## if (file.exists("./inst")) {
-##   devtools::load_all()
-## } else {
-##   library(appc)
-## }
 
 pred_names <-
   c(
