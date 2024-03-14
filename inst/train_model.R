@@ -32,7 +32,7 @@ grf <-
     Y = d_train$conc,
     seed = 224,
     num.threads = parallel::detectCores(),
-    num.trees = 500,
+    num.trees = 200,
     compute.oob.predictions = TRUE,
     honesty = FALSE,
     tune.parameters = "none",

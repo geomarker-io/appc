@@ -45,11 +45,19 @@ d_train <- readRDS(train_file)
 
 ## Training data
 
-`r nrow(d_train)` daily $PM_{2.5}$ measurements on `r n_distinct(d_train$date)` different days across `r n_distinct(d_train$s2)` unique stations from `r min(d_train$date)` to `r max(d_train$date)`. Concentrations quantiles are:
+`r nrow(d_train)` daily PM$_{2.5}$ measurements on `r n_distinct(d_train$date)` different days across `r n_distinct(d_train$s2)` unique stations from `r min(d_train$date)` to `r max(d_train$date)`.
+
+Measured PM$_{2.5}$ concentration ($\mu g/ m^3$) quantiles are:
 
 ```{r "training data"}
-quantile(d_train$conc, c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1))
+quantile(d_train$conc, c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1)) |>
+  tibble::enframe(name = "percentile", value = "concentration") |>
+  knitr::kable()
 ```
+
+## Random Forest
+
+The generalized regression forest has `r grf[["_num_trees"]]` trees and was trained using a sample fraction of `r grf$tunable.params$sample.fraction`, a minimum node size of `r grf$tunable.params$min.node.size`, and an $m_{try}$ value of `r grf$tunable.params$mtry`.
 
 ## Variable Importance
 
