@@ -1,8 +1,8 @@
 ---
-title: "timeline-example"
+title: "Timeline Example"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{timeline-example}
+  %\VignetteIndexEntry{Timeline Example}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

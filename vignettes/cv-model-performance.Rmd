@@ -1,8 +1,8 @@
 ---
-title: "cv-model-performance"
+title: "CV Model Performance"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{cv-model-performance}
+  %\VignetteIndexEntry{CV Model Performance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
