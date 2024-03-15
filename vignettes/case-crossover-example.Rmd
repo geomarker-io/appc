@@ -44,12 +44,13 @@ d
 For this example, we want to estimate the fine particulate matter on the days of the case, as well as control dates. Here, we define these control dates using time stratification on year, month, and day-of-week, and use the `purrr` package to create a list-col of dates for each location in our example data:
 
 ```{r}
-dates_seq <- seq(min(d$case_date), max(d$case_date), by = 1)
+dates_seq <- seq(min(d$case_date) - 31, max(d$case_date) + 31, by = 1)
 
 make_control_dates <- function(case_date) {
   dates_seq[lubridate::year(dates_seq) == lubridate::year(case_date) & 
-            lubridate::month(dates_seq) == lubridate::month(case_date) & 
-            lubridate::wday(dates_seq) == lubridate::wday(case_date)]
+              lubridate::month(dates_seq) == lubridate::month(case_date) & 
+              lubridate::wday(dates_seq) == lubridate::wday(case_date) &
+              dates_seq != case_date]
 }
 
 d <- d |>
