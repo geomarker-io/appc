@@ -4,6 +4,7 @@ Version: 0.2.0
 Authors@R: c(
     person("Cole", "Brokamp", , "cole@colebrokamp.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0289-3151")),
+    person("Erika", "Manning", role = "aut"),
     person("Qing", "Duan", role = "aut")
 	   )
 URL: https://github.com/geomarker-io/appc, http://geomarker.io/appc/
@@ -35,6 +36,7 @@ Suggests:
     ggplot2,
     hexbin,
     knitr,
+    lubridate,
     lwgeom,
     mappp,
     readr,
