@@ -48,18 +48,24 @@ d <- d |>
   rowwise() |>
   mutate(dates = list(seq(start_date, end_date, by = 1))) |>
   ungroup()
+
+d
 ```
 
 Next, we will use the `lon` and `lat` columns to create the s2 geohash:
 
 ```{r}
 d <- d |> dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat)))
+
+d
 ```
 
 Directly use the `s2` and `dates` columns to call the `predict_pm25()` function:
 
 ```{r}
 d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates))
+
+d
 ```
 
 With daily exposures, we could average fine particulate matter throughout the study period:
