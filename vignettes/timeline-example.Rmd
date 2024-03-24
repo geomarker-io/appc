@@ -19,7 +19,7 @@ library(appc)
 library(dplyr, warn.conflicts = FALSE)
 ```
 
-This example details how to use the appc package to add air pollution exposure estimates for exact locations and time periods defined by geocoded coordinates and a "key" date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and dates of birth between 2022 and 2023, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
+This example details how to use the appc package to add air pollution exposure estimates for exact locations and time periods defined by geocoded coordinates and a "key" date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and dates of birth during 2022, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
 
 ```{r}
 #| warnings: false
@@ -32,7 +32,7 @@ d <-
   sf::st_coordinates() |>
   tibble::as_tibble() |>
   rename(lat = Y, lon = X) |>
-  mutate(dob = sample(seq(as.Date("2022-01-01"), as.Date("2023-12-31"), by = 1), size = 20))
+  mutate(dob = sample(seq(as.Date("2022-01-01"), as.Date("2022-12-31"), by = 1), size = 20))
 
 d
 ```
