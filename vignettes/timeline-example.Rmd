@@ -32,18 +32,18 @@ d <-
   sf::st_coordinates() |>
   tibble::as_tibble() |>
   rename(lat = Y, lon = X) |>
-  mutate(dob = sample(seq(as.Date("2022-01-01"), as.Date("2022-12-31"), by = 1), size = 20))
+  mutate(dob = sample(seq(as.Date("2023-01-01"), as.Date("2023-12-31"), by = 1), size = 20))
 
 d
 ```
 
-For this example, we want to estimate the average fine particulate matter from 90 days prior to birth until 1 year after birth. We define these dates and create a list-col of dates for each location in our example data:
+For this example, we want to estimate the average fine particulate matter from 90 days prior to birth until the date of birth. We define these dates and create a list-col of dates for each location in our example data:
 
 ```{r}
 d <- d |>
   mutate(
     start_date = dob - 90,
-    end_date = dob + 325.25
+    end_date = dob
   ) |>
   rowwise() |>
   mutate(dates = list(seq(start_date, end_date, by = 1))) |>
