@@ -5,10 +5,14 @@
 \alias{install_gridmet_data}
 \title{Get gridMET surface meteorological data}
 \usage{
-get_gridmet_data(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "rmax"))
+get_gridmet_data(
+  x,
+  dates,
+  gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph")
+)
 
 install_gridmet_data(
-  gridmet_var = c("tmmx", "tmmn", "pr", "rmax"),
+  gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph"),
   gridmet_year = as.character(1979:format(Sys.Date(), "\%Y"))
 )
 }

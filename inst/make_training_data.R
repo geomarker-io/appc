@@ -1,10 +1,6 @@
 library(dplyr, warn.conflicts = FALSE)
 library(purrr)
 
-future::plan("multicore")
-cli::cli_alert_info("using `future::plan()`:")
-future::plan()
-
 # load development version if developing (instead of currently installed version)
 if (file.exists("./inst")) {
   devtools::load_all()

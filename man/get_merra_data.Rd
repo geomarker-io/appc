@@ -50,6 +50,9 @@ the formula in \url{https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4}
 Set a proxy to be used by all {httr} calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}; e.g.
 \code{httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))}
 }
+
+this installs merra data created using code from version 0.2.0 of the package;
+version 0.3.0 of the package did not change merra data code
 }
 \examples{
 d <- list(

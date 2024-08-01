@@ -23,13 +23,15 @@ for \code{install_hms_smoke_data()}, a character string path to the installed RD
 The HMS operates daily in near real-time by outlining the smoke polygon of each distinct smoke plume
 and classifying it as "light", "medium", and "heavy". Since multiple plumes of varying or the same classification
 can cover one another, the total smoke plume exposure is estimated as the weighted sum of all plumes, where
-"light" = 1, "medium" = 2, and "heavy" = 3. Parallel processing via the \code{furrr} package can be used by
-setting the \code{future::plan()} evaluation strategy beforehand.
+"light" = 1, "medium" = 2, and "heavy" = 3.
 }
 \details{
 Daily HMS shapefiles are missing for 7 days within 2017-2023
 ("2017-04-27", "2017-05-31", "2017-06-01", "2017-06-01" "2017-06-22", "2017-11-12", "2018-12-31")
 and will return zero values.  If files are available but no smoke plumes intersect, then a zero values is also returned.
+
+this installs smoke data created using code from version 0.2.0 of the package;
+version 0.3.0 of the package did not change smoke data code
 }
 \examples{
 d <- list(

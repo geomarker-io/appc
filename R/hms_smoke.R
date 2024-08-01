@@ -3,8 +3,7 @@
 #' The HMS operates daily in near real-time by outlining the smoke polygon of each distinct smoke plume
 #' and classifying it as "light", "medium", and "heavy". Since multiple plumes of varying or the same classification
 #' can cover one another, the total smoke plume exposure is estimated as the weighted sum of all plumes, where
-#' "light" = 1, "medium" = 2, and "heavy" = 3. Parallel processing via the `furrr` package can be used by
-#' setting the `future::plan()` evaluation strategy beforehand.
+#' "light" = 1, "medium" = 2, and "heavy" = 3.
 #' @param x a vector of s2 cell identifers (`s2_cell` object); currently required to be within the contiguous united states
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
 #' @return for `get_hms_smoke_data()`, a list of numeric vectors of smoke plume scores (the same length as `x` and `dates`)
@@ -25,7 +24,7 @@ get_hms_smoke_data <- function(x, dates) {
   date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
   withr::with_options(list(sf_use_s2 = FALSE, future.rng.onMisuse = "ignore"), {
     out <-
-      furrr::future_map(seq_along(x), \(i) {
+      purrr::map(seq_along(x), \(i) {
         purrr::map(date_smoke_geoms[[i]], \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .)) |>
           suppressMessages() |>
           purrr::map("Density") |>
@@ -33,7 +32,7 @@ get_hms_smoke_data <- function(x, dates) {
           purrr::map_dbl(sum, na.rm = TRUE) |>
           as.numeric() |>
           suppressWarnings()
-      }, .progress = TRUE)
+      }, .progress = "intersecting smoke data")
   })
   return(out)
 }

@@ -16,7 +16,6 @@ Imports:
     cli,
     dplyr,
     fs,
-    furrr,
     glue,
     grf,
     httr,
