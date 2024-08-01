@@ -17,11 +17,13 @@ pred_names <-
   c(
     "x", "y",
     "doy", "year",
-    ## "merra_pm25",
-    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
     "elevation_median", "elevation_sd",
     "plume_smoke",
-    "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
+    "temperature_max", "temperature_min", "precipitation", "solar_radiation", "wind_speed", "wind_direction", "specific_humidity",
+    ## "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
+    "hpbl",
+    ## "merra_pm25",
+    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4"
     ## "urban_imperviousness",
     ## "aadt_total_m", "aadt_truck_m",
     ## "nei_point_id2w"

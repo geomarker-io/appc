@@ -34,7 +34,7 @@
 #' )
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "tmmx")
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "pr")
-get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "rmax")) {
+get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph")) {
   check_s2_dates(x, dates)
   gridmet_var <- rlang::arg_match(gridmet_var)
   gridmet_years <-
@@ -75,7 +75,7 @@ get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "rm
 #' @return for `install_gridmet_data()`, a character string path to gridMET raster data
 #' @export
 #' @rdname get_gridmet_data
-install_gridmet_data <- function(gridmet_var = c("tmmx", "tmmn", "pr", "rmax"),
+install_gridmet_data <- function(gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph"),
                                  gridmet_year = as.character(1979:format(Sys.Date(), "%Y"))) {
   gridmet_var <- rlang::arg_match(gridmet_var)
   gridmet_year <- rlang::arg_match(gridmet_year)
