@@ -1,6 +1,6 @@
 Package: appc
 Title: Air Pollution Predictor Commons
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
     person("Cole", "Brokamp", , "cole@colebrokamp.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0289-3151")),
@@ -16,7 +16,6 @@ Imports:
     cli,
     dplyr,
     fs,
-    furrr,
     glue,
     grf,
     httr,
@@ -29,7 +28,7 @@ Imports:
     tibble,
     tidyr,
     withr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: 
     curl,
     dotenv,

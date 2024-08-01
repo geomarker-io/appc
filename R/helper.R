@@ -20,7 +20,9 @@ utils::globalVariables(c(
   "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
   "merra_pm25",
   "plume_smoke", ".rowid",
-  "predictions", "variance.estimates"
+  "predictions", "variance.estimates",
+  "precipitation", "solar_radiation", "specific_humidity",
+  "temperature_max", "temperature_min", "wind_direction", "wind_speed"
 ))
 
 #' Get the closest years to a vector of dates

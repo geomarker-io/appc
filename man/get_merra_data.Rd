@@ -40,16 +40,19 @@ from the MERRA-2 \href{https://disc.gsfc.nasa.gov/datasets/M2T1NXAER_5.12.4/summ
 \item To install data from source, an \href{https://disc.gsfc.nasa.gov/information/documents?title=Data\%20Access}{Earthdata account linked with permissions for GES DISC} is required.
 The \code{EARTHDATA_USERNAME} and \code{EARTHDATA_PASSWORD} must be set. If
 a \code{.env} file is present, environment variables will be loaded
-using the {dotenv} package.
+using the dotenv package.
 \item Installed data are filtered to a
 \href{http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313}{bounding box}
 around the contiguous US, averaged to daily values, and
 converted to micrograms per cubic meter ($ug/m^3$).
 \item Total surface PM2.5 mass is calculated according to
 the formula in \url{https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4}
-Set a proxy to be used by all {httr} calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}; e.g.
+Set a proxy to be used by all httr calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}; e.g.
 \code{httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))}
 }
+
+this installs merra data created using code from version 0.2.0 of the package;
+version 0.3.0 of the package did not change merra data code
 }
 \examples{
 d <- list(

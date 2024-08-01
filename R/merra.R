@@ -7,14 +7,14 @@
 #' permissions for GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) is required.
 #' The `EARTHDATA_USERNAME` and `EARTHDATA_PASSWORD` must be set. If
 #' a `.env` file is present, environment variables will be loaded
-#' using the {dotenv} package.
+#' using the dotenv package.
 #' - Installed data are filtered to a
 #' [bounding box](http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313)
 #' around the contiguous US, averaged to daily values, and
 #' converted to micrograms per cubic meter ($ug/m^3$).
 #' - Total surface PM2.5 mass is calculated according to
 #' the formula in <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
-#' Set a proxy to be used by all {httr} calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`; e.g.
+#' Set a proxy to be used by all httr calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`; e.g.
 #' `httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))`
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the MERRA data, must be the same length as `x`
@@ -71,6 +71,8 @@ get_merra_data <- function(x, dates) {
 #' `install_merra_data()` installs MERRA PM2.5 data into
 #' user's data directory for the `appc` package
 #' @return for `install_merra_data()`, a character string path to the merra data
+#' @details this installs merra data created using code from version 0.2.0 of the package;
+#' version 0.3.0 of the package did not change merra data code
 #' @export
 #' @rdname get_merra_data
 install_merra_data <- function(merra_year = as.character(2016:2023)) {
@@ -83,7 +85,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"))
+    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = "0.2.0")
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),

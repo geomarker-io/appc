@@ -16,7 +16,7 @@
 assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   check_s2_dates(x, dates)
   d <- tibble::tibble(s2 = x, dates = dates)
-  cli::cli_progress_step("checking that s2 locations are within the contiguous united states")
+  cli::cli_progress_step("checking that s2 are within the contiguous US")
   contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), s2::as_s2_geography(contiguous_us))
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
 
@@ -40,16 +40,29 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
 
   cli::cli_progress_step("adding HMS smoke data")
   d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
+
   cli::cli_progress_step("adding NARR")
   my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
-  d$air.2m <- my_narr("air.2m")
+  ## d$air.2m <- my_narr("air.2m")
   d$hpbl <- my_narr("hpbl")
-  d$acpcp <- my_narr("acpcp")
-  d$rhum.2m <- my_narr("rhum.2m")
-  d$vis <- my_narr("vis")
-  d$pres.sfc <- my_narr("pres.sfc")
-  d$uwnd.10m <- my_narr("uwnd.10m")
-  d$vwnd.10m <- my_narr("vwnd.10m")
+  ## d$acpcp <- my_narr("acpcp")
+  ## d$rhum.2m <- my_narr("rhum.2m")
+  ## d$vis <- my_narr("vis")
+  ## d$pres.sfc <- my_narr("pres.sfc")
+  ## d$uwnd.10m <- my_narr("uwnd.10m")
+  ## d$vwnd.10m <- my_narr("vwnd.10m")
+
+  cli::cli_progress_step("adding gridMET")
+  my_gridmet <- purrr::partial(get_gridmet_data, x = d$s2, dates = d$dates)
+  d$temperature_max <- my_gridmet("tmmx")
+  d$temperature_min <- my_gridmet("tmmn")
+  d$precipitation <- my_gridmet("pr")
+  d$solar_radiation <- my_gridmet("srad")
+  d$wind_speed <- my_gridmet("vs")
+  d$wind_direction <- my_gridmet("th")
+  d$specific_humidity <- my_gridmet("sph")
+  ## d$relative_humidity_max <- my_gridmet("rmax")
+  ## d$relative_humidity_min <- my_gridmet("rmin")
 
   cli::cli_progress_step("adding MERRA")
   d$merra <- get_merra_data(d$s2, d$dates)
@@ -81,8 +94,9 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   d <-
     d |>
     tidyr::unnest(cols = c(
-      dates, air.2m, hpbl, acpcp,
-      rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
+      dates, hpbl,
+      temperature_max, temperature_min, precipitation, solar_radiation, wind_speed, wind_direction, specific_humidity,
+      ## air.2m, acpcp, rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
       merra_pm25,
       merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
       ## urban_imperviousness,
