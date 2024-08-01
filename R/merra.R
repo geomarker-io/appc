@@ -71,6 +71,8 @@ get_merra_data <- function(x, dates) {
 #' `install_merra_data()` installs MERRA PM2.5 data into
 #' user's data directory for the `appc` package
 #' @return for `install_merra_data()`, a character string path to the merra data
+#' @details this installs merra data created using code from version 0.2.0 of the package;
+#' version 0.3.0 of the package did not change merra data code
 #' @export
 #' @rdname get_merra_data
 install_merra_data <- function(merra_year = as.character(2016:2023)) {
@@ -83,7 +85,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"))
+    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = "0.2.0")
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
