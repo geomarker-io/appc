@@ -7,14 +7,14 @@
 #' permissions for GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) is required.
 #' The `EARTHDATA_USERNAME` and `EARTHDATA_PASSWORD` must be set. If
 #' a `.env` file is present, environment variables will be loaded
-#' using the {dotenv} package.
+#' using the dotenv package.
 #' - Installed data are filtered to a
 #' [bounding box](http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313)
 #' around the contiguous US, averaged to daily values, and
 #' converted to micrograms per cubic meter ($ug/m^3$).
 #' - Total surface PM2.5 mass is calculated according to
 #' the formula in <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
-#' Set a proxy to be used by all {httr} calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`; e.g.
+#' Set a proxy to be used by all httr calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`; e.g.
 #' `httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))`
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the MERRA data, must be the same length as `x`

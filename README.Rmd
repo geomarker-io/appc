@@ -70,12 +70,12 @@ Spatiotemporal geomarkers are used for predicting air pollution concentrations, 
 
 | geomarker | appc function |
 |-----------|---------------|
-| 🌦 weather & atmospheric conditions | `get_narr_data()` |
+| 🌦 weather & atmospheric conditions | `get_gridmet_data`, `get_narr_data()` |
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
 
-Currently, `get_urban_imperviousness()`, `get_traffic()`, and `get_nei_point_summary()` are stashed in the `/inst` folder and not integrated into this package.
+Currently, `get_urban_imperviousness()`, `get_traffic()`, and `get_nei_point_summary()` are stashed in the `/inst` folder and are not integrated into this package.
 
 ## Developing
 

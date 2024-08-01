@@ -50,7 +50,7 @@ get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "sr
     purrr::map_chr(\(.) install_gridmet_data(gridmet_var = gridmet_var, gridmet_year = .)) |>
     purrr::map(terra::rast) |>
     purrr::map2(gridmet_years, \(.x, .y) {
-      setNames(
+      stats::setNames(
         .x,
         seq(
           as.Date(glue::glue("{.y}-01-01")),

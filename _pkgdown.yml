@@ -5,6 +5,7 @@ reference:
 - title: Geomarker assessment
   contents:
   - get_elevation_summary
+  - get_gridmet_data
   - get_narr_data
   - get_merra_data
   - get_hms_smoke_data

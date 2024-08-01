@@ -48,42 +48,45 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [8.2s]
+#> ✔ (down)loading random forest model [9.2s]
 #> 
-#> ℹ checking that s2 locations are within the contiguous united states
-#> ✔ checking that s2 locations are within the contiguous united states [55ms]
+#> ℹ checking that s2 are within the contiguous US
+#> ✔ checking that s2 are within the contiguous US [60ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [1.3s]
+#> ✔ adding coordinates [1.6s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.3s]
+#> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [967ms]
+#> ✔ adding HMS smoke data [889ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [3.1s]
+#> ✔ adding NARR [483ms]
+#> 
+#> ℹ adding gridMET
+#> ✔ adding gridMET [443ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [569ms]
+#> ✔ adding MERRA [558ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [24ms]
+#> ✔ adding time components [23ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.95   0.917
-#> 2  9.32   0.814
+#> 1  8.16   1.11 
+#> 2  9.28   0.806
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.82   0.685
-#> 2  7.68   0.765
+#> 1  5.13   0.381
+#> 2  5.95   0.466
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
@@ -119,15 +122,15 @@ Spatiotemporal geomarkers are used for predicting air pollution
 concentrations, but also serve as exposures or confounding exposures
 themselves. View information and options about each geomarker:
 
-| geomarker                             | appc function             |
-|---------------------------------------|---------------------------|
-| 🌦 weather & atmospheric conditions    | `get_narr_data()`         |
-| 🛰 satellite-based aerosol diagnostics | `get_merra_data()`        |
-| 🔥 wildfire smoke                     | `get_hms_smoke_data()`    |
-| 🗻 elevation                          | `get_elevation_summary()` |
+| geomarker | appc function |
+|----|----|
+| 🌦 weather & atmospheric conditions | `get_gridmet_data`, `get_narr_data()` |
+| 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
+| 🔥 wildfire smoke | `get_hms_smoke_data()` |
+| 🗻 elevation | `get_elevation_summary()` |
 
 Currently, `get_urban_imperviousness()`, `get_traffic()`, and
-`get_nei_point_summary()` are stashed in the `/inst` folder and not
+`get_nei_point_summary()` are stashed in the `/inst` folder and are not
 integrated into this package.
 
 ## Developing
