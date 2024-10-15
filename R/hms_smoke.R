@@ -40,8 +40,6 @@ get_hms_smoke_data <- function(x, dates) {
 #' installs HMS smoke data into user's data directory for the `appc` package
 #' @return for `install_hms_smoke_data()`, a character string path to the installed RDS file
 #' @rdname get_hms_smoke_data
-#' @details this installs smoke data created using code from version 0.2.0 of the package;
-#' version 0.3.0 of the package did not change smoke data code
 #' @export
 install_hms_smoke_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
@@ -52,7 +50,7 @@ install_hms_smoke_data <- function() {
     install_released_data(released_data_name = "hms_smoke.rds", package_version = "0.2.0")
     return(as.character(dest_file))
   }
-  smoke_days <- seq(as.Date("2017-01-01"), as.Date("2023-12-31"), by = 1)
+  smoke_days <- seq(as.Date("2017-01-01"), as.Date("2024-09-01"), by = 1)
   all_smoke_daily_data <-
     purrr::map(
       smoke_days,
@@ -65,6 +63,7 @@ install_hms_smoke_data <- function() {
   return(as.character(dest_file))
 }
 
+#' download_daily_smoke_data(as.Date("2024-04-21"))
 download_daily_smoke_data <- function(date) {
   safe_st_read <- purrr::safely(sf::st_read, otherwise = sf::st_sf(sf::st_sfc(crs = sf::st_crs("epsg:4326"))))
   smoke_shapefile <-

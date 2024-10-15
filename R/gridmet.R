@@ -29,7 +29,7 @@
 #' @export
 #' @examples
 #' d <- list(
-#'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
+#'   "8841b39a7c46e25f" = as.Date(c("2024-05-18", "2024-11-06")),
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "tmmx")
@@ -56,7 +56,7 @@ get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "sr
           as.Date(glue::glue("{.y}-01-01")),
           as.Date(glue::glue("{.y}-12-31")),
           by = 1
-        )
+        )[1:terra::nlyr(.x)]
       )
     }) |>
     purrr::reduce(c)

@@ -45,7 +45,7 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
 #' @export
 #' @rdname get_narr_data
 install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
-                              narr_year = as.character(2016:2023)) {
+                              narr_year = as.character(2016:2024)) {
   narr_var <- rlang::arg_match(narr_var)
   narr_year <- rlang::arg_match(narr_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("narr_{narr_var}_{narr_year}.nc"))
