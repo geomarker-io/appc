@@ -45,7 +45,7 @@ get_merra_data <- function(x, dates) {
     dplyr::nest_by(s2) |>
     dplyr::ungroup() |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2)) |>
-    dplyr::mutate(s2_geography = s2::s2_cell_to_lnglat(s2)) |>
+    dplyr::mutate(s2_geography = s2::s2_cell_center(s2)) |>
     stats::na.omit() # some s2 failed to convert to lnglat ?
 
   x_closest_merra <-
@@ -75,7 +75,7 @@ get_merra_data <- function(x, dates) {
 #' version 0.3.0 of the package did not change merra data code
 #' @export
 #' @rdname get_merra_data
-install_merra_data <- function(merra_year = as.character(2016:2023)) {
+install_merra_data <- function(merra_year = as.character(2016:2024)) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
     paste0(c("merra", merra_year), collapse = "_"),
