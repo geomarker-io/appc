@@ -128,11 +128,19 @@ create_daily_merra_data <- function(merra_date) {
         (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
     req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
   }
-  httr::GET(
+  resp <-
+    httr::GET(
     req_url,
-    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
-    httr::write_disk(tf)
+    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"])
   )
+
+  httr::GET(
+    resp$url,
+    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
+    ## httr::progress(),
+    httr::write_disk(tf, overwrite = TRUE)
+  )
+
   out <-
     tidync::tidync(tf) |>
     tidync::hyper_filter(
