@@ -60,7 +60,6 @@ install_hms_smoke_data <- function() {
   return(as.character(dest_file))
 }
 
-#' download_daily_smoke_data(as.Date("2024-04-21"))
 download_daily_smoke_data <- function(date) {
   safe_st_read <- purrr::safely(sf::st_read, otherwise = sf::st_sf(sf::st_sfc(crs = sf::st_crs("epsg:4326"))))
   smoke_shapefile <-
