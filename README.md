@@ -48,31 +48,31 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.1s]
+#> ✔ (down)loading random forest model [9.3s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [58ms]
+#> ✔ checking that s2 are within the contiguous US [54ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [2.9s]
+#> ✔ adding coordinates [2s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [924ms]
+#> ✔ adding HMS smoke data [944ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [497ms]
+#> ✔ adding NARR [474ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [429ms]
+#> ✔ adding gridMET [423ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [555ms]
+#> ✔ adding MERRA [561ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [26ms]
+#> ✔ adding time components [24ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
@@ -141,21 +141,5 @@ integrated into this package.
 
 To create and release geomarker data for release assets, as well as to
 create the AQS training data, train, and evaluate a generalized random
-forest model, use [`just`](https://just.systems/man/en/) to execute
-recipes in the `justfile`.
-
-``` sh
-> just --list
-
-Available recipes:
-    build_site             # build readme and webpage
-    check                  # CRAN check package
-    dl_geomarker_data      # download all geomarker ahead of time, if not already cached
-    docker_test            # run tests without cached release files
-    docker_tool            # build docker image preloaded with {appc} and data
-    make_training_data     # make training data for GRF
-    release_hms_smoke_data # install smoke data from source and upload to github release
-    release_merra_data     # upload merra data to github release
-    release_model          # upload grf model and training data to current github release
-    train_model            # train grf model and render report
-```
+forest model, install and use [`just`](https://just.systems/man/en/) to
+execute recipes in the `justfile`.

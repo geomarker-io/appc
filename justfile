@@ -3,36 +3,6 @@ set dotenv-load
 pkg_version := `Rscript -e "cat(desc::desc_get('Version'))"`
 geomarker_folder := `Rscript -e "cat(tools::R_user_dir('appc', 'data'))"`
 
-# CRAN check package
-check:
-  #!/usr/bin/env Rscript
-  devtools::document()
-  devtools::check()
-
-# build readme and webpage
-build_site:
-  #!/usr/bin/env Rscript
-  devtools::document()
-  pkgdown::build_site()
-
-# download all geomarker ahead of time, if not already cached
-dl_geomarker_data:
-  #!/usr/bin/env Rscript
-  library(appc)
-  install_elevation_data()
-  tibble::tibble(narr_var = "hpbl", narr_year = as.character(2017:2024)) |>
-    purrr::pmap_chr(install_narr_data)
-  install_hms_smoke_data()
-  purrr::map_chr(as.character(2017:2024), install_merra_data)
-  
-# run tests without cached release files
-docker_test:
-  docker build -t appc-test -f Dockerfile.testing .
-
-# build docker image preloaded with {appc} and data
-docker_tool:
-  docker build -t appc -f Dockerfile.tool .
-
 # make training data for GRF
 make_training_data:
   Rscript --verbose inst/make_training_data.R
@@ -50,7 +20,7 @@ release_model:
 
 # upload merra data to github release
 release_merra_data:
-  for year in {2017..2023}; do \
+  for year in {2017..2024}; do \
     rm -f "{{geomarker_folder}}"/merra_$year.rds; \
     APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "if (file.exists('./inst')) devtools::load_all" -e "appc::install_merra_data('$year')"; \
     gh release upload v{{pkg_version}} "{{geomarker_folder}}"/merra_$year.rds; \
