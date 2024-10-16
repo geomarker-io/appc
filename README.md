@@ -45,41 +45,41 @@ concentrations at exact locations on specific dates using the
 ``` r
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-  dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
+  dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.3s]
+#> ✔ (down)loading random forest model [8.6s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [54ms]
+#> ✔ checking that s2 are within the contiguous US [53ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [2s]
+#> ✔ adding coordinates [1.9s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [944ms]
+#> ✔ adding HMS smoke data [920ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [474ms]
+#> ✔ adding NARR [793ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [423ms]
+#> ✔ adding gridMET [797ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [561ms]
+#> ✔ adding MERRA [1s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [24ms]
+#> ✔ adding time components [20ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  8.03   0.592
-#> 2  9.25   0.596
+#> 1  7.50   0.878
+#> 2  5.46   0.592
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
@@ -124,7 +124,7 @@ themselves. View information and options about each geomarker:
 
 | geomarker | appc function |
 |----|----|
-| 🌦 weather & atmospheric conditions | `get_gridmet_data`, `get_narr_data()` |
+| 🌦 weather & atmospheric conditions | `get_gridmet_data()`, `get_narr_data()` |
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
