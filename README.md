@@ -48,45 +48,45 @@ appc::predict_pm25(
   dates = list(as.Date(c("2023-05-18", "2023-11-06")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.2s]
+#> ✔ (down)loading random forest model [9.1s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [60ms]
+#> ✔ checking that s2 are within the contiguous US [58ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [1.6s]
+#> ✔ adding coordinates [2.9s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [889ms]
+#> ✔ adding HMS smoke data [924ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [483ms]
+#> ✔ adding NARR [497ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [443ms]
+#> ✔ adding gridMET [429ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [558ms]
+#> ✔ adding MERRA [555ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [23ms]
+#> ✔ adding time components [26ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  8.16   1.11 
-#> 2  9.28   0.806
+#> 1  8.03   0.592
+#> 2  9.25   0.596
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.13   0.381
-#> 2  5.95   0.466
+#> 1  5.07   0.932
+#> 2  6.02   0.493
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
@@ -98,9 +98,9 @@ files are cached across all of an R user’s sessions and projects.
 
 See more examples in `vignette("timeline-example")`.
 
-## S2 geohash
+## S2 Geometry
 
-The [s2 geohash](https://s2geometry.io/) is a
+The [S2Geometry](https://s2geometry.io/) library is a
 [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html)
 geospatial index that uses [spherical
 geometry](https://s2geometry.io/about/overview). The appc package uses
