@@ -17,12 +17,12 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   check_s2_dates(x, dates)
   d <- tibble::tibble(s2 = x, dates = dates)
   cli::cli_progress_step("checking that s2 are within the contiguous US")
-  contig_us_flag <- s2::s2_intersects(s2::as_s2_geography(s2::s2_cell_to_lnglat(d$s2)), s2::as_s2_geography(contiguous_us))
+  contig_us_flag <- s2::s2_intersects(s2::s2_cell_center(d$s2), s2::as_s2_geography(contiguous_us))
   if (!all(contig_us_flag)) stop("not all s2 locations are within the contiguous united states", call. = FALSE)
 
   cli::cli_progress_step("adding coordinates")
   conus_coords <-
-    sf::st_as_sf(s2::s2_cell_to_lnglat(d$s2)) |>
+    sf::st_as_sf(s2::s2_cell_center(d$s2)) |>
     sf::st_transform(sf::st_crs(5072)) |>
     sf::st_coordinates() |>
     tibble::as_tibble()

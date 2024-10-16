@@ -55,9 +55,10 @@ directory (i.e., `tools::R_user_dir("appc", "data")`). These files are cached ac
 
 See more examples in `vignette("timeline-example")`.
 
-## S2 geohash
+## S2 Geometry
 
-The [s2 geohash](https://s2geometry.io/) is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview). The appc package uses s2 cells via the [s2](https://r-spatial.github.io/s2/) package to specify geospatial locations.
+The [S2Geometry](https://s2geometry.io/) library is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview).
+The appc package uses s2 cells via the [s2](https://r-spatial.github.io/s2/) package to specify geospatial locations.
 In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples) using their character string representation, or by specifying latitude and longitude coordinates; e.g.:
 
 ```{r}
@@ -81,20 +82,4 @@ Currently, `get_urban_imperviousness()`, `get_traffic()`, and `get_nei_point_sum
 
 > Please note that the appc project is released with a [Contributor Code of Conduct](http://geomarker.io/appc/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
 
-To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, use [`just`](https://just.systems/man/en/) to execute recipes in the `justfile`.
-
-```sh
-> just --list
-
-Available recipes:
-    build_site             # build readme and webpage
-    check                  # CRAN check package
-    dl_geomarker_data      # download all geomarker ahead of time, if not already cached
-    docker_test            # run tests without cached release files
-    docker_tool            # build docker image preloaded with {appc} and data
-    make_training_data     # make training data for GRF
-    release_hms_smoke_data # install smoke data from source and upload to github release
-    release_merra_data     # upload merra data to github release
-    release_model          # upload grf model and training data to current github release
-    train_model            # train grf model and render report
-```
+To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, install and use [`just`](https://just.systems/man/en/) to execute recipes in the `justfile`.

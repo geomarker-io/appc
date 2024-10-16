@@ -8,6 +8,8 @@ if (file.exists("./inst")) {
   library(appc)
 }
 
+message("using appc, version ", packageVersion("appc"))
+
 cli::cli_progress_step("creating AQS training data")
 
 # get AQS data
@@ -15,7 +17,7 @@ d <-
   tidyr::expand_grid(
     ## pollutant = c("pm25", "ozone", "no2"),
     pollutant = "pm25",
-    year = as.character(2017:2023)
+    year = as.character(2017:2024)
   ) |>
   purrr::pmap(get_daily_aqs)
 

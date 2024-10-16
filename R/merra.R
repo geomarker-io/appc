@@ -45,7 +45,7 @@ get_merra_data <- function(x, dates) {
     dplyr::nest_by(s2) |>
     dplyr::ungroup() |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2)) |>
-    dplyr::mutate(s2_geography = s2::s2_cell_to_lnglat(s2)) |>
+    dplyr::mutate(s2_geography = s2::s2_cell_center(s2)) |>
     stats::na.omit() # some s2 failed to convert to lnglat ?
 
   x_closest_merra <-
@@ -75,7 +75,7 @@ get_merra_data <- function(x, dates) {
 #' version 0.3.0 of the package did not change merra data code
 #' @export
 #' @rdname get_merra_data
-install_merra_data <- function(merra_year = as.character(2016:2023)) {
+install_merra_data <- function(merra_year = as.character(2016:2024)) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
     paste0(c("merra", merra_year), collapse = "_"),
@@ -85,7 +85,7 @@ install_merra_data <- function(merra_year = as.character(2016:2023)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = "0.2.0")
+    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = utils::packageVersion("appc"))
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
@@ -128,11 +128,19 @@ create_daily_merra_data <- function(merra_date) {
         (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
     req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
   }
-  httr::GET(
+  resp <-
+    httr::GET(
     req_url,
-    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
-    httr::write_disk(tf)
+    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"])
   )
+
+  httr::GET(
+    resp$url,
+    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
+    ## httr::progress(),
+    httr::write_disk(tf, overwrite = TRUE)
+  )
+
   out <-
     tidync::tidync(tf) |>
     tidync::hyper_filter(
