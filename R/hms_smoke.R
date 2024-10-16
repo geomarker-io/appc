@@ -10,7 +10,8 @@
 #' @references <https://www.ospo.noaa.gov/Products/land/hms.html#about>
 #' @details Daily HMS shapefiles are missing for 7 days within 2017-2023
 #' ("2017-04-27", "2017-05-31", "2017-06-01", "2017-06-01" "2017-06-22", "2017-11-12", "2018-12-31")
-#' and will return zero values.  If files are available but no smoke plumes intersect, then a zero values is also returned.
+#' and will return zero values.
+#' If files are available but no smoke plumes intersect, then a zero values is also returned.
 #' @export
 #' @examples
 #' d <- list(
@@ -44,10 +45,6 @@ get_hms_smoke_data <- function(x, dates) {
 install_hms_smoke_data <- function() {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
   if (file.exists(dest_file)) {
-    return(as.character(dest_file))
-  }
-  if (!install_source_preference()) {
-    install_released_data(released_data_name = "hms_smoke.rds", package_version = "0.2.0")
     return(as.character(dest_file))
   }
   smoke_days <- seq(as.Date("2017-01-01"), as.Date("2024-09-01"), by = 1)

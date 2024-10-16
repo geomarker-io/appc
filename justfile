@@ -20,11 +20,10 @@ dl_geomarker_data:
   #!/usr/bin/env Rscript
   library(appc)
   install_elevation_data()
-  tidyr::expand_grid(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
-                     narr_year = as.character(2017:2023)) |>
+  tibble::tibble(narr_var = "hpbl", narr_year = as.character(2017:2024)) |>
     purrr::pmap_chr(install_narr_data)
   install_hms_smoke_data()
-  purrr::map_chr(as.character(2017:2023), install_merra_data)
+  purrr::map_chr(as.character(2017:2024), install_merra_data)
   
 # run tests without cached release files
 docker_test:
@@ -48,12 +47,6 @@ train_model:
 release_model:
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/training_data_v{{pkg_version}}.rds"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/rf_pm_v{{pkg_version}}.qs"
-
-# install smoke data from source and upload to github release
-release_hms_smoke_data:
-  rm -f "{{geomarker_folder}}/hms_smoke.rds"
-  APPC_INSTALL_DATA_FROM_SOURCE=1 Rscript -e "if (file.exists('./inst')) devtools::load_all" -e "appc::install_hms_smoke_data()"
-  gh release upload v{{pkg_version}} "{{geomarker_folder}}/hms_smoke.rds"
 
 # upload merra data to github release
 release_merra_data:
