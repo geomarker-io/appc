@@ -28,10 +28,8 @@ can cover one another, the total smoke plume exposure is estimated as the weight
 \details{
 Daily HMS shapefiles are missing for 7 days within 2017-2023
 ("2017-04-27", "2017-05-31", "2017-06-01", "2017-06-01" "2017-06-22", "2017-11-12", "2018-12-31")
-and will return zero values.  If files are available but no smoke plumes intersect, then a zero values is also returned.
-
-this installs smoke data created using code from version 0.2.0 of the package;
-version 0.3.0 of the package did not change smoke data code
+and will return zero values.
+If files are available but no smoke plumes intersect, then a zero values is also returned.
 }
 \examples{
 d <- list(

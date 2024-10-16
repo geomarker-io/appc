@@ -15,7 +15,7 @@ get_narr_data(
 install_narr_data(
   narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m",
     "vwnd.10m"),
-  narr_year = as.character(2016:2023)
+  narr_year = as.character(2016:2024)
 )
 }
 \arguments{

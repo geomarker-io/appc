@@ -8,7 +8,7 @@
 \usage{
 get_merra_data(x, dates)
 
-install_merra_data(merra_year = as.character(2016:2023))
+install_merra_data(merra_year = as.character(2016:2024))
 
 create_daily_merra_data(merra_date)
 }

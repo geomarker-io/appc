@@ -28,7 +28,7 @@ Imports:
     tibble,
     tidyr,
     withr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: 
     curl,
     dotenv,
