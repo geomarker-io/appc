@@ -85,7 +85,7 @@ install_merra_data <- function(merra_year = as.character(2016:2024)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = "0.2.0")
+    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = utils::packageVersion("appc"))
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
