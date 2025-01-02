@@ -7,7 +7,7 @@
 #' @param buffer distance from s2 cell (in meters) to summarize data
 #' @return for `get_nlcd_frac_imperv()`, a list of numeric vectors of fractional impervious surface pixel summaries,
 #' the same length as `x`; each vector has values for each date in dates, named according to the NLCD product year
-#' @references https://www.mrlc.gov/data/type/fractional-impervious-surface
+#' @references https://www.usgs.gov/centers/eros/science/annual-nlcd-fractional-impervious-surface
 #' @export
 #' @examples
 #' d <- list(
@@ -55,8 +55,12 @@ get_nlcd_frac_imperv <- function(x, dates, fun = stats::median, buffer = 400) {
 #' @return for `install_nlcd_frac_imperv_data()`, a character string path to NLCD raster data
 #' @export
 #' @rdname get_narr_data
-install_nlcd_frac_imperv_data <- function(year = as.character(2023:2017)) {
+install_nlcd_frac_imperv_data <- function(year = as.character(2024:2017)) {
   year <- rlang::arg_match(year)
+  if (year == "2024") {
+    year <- "2023"
+    cli::cli_alert_warning("2024 NLCD not yet available; using 2023")
+  }
   dest_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("Annual_NLCD_FctImp_{year}_CU_C1V0.tif"))
   if (fs::file_exists(dest_path)) {
     return(dest_path)

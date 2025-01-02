@@ -54,4 +54,3 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = as.chara
     dplyr::summarise(conc = mean(conc, na.rm = TRUE), .groups = "drop")
   return(d_out)
 }
-

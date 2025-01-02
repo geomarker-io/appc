@@ -7,12 +7,19 @@
 \usage{
 get_hms_smoke_data(x, dates)
 
-install_hms_smoke_data()
+install_hms_smoke_data(
+  hms_smoke_start_date = as.Date("2017-01-01"),
+  hms_smoke_end_date = as.Date("2024-12-31")
+)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object); currently required to be within the contiguous united states}
 
 \item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
+
+\item{hms_smoke_start_date}{a date object that is the first day of hms smoke data installed}
+
+\item{hms_smoke_end_date}{a date object that is the last day of hms smoke data installed}
 }
 \value{
 for \code{get_hms_smoke_data()}, a list of numeric vectors of smoke plume scores (the same length as \code{x} and \code{dates})
@@ -34,7 +41,7 @@ If files are available but no smoke plumes intersect, then a zero values is also
 \examples{
 d <- list(
   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2017-11-06")),
-  "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15"))
+  "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15", "2024-12-30"))
 )
 get_hms_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
 }

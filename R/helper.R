@@ -18,6 +18,7 @@ utils::globalVariables(c(
   "d", "pollutant code", "site longitude", "site latitude", "total_emissions",
   "air.2m", "hpbl", "acpcp", "rhum.2m",
   "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
+  "frac_imperv",
   "merra_pm25",
   "plume_smoke", ".rowid",
   "predictions", "variance.estimates",
