@@ -94,7 +94,7 @@ the same length as <code>x</code>; each vector has values for each date in dates
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"8841b39a7c46e25f"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-05-18"</span>, <span class="st">"2023-11-06"</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"8841a45555555555"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2022-06-22"</span>, <span class="st">"2022-08-15"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="st">"8841a45555555555"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_nlcd_frac_imperv</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841b39a7c46e25f`</span>
@@ -102,7 +102,7 @@ the same length as <code>x</code>; each vector has values for each date in dates
 <span class="r-out co"><span class="r-pr">#&gt;</span>   70   70 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841a45555555555`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2022 2022 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2023 2023 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    8    8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">get_nlcd_frac_imperv</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span>, fun <span class="op">=</span> <span class="va">mean</span>, buffer <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
@@ -111,8 +111,8 @@ the same length as <code>x</code>; each vector has values for each date in dates
 <span class="r-out co"><span class="r-pr">#&gt;</span> 57.57054 57.57054 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8841a45555555555`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     2022     2022 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28.68606 28.68606 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     2023     2023 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28.82856 28.82856 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>
