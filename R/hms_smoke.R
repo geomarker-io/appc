@@ -16,12 +16,14 @@
 #' @examples
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2017-11-06")),
-#'   "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15"))
+#'   "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15", "2024-12-30"))
 #' )
 #' get_hms_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
 get_hms_smoke_data <- function(x, dates) {
   check_s2_dates(x, dates)
-  d_smoke <- readRDS(install_hms_smoke_data())
+  d_smoke <-
+    install_hms_smoke_data() |>
+    readRDS()
   date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
   withr::with_options(list(sf_use_s2 = FALSE, future.rng.onMisuse = "ignore"), {
     out <-
@@ -39,20 +41,22 @@ get_hms_smoke_data <- function(x, dates) {
 }
 
 #' installs HMS smoke data into user's data directory for the `appc` package
+#' @param hms_smoke_start_date a date object that is the first day of hms smoke data installed
+#' @param hms_smoke_end_date a date object that is the last day of hms smoke data installed
 #' @return for `install_hms_smoke_data()`, a character string path to the installed RDS file
 #' @rdname get_hms_smoke_data
 #' @export
-install_hms_smoke_data <- function() {
+install_hms_smoke_data <- function(hms_smoke_start_date = as.Date("2017-01-01"), hms_smoke_end_date = as.Date("2024-12-31")) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
   if (file.exists(dest_file)) {
     return(as.character(dest_file))
   }
-  smoke_days <- seq(as.Date("2017-01-01"), as.Date("2024-09-01"), by = 1)
+  smoke_days <- seq(hms_smoke_start_date, hms_smoke_end_date, by = 1)
   all_smoke_daily_data <-
     purrr::map(
       smoke_days,
       download_daily_smoke_data,
-      .progress = "downloading all smoke data"
+      .progress = glue::glue("downloading HMS smoke data: {hms_smoke_start_date} - {hms_smoke_end_date")
     ) |>
     purrr::map("result") |>
     stats::setNames(smoke_days)
