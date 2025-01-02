@@ -55,25 +55,25 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [8.8s]
+#> ✔ (down)loading random forest model [9s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [59ms]
+#> ✔ checking that s2 are within the contiguous US [54ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [2.3s]
+#> ✔ adding coordinates [1.7s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.4s]
+#> ✔ adding elevation [1.3s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [972ms]
+#> ✔ adding HMS smoke data [940ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [873ms]
+#> ✔ adding NARR [839ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [836ms]
+#> ✔ adding gridMET [835ms]
 #> 
 #> ℹ adding MERRA
 #> ✔ adding MERRA [1.2s]
@@ -86,7 +86,7 @@ appc::predict_pm25(
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
 #> 1  6.89   1.02 
-#> 2  5.48   0.549
+#> 2  5.54   0.628
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
@@ -95,13 +95,6 @@ appc::predict_pm25(
 #> 1  5.10   0.386
 #> 2  5.75   0.843
 ```
-
-Installed geomarker data sources and the grf model are hosted as release
-assets on GitHub and are downloaded locally to the package-specific R
-user data directory (i.e., `tools::R_user_dir("appc", "data")`). These
-files are cached across all of an R user’s sessions and projects.
-(Specify an alternative download location by setting the
-`R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
 
 See more examples in `vignette("timeline-example")`.
 
@@ -139,6 +132,25 @@ themselves. View information and options about each geomarker:
 
 Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in
 the `/inst` folder and are not integrated into this package.
+
+## Installing Geomarker Data Sources
+
+Installed geomarker data sources and the grf model are hosted as release
+assets on GitHub and are downloaded locally to the package-specific R
+user data directory (i.e., `tools::R_user_dir("appc", "data")`). These
+files are cached across all of an R user’s sessions and projects.
+(Specify an alternative download location by setting the
+`R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
+
+Note that although geomarker data are usually installed *per year*, data
+for the current year will always contain missing values for very recent
+and future values. To “refresh” geomarker for the current year, delete
+the installed file and reinstall the data; for example:
+
+``` r
+file.remove(install_daymet_data("tmmx", "2024"))
+install_daymet_data("tmmx", "2024")
+```
 
 ## Developing
 

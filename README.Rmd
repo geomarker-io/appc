@@ -57,9 +57,6 @@ appc::predict_pm25(
 )
 ```
 
-Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data
-directory (i.e., `tools::R_user_dir("appc", "data")`). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
-
 See more examples in `vignette("timeline-example")`.
 
 ## S2 Geometry
@@ -85,6 +82,20 @@ Spatiotemporal geomarkers are used for predicting air pollution concentrations, 
 | 🏙 land cover | `get_urban_imperv()` |
 
 Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in the `/inst` folder and are not integrated into this package.
+
+## Installing Geomarker Data Sources
+
+Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data
+directory (i.e., `tools::R_user_dir("appc", "data")`). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the `R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
+
+Note that although geomarker data are usually installed *per year*, data for the current year will always contain missing values for very recent and future values.
+To "refresh" geomarker for the current year, delete the installed file and reinstall
+the data; for example:
+
+```r
+file.remove(install_daymet_data("tmmx", "2024"))
+install_daymet_data("tmmx", "2024")
+```
 
 ## Developing
 
