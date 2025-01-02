@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,8 +78,11 @@
 <div class="section level2">
 <h2 id="installing">Installing<a class="anchor" aria-label="anchor" href="#installing"></a>
 </h2>
-<p>Install the development version of appc from GitHub with:</p>
+<p>Install the latest stable release of appc from R-universe with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"appc"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://geomarker-io.r-universe.dev"</span>, <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Install the latest, under-development version of appc from GitHub with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"geomarker-io/appc"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -87,16 +90,16 @@
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>In R, create model-based predictions of ambient air pollution concentrations at exact locations on specific dates using the <code><a href="reference/predict_pm25.html">predict_pm25()</a></code> function:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">appc</span><span class="fu">::</span><span class="fu"><a href="reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b39a7c46e25f"</span>, <span class="st">"8841a45555555555"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-05-18"</span>, <span class="st">"2024-06-10"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ (down)loading random forest model</span></span>
-<span><span class="co">#&gt; ✔ (down)loading random forest model [8.6s]</span></span>
+<span><span class="co">#&gt; ✔ (down)loading random forest model [9s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ checking that s2 are within the contiguous US</span></span>
-<span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [53ms]</span></span>
+<span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [64ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding coordinates</span></span>
 <span><span class="co">#&gt; ✔ adding coordinates [1.9s]</span></span>
@@ -105,33 +108,36 @@
 <span><span class="co">#&gt; ✔ adding elevation [1.4s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding HMS smoke data</span></span>
-<span><span class="co">#&gt; ✔ adding HMS smoke data [920ms]</span></span>
+<span><span class="co">#&gt; ✔ adding HMS smoke data [971ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding NARR</span></span>
-<span><span class="co">#&gt; ✔ adding NARR [793ms]</span></span>
+<span><span class="co">#&gt; ✔ adding NARR [869ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding gridMET</span></span>
-<span><span class="co">#&gt; ✔ adding gridMET [797ms]</span></span>
+<span><span class="co">#&gt; ✔ adding gridMET [841ms]</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ℹ adding NLCD</span></span>
+<span><span class="co">#&gt; ! 2024 NLCD not yet available; using 2023</span></span>
+<span><span class="co">#&gt; ℹ adding NLCD✔ adding NLCD [51ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding MERRA</span></span>
-<span><span class="co">#&gt; ✔ adding MERRA [1s]</span></span>
+<span><span class="co">#&gt; ✔ adding MERRA [1.1s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding time components</span></span>
-<span><span class="co">#&gt; ✔ adding time components [20ms]</span></span>
-<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ✔ adding time components [19ms]</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  7.50   0.878</span></span>
-<span><span class="co">#&gt; 2  5.46   0.592</span></span>
+<span><span class="co">#&gt; 1  7.11   0.577</span></span>
+<span><span class="co">#&gt; 2  5.93   0.636</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  5.07   0.932</span></span>
-<span><span class="co">#&gt; 2  6.02   0.493</span></span></code></pre></div>
+<span><span class="co">#&gt; 1  5.20    1.82</span></span>
+<span><span class="co">#&gt; 2  5.56    1.04</span></span></code></pre></div>
 <p>Installed geomarker data sources and the grf model are hosted as release assets on GitHub and are downloaded locally to the package-specific R user data directory (i.e., <code>tools::R_user_dir("appc", "data")</code>). These files are cached across all of an R user’s sessions and projects. (Specify an alternative download location by setting the <code>R_USER_DATA_DIR</code> environment variable; see <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">?tools::R_user_dir</a></code>.)</p>
 <p>See more examples in <code><a href="articles/timeline-example.html">vignette("timeline-example")</a></code>.</p>
 </div>
@@ -139,7 +145,7 @@
 <h2 id="s2-geometry">S2 Geometry<a class="anchor" aria-label="anchor" href="#s2-geometry"></a>
 </h2>
 <p>The <a href="https://s2geometry.io/" class="external-link">S2Geometry</a> library is a <a href="https://s2geometry.io/devguide/s2cell_hierarchy.html" class="external-link">hierarchical</a> geospatial index that uses <a href="https://s2geometry.io/about/overview" class="external-link">spherical geometry</a>. The appc package uses s2 cells via the <a href="https://r-spatial.github.io/s2/" class="external-link">s2</a> package to specify geospatial locations. In R, s2 cells can be <a href="https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples" class="external-link">created</a> using their character string representation, or by specifying latitude and longitude coordinates; e.g.:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_lnglat.html" class="external-link">s2_lnglat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">84.4126</span>, <span class="op">-</span><span class="fl">84.5036</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">39.1582</span>, <span class="fl">39.2875</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;s2_cell[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8841ad122d9774a7 88404ebdac3ea7d1</span></span></code></pre></div>
@@ -176,9 +182,13 @@
 <td>🗻 elevation</td>
 <td><code><a href="reference/get_elevation_summary.html">get_elevation_summary()</a></code></td>
 </tr>
+<tr class="odd">
+<td>🏙 land cover</td>
+<td><code>get_urban_imperv()</code></td>
+</tr>
 </tbody>
 </table>
-<p>Currently, <code>get_urban_imperviousness()</code>, <code>get_traffic()</code>, and <code>get_nei_point_summary()</code> are stashed in the <code>/inst</code> folder and are not integrated into this package.</p>
+<p>Currently, <code>get_traffic()</code>, and <code>get_nei_point_summary()</code> are stashed in the <code>/inst</code> folder and are not integrated into this package.</p>
 </div>
 <div class="section level2">
 <h2 id="developing">Developing<a class="anchor" aria-label="anchor" href="#developing"></a>
@@ -186,7 +196,9 @@
 <blockquote>
 <p>Please note that the appc project is released with a <a href="http://geomarker.io/appc/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </blockquote>
-<p>To create and release geomarker data for release assets, as well as to create the AQS training data, train, and evaluate a generalized random forest model, install and use <a href="https://just.systems/man/en/" class="external-link"><code>just</code></a> to execute recipes in the <code>justfile</code>.</p>
+<p>To create and release the AQS training data, train, and evaluate a generalized random forest model, install and use <a href="https://just.systems/man/en/" class="external-link"><code>just</code></a> to execute recipes in the <code>justfile</code>.</p>
+<p>To update the MERRA-2 releases:<br>
+- Delete any exisiting MERRA-2 data and re-install it using code based on <code>inst/install_merra_from_source_on_cchmc_hpc.sh</code> - Create a “pre-release” (i.e., <em>not latest</em>) tagged and titled <code>merra-{release_date}</code> (e.g., <code>merra-2025-01-02</code>) - Update the default release tag used in <code><a href="reference/get_merra_data.html">get_merra_data()</a></code> (and <code><a href="reference/get_merra_data.html">install_merra_data()</a></code>)</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -231,6 +243,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://geomarker-io.r-universe.dev/appc" class="external-link"><img src="https://r-lib.r-universe.dev/badges/cpp11" alt="r-universe"></a></li>
 <li><a href="https://CRAN.R-project.org/package=appc" class="external-link"><img src="https://www.r-pkg.org/badges/version/appc" alt="CRAN status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
 </ul>

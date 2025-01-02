@@ -16,7 +16,7 @@ can cover one another, the total smoke plume exposure is estimated as the weight
     
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,10 @@ can cover one another, the total smoke plume exposure is estimated as the weight
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_hms_smoke_data</span><span class="op">(</span><span class="va">x</span>, <span class="va">dates</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">install_hms_smoke_data</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">install_hms_smoke_data</span><span class="op">(</span></span>
+<span>  hms_smoke_start_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2017-01-01"</span><span class="op">)</span>,</span>
+<span>  hms_smoke_end_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2024-12-31"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -78,6 +81,14 @@ can cover one another, the total smoke plume exposure is estimated as the weight
 
 <dt>dates</dt>
 <dd><p>a list of date vectors for the predictions, must be the same length as <code>x</code></p></dd>
+
+
+<dt>hms_smoke_start_date</dt>
+<dd><p>a date object that is the first day of hms smoke data installed</p></dd>
+
+
+<dt>hms_smoke_end_date</dt>
+<dd><p>a date object that is the last day of hms smoke data installed</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -105,14 +116,14 @@ If files are available but no smoke plumes intersect, then a zero values is also
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="st">"8841b39a7c46e25f"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-05-18"</span>, <span class="st">"2017-11-06"</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  <span class="st">"8841a45555555555"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2017-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="st">"8841a45555555555"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2017-06-22"</span>, <span class="st">"2023-08-15"</span>, <span class="st">"2024-12-30"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">get_hms_smoke_data</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 9 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0 2 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

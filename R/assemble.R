@@ -64,8 +64,8 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   ## d$relative_humidity_max <- my_gridmet("rmax")
   ## d$relative_humidity_min <- my_gridmet("rmin")
 
-  cli::cli_progress_step("adding NLCD")
-  d$frac_imperv <- get_nlcd_frac_imperv(d$s2, d$dates, fun = stats::median, buffer = 1200)
+  ## cli::cli_progress_step("adding NLCD")
+  ## d$frac_imperv <- get_nlcd_frac_imperv(d$s2, d$dates, fun = stats::median, buffer = 1200)
 
   cli::cli_progress_step("adding MERRA")
   d$merra <- get_merra_data(d$s2, d$dates)
@@ -92,7 +92,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
       dates, hpbl,
       temperature_max, temperature_min, precipitation, solar_radiation, wind_speed, wind_direction, specific_humidity,
       ## air.2m, acpcp, rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
-      frac_imperv,
+      ## frac_imperv,
       merra_pm25,
       merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
       ## urban_imperviousness,

@@ -28,8 +28,8 @@ pred_names <-
     ## "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
     "hpbl",
     ## "merra_pm25",
-    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
-    "frac_imperv"
+    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4"
+    ## "frac_imperv"
     ## "aadt_total_m", "aadt_truck_m",
     ## "nei_point_id2w"
   )
