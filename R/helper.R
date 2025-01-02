@@ -83,3 +83,10 @@ ui_confirm <- function() {
   if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
   return(invisible(TRUE))
 }
+
+install_source_preference <- function() {
+  any(
+    getOption("appc_install_data_from_source", "") != "",
+    Sys.getenv("APPC_INSTALL_DATA_FROM_SOURCE", "") != ""
+  )
+}

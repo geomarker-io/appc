@@ -55,35 +55,35 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.2s]
+#> ✔ (down)loading random forest model [9s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [62ms]
+#> ✔ checking that s2 are within the contiguous US [64ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [2.3s]
+#> ✔ adding coordinates [1.9s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [985ms]
+#> ✔ adding HMS smoke data [971ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [880ms]
+#> ✔ adding NARR [869ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [811ms]
+#> ✔ adding gridMET [841ms]
 #> 
 #> ℹ adding NLCD
 #> ! 2024 NLCD not yet available; using 2023
-#> ℹ adding NLCD✔ adding NLCD [48ms]
+#> ℹ adding NLCD✔ adding NLCD [51ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1.2s]
+#> ✔ adding MERRA [1.1s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [24ms]
+#> ✔ adding time components [19ms]
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
@@ -140,9 +140,8 @@ themselves. View information and options about each geomarker:
 | 🗻 elevation | `get_elevation_summary()` |
 | 🏙 land cover | `get_urban_imperv()` |
 
-Currently, `get_urban_imperviousness()`, `get_traffic()`, and
-`get_nei_point_summary()` are stashed in the `/inst` folder and are not
-integrated into this package.
+Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in
+the `/inst` folder and are not integrated into this package.
 
 ## Developing
 
@@ -150,7 +149,14 @@ integrated into this package.
 > of Conduct](http://geomarker.io/appc/CODE_OF_CONDUCT.html). By
 > contributing to this project, you agree to abide by its terms.
 
-To create and release geomarker data for release assets, as well as to
-create the AQS training data, train, and evaluate a generalized random
-forest model, install and use [`just`](https://just.systems/man/en/) to
-execute recipes in the `justfile`.
+To create and release the AQS training data, train, and evaluate a
+generalized random forest model, install and use
+[`just`](https://just.systems/man/en/) to execute recipes in the
+`justfile`.
+
+To update the MERRA-2 releases:  
+- Delete any exisiting MERRA-2 data and re-install it using code based
+on `inst/install_merra_from_source_on_cchmc_hpc.sh` - Create a
+“pre-release” (i.e., *not latest*) tagged and titled
+`merra-{release_date}` (e.g., `merra-2025-01-02`) - Update the default
+release tag used in `get_merra_data()` (and `install_merra_data()`)
