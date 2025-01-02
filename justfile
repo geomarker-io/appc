@@ -10,8 +10,8 @@ make_training_data:
 # train grf model and render report
 train_model:
   Rscript --verbose inst/train_model.R
-  R -e "rmarkdown::render('./vignettes/cv-model-performance.Rmd', knit_root_dir = getwd())"
-  open vignettes/cv-model-performance.html
+  R -e "rmarkdown::render('./vignettes/articles/cv-model-performance.Rmd', knit_root_dir = getwd())"
+  open vignettes/articles/cv-model-performance.html
 
 # upload grf model and training data to current github release
 release_model:

@@ -1,12 +1,5 @@
 ---
 title: "Case-Crossover Example"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Case-Crossover Example}
-  %\VignetteEncoding{UTF-8}
-  %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
