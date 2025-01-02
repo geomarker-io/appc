@@ -9,7 +9,11 @@ if (file.exists("./inst")) {
   library(appc)
 }
 
-train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
+train_file_output_path <-
+  fs::path(
+    tools::R_user_dir("appc", "data"),
+    glue::glue("training_data_v{packageVersion('appc')}.rds")
+  )
 d_train <- readRDS(train_file_output_path)
 
 
@@ -19,12 +23,13 @@ pred_names <-
     "doy", "year",
     "elevation_median", "elevation_sd",
     "plume_smoke",
-    "temperature_max", "temperature_min", "precipitation", "solar_radiation", "wind_speed", "wind_direction", "specific_humidity",
+    "temperature_max", "temperature_min", "precipitation",
+    "solar_radiation", "wind_speed", "wind_direction", "specific_humidity",
     ## "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
     "hpbl",
     ## "merra_pm25",
-    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4"
-    ## "urban_imperviousness",
+    "merra_dust", "merra_oc", "merra_bc", "merra_ss", "merra_so4",
+    "frac_imperv"
     ## "aadt_total_m", "aadt_truck_m",
     ## "nei_point_id2w"
   )
