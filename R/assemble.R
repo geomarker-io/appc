@@ -9,7 +9,7 @@
 #' @examples
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15", "2024-09-30"))
 #' )
 #' assemble_predictors(x = s2::as_s2_cell(names(d)), dates = d) |>
 #'   tibble::glimpse()
@@ -64,6 +64,9 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   ## d$relative_humidity_max <- my_gridmet("rmax")
   ## d$relative_humidity_min <- my_gridmet("rmin")
 
+  cli::cli_progress_step("adding NLCD")
+  d$frac_imperv <- get_nlcd_frac_imperv(d$s2, d$dates, fun = stats::median, buffer = 1200)
+
   cli::cli_progress_step("adding MERRA")
   d$merra <- get_merra_data(d$s2, d$dates)
   d$merra_dust <- purrr::map(d$merra, "merra_dust")
@@ -73,14 +76,6 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   d$merra_so4 <- purrr::map(d$merra, "merra_so4")
   d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
   d$merra <- NULL
-
-  ## cli::cli_progress_step("adding NLCD urban imperviousness")
-  ## impervious_years <- c("2016", "2019", "2021")
-  ## d$urban_imperviousness <-
-  ##   purrr::map(impervious_years, \(x) get_urban_imperviousness(d$s2, year = x, buffer = 2500)) |>
-  ##   stats::setNames(impervious_years) |>
-  ##   purrr::list_transpose()
-  ## d$urban_imperviousness <- purrr::map2(d$dates, d$urban_imperviousness, \(x, y) y[get_closest_year(x = x, years = names(y[1]))])
 
   ## cli::cli_progress_step("adding NEI")
   ## nei_years <- c("2017", "2020")
@@ -97,6 +92,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
       dates, hpbl,
       temperature_max, temperature_min, precipitation, solar_radiation, wind_speed, wind_direction, specific_humidity,
       ## air.2m, acpcp, rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
+      frac_imperv,
       merra_pm25,
       merra_dust, merra_oc, merra_bc, merra_ss, merra_so4,
       ## urban_imperviousness,
