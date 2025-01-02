@@ -56,7 +56,7 @@ install_hms_smoke_data <- function(hms_smoke_start_date = as.Date("2017-01-01"),
     purrr::map(
       smoke_days,
       download_daily_smoke_data,
-      .progress = glue::glue("downloading HMS smoke data: {hms_smoke_start_date} - {hms_smoke_end_date")
+      .progress = glue::glue("downloading HMS smoke data: {hms_smoke_start_date} - {hms_smoke_end_date}")
     ) |>
     purrr::map("result") |>
     stats::setNames(smoke_days)
@@ -77,4 +77,3 @@ download_daily_smoke_data <- function(date) {
     ) |>
     safe_st_read(quiet = TRUE)
 }
-
