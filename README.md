@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
+[![r-universe](https://r-lib.r-universe.dev/badges/cpp11)](https://geomarker-io.r-universe.dev/appc)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
 [![Lifecycle:
@@ -29,7 +30,13 @@ release to use more recent AQS measurements and/or geomarker predictors.
 
 ## Installing
 
-Install the development version of appc from GitHub with:
+Install the latest stable release of appc from R-universe with:
+
+``` r
+install.packages("appc", repos = c("https://geomarker-io.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+Install the latest, under-development version of appc from GitHub with:
 
 ``` r
 # install.packages("remotes")
@@ -48,10 +55,10 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [8.6s]
+#> ✔ (down)loading random forest model [9s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [53ms]
+#> ✔ checking that s2 are within the contiguous US [64ms]
 #> 
 #> ℹ adding coordinates
 #> ✔ adding coordinates [1.9s]
@@ -60,33 +67,36 @@ appc::predict_pm25(
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [920ms]
+#> ✔ adding HMS smoke data [971ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [793ms]
+#> ✔ adding NARR [869ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [797ms]
+#> ✔ adding gridMET [841ms]
+#> 
+#> ℹ adding NLCD
+#> ! 2024 NLCD not yet available; using 2023
+#> ℹ adding NLCD✔ adding NLCD [51ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1s]
+#> ✔ adding MERRA [1.1s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [20ms]
-#> 
+#> ✔ adding time components [19ms]
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.50   0.878
-#> 2  5.46   0.592
+#> 1  7.11   0.577
+#> 2  5.93   0.636
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.07   0.932
-#> 2  6.02   0.493
+#> 1  5.20    1.82
+#> 2  5.56    1.04
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
@@ -128,10 +138,10 @@ themselves. View information and options about each geomarker:
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
+| 🏙 land cover | `get_urban_imperv()` |
 
-Currently, `get_urban_imperviousness()`, `get_traffic()`, and
-`get_nei_point_summary()` are stashed in the `/inst` folder and are not
-integrated into this package.
+Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in
+the `/inst` folder and are not integrated into this package.
 
 ## Developing
 
@@ -139,7 +149,14 @@ integrated into this package.
 > of Conduct](http://geomarker.io/appc/CODE_OF_CONDUCT.html). By
 > contributing to this project, you agree to abide by its terms.
 
-To create and release geomarker data for release assets, as well as to
-create the AQS training data, train, and evaluate a generalized random
-forest model, install and use [`just`](https://just.systems/man/en/) to
-execute recipes in the `justfile`.
+To create and release the AQS training data, train, and evaluate a
+generalized random forest model, install and use
+[`just`](https://just.systems/man/en/) to execute recipes in the
+`justfile`.
+
+To update the MERRA-2 releases:  
+- Delete any exisiting MERRA-2 data and re-install it using code based
+on `inst/install_merra_from_source_on_cchmc_hpc.sh` - Create a
+“pre-release” (i.e., *not latest*) tagged and titled
+`merra-{release_date}` (e.g., `merra-2025-01-02`) - Update the default
+release tag used in `get_merra_data()` (and `install_merra_data()`)

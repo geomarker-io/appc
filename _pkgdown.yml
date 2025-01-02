@@ -9,6 +9,7 @@ reference:
   - get_narr_data
   - get_merra_data
   - get_hms_smoke_data
+  - get_nlcd_frac_imperv
 - title: Air pollution assessment
   contents:
   - predict_pm25

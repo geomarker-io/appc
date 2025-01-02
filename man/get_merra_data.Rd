@@ -6,9 +6,12 @@
 \alias{create_daily_merra_data}
 \title{Get MERRA-2 aerosol diagnostics data}
 \usage{
-get_merra_data(x, dates)
+get_merra_data(x, dates, merra_release = "merra-2025-01-02")
 
-install_merra_data(merra_year = as.character(2016:2024))
+install_merra_data(
+  merra_year = as.character(2017:2024),
+  merra_release = "merra-2025-01-02"
+)
 
 create_daily_merra_data(merra_date)
 }
@@ -16,6 +19,9 @@ create_daily_merra_data(merra_date)
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{dates}{a list of date vectors for the MERRA data, must be the same length as \code{x}}
+
+\item{merra_release}{a character string of a release tag from which "pre-compiled" MERRA data binary is used
+instead of installing latest data from source; see details}
 
 \item{merra_year}{a character string that is the year for the merra data}
 
@@ -34,25 +40,28 @@ date, and concentrations of PM2.5 total, dust, oc, bc, ss, so4
 \description{
 Total and component (Dust, OC, BC, SS, SO4) surface PM2.5 concentrations
 from the MERRA-2 \href{https://disc.gsfc.nasa.gov/datasets/M2T1NXAER_5.12.4/summary}{M2T1NXAER v5.12.4} product.
+Because installing MERRA-2 data takes a long time, "pre-compiled" data binaries for each year are available
+as pre-releases specific to MERRA data on GitHub.
 }
 \details{
 \itemize{
-\item To install data from source, an \href{https://disc.gsfc.nasa.gov/information/documents?title=Data\%20Access}{Earthdata account linked with permissions for GES DISC} is required.
-The \code{EARTHDATA_USERNAME} and \code{EARTHDATA_PASSWORD} must be set. If
-a \code{.env} file is present, environment variables will be loaded
-using the dotenv package.
 \item Installed data are filtered to a
 \href{http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313}{bounding box}
 around the contiguous US, averaged to daily values, and
 converted to micrograms per cubic meter ($ug/m^3$).
 \item Total surface PM2.5 mass is calculated according to
 the formula in \url{https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4}
-Set a proxy to be used by all httr calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}; e.g.
-\code{httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))}
+\item Set options("appc_install_data_from_source"), or the environment variable \code{APPC_INSTALL_DATA_FROM_SOURCE}
+to any non-empty value to install MERRA-2 directly from their sources instead of using the released
+GitHub data binary.
+\itemize{
+\item An \href{https://disc.gsfc.nasa.gov/information/documents?title=Data\%20Access}{Earthdata account linked with permissions for GES DISC} is required.
+The \code{EARTHDATA_USERNAME} and \code{EARTHDATA_PASSWORD} must be set. If
+a \code{.env} file is present, environment variables will be loaded
+using the dotenv package.
+\item Set a proxy to be used by all httr calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}
 }
-
-this installs merra data created using code from version 0.2.0 of the package;
-version 0.3.0 of the package did not change merra data code
+}
 }
 \examples{
 d <- list(

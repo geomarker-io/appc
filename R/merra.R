@@ -2,24 +2,30 @@
 #'
 #' Total and component (Dust, OC, BC, SS, SO4) surface PM2.5 concentrations
 #' from the MERRA-2 [M2T1NXAER v5.12.4](https://disc.gsfc.nasa.gov/datasets/M2T1NXAER_5.12.4/summary) product.
+#' Because installing MERRA-2 data takes a long time, "pre-compiled" data binaries for each year are available
+#' as pre-releases specific to MERRA data on GitHub.
 #' @details
-#' - To install data from source, an [Earthdata account linked with
-#' permissions for GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) is required.
-#' The `EARTHDATA_USERNAME` and `EARTHDATA_PASSWORD` must be set. If
-#' a `.env` file is present, environment variables will be loaded
-#' using the dotenv package.
 #' - Installed data are filtered to a
 #' [bounding box](http://bboxfinder.com/#24.766785,-126.474609,49.894634,-66.445313)
 #' around the contiguous US, averaged to daily values, and
 #' converted to micrograms per cubic meter ($ug/m^3$).
 #' - Total surface PM2.5 mass is calculated according to
 #' the formula in <https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4>
-#' Set a proxy to be used by all httr calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`; e.g.
-#' `httr::set_config(httr::use_proxy("http://bmiproxyp.chmcres.cchmc.org", 80, Sys.getenv("CCHMC_USERNAME"), Sys.getenv("CCHMC_PASSWORD")))`
+#' - Set options("appc_install_data_from_source"), or the environment variable `APPC_INSTALL_DATA_FROM_SOURCE`
+#' to any non-empty value to install MERRA-2 directly from their sources instead of using the released
+#' GitHub data binary.
+#'   - An [Earthdata account linked with
+#' permissions for GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) is required.
+#' The `EARTHDATA_USERNAME` and `EARTHDATA_PASSWORD` must be set. If
+#' a `.env` file is present, environment variables will be loaded
+#' using the dotenv package.
+#'   - Set a proxy to be used by all httr calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the MERRA data, must be the same length as `x`
 #' @param merra_year a character string that is the year for the merra data
 #' @param merra_date a date object that is the date for the merra data
+#' @param merra_release a character string of a release tag from which "pre-compiled" MERRA data binary is used
+#' instead of installing latest data from source; see details
 #' @return for `get_merra_data()`, a list of tibbles the same
 #' length as `x`, each containing merra data columns (`merra_dust`, `merra_oc`, `merra_bc`,
 #' `merra_ss`, `merra_so4`, `merra_pm25`) with one row per date in `dates`
@@ -30,7 +36,7 @@
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-get_merra_data <- function(x, dates) {
+get_merra_data <- function(x, dates, merra_release = "merra-2025-01-02") {
   check_s2_dates(x, dates)
   d_merra <-
     dates |>
@@ -39,7 +45,7 @@ get_merra_data <- function(x, dates) {
     unique() |>
     format("%Y") |>
     unique() |>
-    purrr::map_chr(\(.) install_merra_data(merra_year = .)) |>
+    purrr::map_chr(\(.) install_merra_data(merra_year = ., merra_release = merra_release)) |>
     purrr::map(readRDS) |>
     purrr::list_rbind() |>
     dplyr::nest_by(s2) |>
@@ -58,12 +64,14 @@ get_merra_data <- function(x, dates) {
     dplyr::mutate(s2 = x)
 
   out <-
-    purrr::map2(x_closest_merra$data, dates,
+    purrr::map2(
+      x_closest_merra$data, dates,
       \(xx, dd) {
         tibble::tibble(date = dd) |>
           dplyr::left_join(xx, by = "date") |>
           dplyr::select(-date)
-      })
+      }
+    )
   names(out) <- as.character(x)
   return(out)
 }
@@ -73,7 +81,7 @@ get_merra_data <- function(x, dates) {
 #' @return for `install_merra_data()`, a character string path to the merra data
 #' @export
 #' @rdname get_merra_data
-install_merra_data <- function(merra_year = as.character(2016:2024)) {
+install_merra_data <- function(merra_year = as.character(2017:2024), merra_release = "merra-2025-01-02") {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(tools::R_user_dir("appc", "data"),
     paste0(c("merra", merra_year), collapse = "_"),
@@ -83,7 +91,14 @@ install_merra_data <- function(merra_year = as.character(2016:2024)) {
     return(as.character(dest_file))
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("merra_{merra_year}.rds"), package_version = utils::packageVersion("appc"))
+    dl_url <- glue::glue(
+      "https://github.com", "geomarker-io",
+      "appc", "releases", "download",
+      merra_release,
+      "merra_{merra_year}.rds",
+      .sep = "/"
+    )
+    utils::download.file(dl_url, dest_file, quiet = FALSE, mode = "wb")
     return(as.character(dest_file))
   }
   date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
@@ -117,20 +132,21 @@ create_daily_merra_data <- function(merra_date) {
   tf <- tempfile(fileext = ".nc4")
   req_url <-
     fs::path("https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
-             "M2T1NXAER.5.12.4",
-             format(the_date, "%Y"),
-             format(the_date, "%m"),
-             paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
-             ext = "nc4")
+      "M2T1NXAER.5.12.4",
+      format(the_date, "%Y"),
+      format(the_date, "%m"),
+      paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
+      ext = "nc4"
+    )
   if ((format(the_date, "%Y") == "2020" & format(the_date, "%m") == "09") ||
-        (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
+    (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
     req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
   }
   resp <-
     httr::GET(
-    req_url,
-    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"])
-  )
+      req_url,
+      httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"])
+    )
 
   httr::GET(
     resp$url,
@@ -161,4 +177,3 @@ create_daily_merra_data <- function(merra_date) {
     dplyr::select(-lon, -lat)
   return(out)
 }
-

@@ -18,6 +18,7 @@ utils::globalVariables(c(
   "d", "pollutant code", "site longitude", "site latitude", "total_emissions",
   "air.2m", "hpbl", "acpcp", "rhum.2m",
   "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
+  "frac_imperv",
   "merra_pm25",
   "plume_smoke", ".rowid",
   "predictions", "variance.estimates",
@@ -81,4 +82,11 @@ ui_confirm <- function() {
   ans <- readline("Are you sure (y/n)? ")
   if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
   return(invisible(TRUE))
+}
+
+install_source_preference <- function() {
+  any(
+    getOption("appc_install_data_from_source", "") != "",
+    Sys.getenv("APPC_INSTALL_DATA_FROM_SOURCE", "") != ""
+  )
 }
