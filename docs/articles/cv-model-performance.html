@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,9 +82,9 @@
 <div class="section level2">
 <h2 id="training-data">Training data<a class="anchor" aria-label="anchor" href="#training-data"></a>
 </h2>
-<p>508,134 daily PM<span class="math inline">\(_{2.5}\)</span>
-measurements on 2,769 different days across 764 unique stations from
-2017-01-01 to 2024-07-31.</p>
+<p>521,015 daily PM<span class="math inline">\(_{2.5}\)</span>
+measurements on 2,861 different days across 767 unique stations from
+2017-01-01 to 2024-10-31.</p>
 <p>Measured PM<span class="math inline">\(_{2.5}\)</span> concentration
 (<span class="math inline">\(\mu g/ m^3\)</span>) quantiles are:</p>
 <table class="table">
@@ -115,7 +115,7 @@ measurements on 2,769 different days across 764 unique stations from
 </tr>
 <tr class="even">
 <td align="left">95%</td>
-<td align="right">17.6</td>
+<td align="right">17.5</td>
 </tr>
 <tr class="odd">
 <td align="left">100%</td>
@@ -143,60 +143,56 @@ splits of each tree in the forest.</p>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.707</td>
+<td align="right">0.718</td>
 <td align="left">merra_oc</td>
 </tr>
 <tr class="even">
-<td align="right">0.104</td>
+<td align="right">0.097</td>
 <td align="left">merra_bc</td>
 </tr>
 <tr class="odd">
-<td align="right">0.069</td>
+<td align="right">0.066</td>
 <td align="left">hpbl</td>
 </tr>
 <tr class="even">
-<td align="right">0.032</td>
+<td align="right">0.038</td>
 <td align="left">plume_smoke</td>
 </tr>
 <tr class="odd">
-<td align="right">0.024</td>
+<td align="right">0.021</td>
 <td align="left">x</td>
 </tr>
 <tr class="even">
-<td align="right">0.020</td>
+<td align="right">0.019</td>
 <td align="left">temperature_max</td>
 </tr>
 <tr class="odd">
-<td align="right">0.014</td>
+<td align="right">0.013</td>
 <td align="left">merra_so4</td>
 </tr>
 <tr class="even">
-<td align="right">0.006</td>
-<td align="left">wind_speed</td>
-</tr>
-<tr class="odd">
 <td align="right">0.005</td>
 <td align="left">temperature_min</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="right">0.004</td>
-<td align="left">y, doy, merra_dust</td>
+<td align="left">y, doy</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="right">0.003</td>
-<td align="left">solar_radiation</td>
-</tr>
-<tr class="even">
-<td align="right">0.002</td>
-<td align="left">elevation_sd, specific_humidity</td>
+<td align="left">solar_radiation, specific_humidity, merra_dust</td>
 </tr>
 <tr class="odd">
-<td align="right">0.001</td>
-<td align="left">elevation_median, wind_direction, merra_ss</td>
+<td align="right">0.002</td>
+<td align="left">elevation_sd, wind_speed</td>
 </tr>
 <tr class="even">
+<td align="right">0.001</td>
+<td align="left">elevation_median, wind_direction</td>
+</tr>
+<tr class="odd">
 <td align="right">0.000</td>
-<td align="left">year, precipitation</td>
+<td align="left">year, precipitation, merra_ss</td>
 </tr>
 </tbody>
 </table>
@@ -237,7 +233,7 @@ concentration contained the measured concentration.</p>
 <td align="right">1.2</td>
 <td align="right">0.85</td>
 <td align="left">69%</td>
-<td align="right">601</td>
+<td align="right">601.5</td>
 </tr></tbody>
 </table>
 <div class="section level4">
@@ -261,13 +257,13 @@ concentration contained the measured concentration.</p>
 <td align="right">2017</td>
 <td align="right">1.10</td>
 <td align="right">0.86</td>
-<td align="left">70%</td>
+<td align="left">69%</td>
 <td align="right">117</td>
 </tr>
 <tr class="even">
 <td align="right">2018</td>
-<td align="right">1.19</td>
-<td align="right">0.85</td>
+<td align="right">1.15</td>
+<td align="right">0.86</td>
 <td align="left">70%</td>
 <td align="right">117</td>
 </tr>
@@ -281,13 +277,13 @@ concentration contained the measured concentration.</p>
 <tr class="even">
 <td align="right">2020</td>
 <td align="right">1.20</td>
-<td align="right">0.83</td>
+<td align="right">0.84</td>
 <td align="left">69%</td>
 <td align="right">115</td>
 </tr>
 <tr class="odd">
 <td align="right">2021</td>
-<td align="right">1.25</td>
+<td align="right">1.20</td>
 <td align="right">0.85</td>
 <td align="left">69%</td>
 <td align="right">116</td>
@@ -295,23 +291,23 @@ concentration contained the measured concentration.</p>
 <tr class="even">
 <td align="right">2022</td>
 <td align="right">1.20</td>
-<td align="right">0.84</td>
-<td align="left">69%</td>
+<td align="right">0.83</td>
+<td align="left">68%</td>
 <td align="right">117</td>
 </tr>
 <tr class="odd">
 <td align="right">2023</td>
 <td align="right">1.30</td>
 <td align="right">0.85</td>
-<td align="left">69%</td>
+<td align="left">70%</td>
 <td align="right">116</td>
 </tr>
 <tr class="even">
 <td align="right">2024</td>
-<td align="right">1.26</td>
-<td align="right">0.83</td>
-<td align="left">68%</td>
-<td align="right">41</td>
+<td align="right">1.20</td>
+<td align="right">0.84</td>
+<td align="left">70%</td>
+<td align="right">62</td>
 </tr>
 </tbody>
 </table>
@@ -329,7 +325,7 @@ concentration contained the measured concentration.</p>
 <th align="right">median_n</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">0.71</td>
+<td align="right">0.72</td>
 <td align="right">0.89</td>
 <td align="left">95%</td>
 <td align="right">75</td>

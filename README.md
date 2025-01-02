@@ -55,48 +55,45 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9s]
+#> ✔ (down)loading random forest model [8.8s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [64ms]
+#> ✔ checking that s2 are within the contiguous US [59ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [1.9s]
+#> ✔ adding coordinates [2.3s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [971ms]
+#> ✔ adding HMS smoke data [972ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [869ms]
+#> ✔ adding NARR [873ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [841ms]
-#> 
-#> ℹ adding NLCD
-#> ! 2024 NLCD not yet available; using 2023
-#> ℹ adding NLCD✔ adding NLCD [51ms]
+#> ✔ adding gridMET [836ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1.1s]
+#> ✔ adding MERRA [1.2s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [19ms]
+#> ✔ adding time components [23ms]
+#> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.11   0.577
-#> 2  5.93   0.636
+#> 1  6.89   1.02 
+#> 2  5.48   0.549
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.20    1.82
-#> 2  5.56    1.04
+#> 1  5.10   0.386
+#> 2  5.75   0.843
 ```
 
 Installed geomarker data sources and the grf model are hosted as release
@@ -154,9 +151,11 @@ generalized random forest model, install and use
 [`just`](https://just.systems/man/en/) to execute recipes in the
 `justfile`.
 
-To update the MERRA-2 releases:  
+To update the MERRA-2 releases:
+
 - Delete any exisiting MERRA-2 data and re-install it using code based
-on `inst/install_merra_from_source_on_cchmc_hpc.sh` - Create a
-“pre-release” (i.e., *not latest*) tagged and titled
-`merra-{release_date}` (e.g., `merra-2025-01-02`) - Update the default
-release tag used in `get_merra_data()` (and `install_merra_data()`)
+  on `inst/install_merra_from_source_on_cchmc_hpc.sh`
+- Create a “pre-release” (i.e., *not latest*) tagged and titled
+  `merra-{release_date}` (e.g., `merra-2025-01-02`)
+- Update the default release tag used in `get_merra_data()` (and
+  `install_merra_data()`)
