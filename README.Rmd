@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
+[![r-universe](https://r-lib.r-universe.dev/badges/cpp11)](https://geomarker-io.r-universe.dev/appc)
 [![CRAN status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
@@ -31,7 +32,13 @@ Source files included with the package train and evaluate models that can be upd
 
 ## Installing
 
-Install the development version of appc from GitHub with:
+Install the latest stable release of appc from R-universe with:
+
+```r
+install.packages("appc", repos = c("https://geomarker-io.r-universe.dev", "https://cloud.r-project.org"))
+```
+
+Install the latest, under-development version of appc from GitHub with:
 
 ```r
 # install.packages("remotes")
@@ -75,6 +82,7 @@ Spatiotemporal geomarkers are used for predicting air pollution concentrations, 
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
+| 🏙 land cover | `get_urban_imperv()` |
 
 Currently, `get_urban_imperviousness()`, `get_traffic()`, and `get_nei_point_summary()` are stashed in the `/inst` folder and are not integrated into this package.
 
