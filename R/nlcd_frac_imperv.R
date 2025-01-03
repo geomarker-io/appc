@@ -66,9 +66,6 @@ install_nlcd_frac_imperv_data <- function(year = as.character(2024:2017)) {
     return(dest_path)
   }
   dl_url <- glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/Annual_NLCD_FctImp_{year}_CU_C1V0.tif")
-  dl_tmp <- tempfile(glue::glue("Annual_NLCD_FctImp_{year}_CU_C1V0"), fileext = ".tif")
-  withr::local_options(timeout = 3000)
-  utils::download.file(dl_url, dl_tmp)
-  system2("gdal_translate", c("-of COG", shQuote(dl_tmp), shQuote(dest_path)))
+  utils::download.file(dl_url, dest_path)
   return(dest_path)
 }
