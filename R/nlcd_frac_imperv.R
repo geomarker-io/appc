@@ -1,12 +1,15 @@
 #' Get NLCD Fractional Impervious Surface
 #'
+#' NLCD data is from the [Annual NLCD](https://www.mrlc.gov/data/project/annual-nlcd)
+#'
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
-#' @param dates a list of date vectors for the NLCD data, must be the same length as `x`; each date is matched
-#' to the closest available year of [Annual NLCD data](https://www.mrlc.gov/data/project/annual-nlcd)
+#' @param dates a list of date vectors for the NLCD data, must be the same length as `x`
 #' @param fun function to summarize extracted data
 #' @param buffer distance from s2 cell (in meters) to summarize data
-#' @return for `get_nlcd_frac_imperv()`, a list of numeric vectors of fractional impervious surface pixel summaries,
-#' the same length as `x`; each vector has values for each date in dates, named according to the NLCD product year
+#' @param nlcd_year a character string that is the year for the NLCD data
+#' @return for `get_nlcd_frac_imperv()`, a list of numeric vectors of fractional impervious
+#' surface pixel summaries, the same length as `x`;
+#' each vector has values for each date in dates, named according to the NLCD product year
 #' @references https://www.usgs.gov/centers/eros/science/annual-nlcd-fractional-impervious-surface
 #' @export
 #' @examples
@@ -54,18 +57,18 @@ get_nlcd_frac_imperv <- function(x, dates, fun = stats::median, buffer = 400) {
 #' Installs annual NLCD Fractional Impervious Surface raster data into user's data directory for the `appc` package
 #' @return for `install_nlcd_frac_imperv_data()`, a character string path to NLCD raster data
 #' @export
-#' @rdname get_narr_data
-install_nlcd_frac_imperv_data <- function(year = as.character(2024:2017)) {
-  year <- rlang::arg_match(year)
-  if (year == "2024") {
-    year <- "2023"
+#' @rdname get_nlcd_frac_imperv
+install_nlcd_frac_imperv_data <- function(nlcd_year = as.character(2024:2017)) {
+  nlcd_year <- rlang::arg_match(nlcd_year)
+  if (nlcd_year == "2024") {
+    nlcd_year <- "2023"
     cli::cli_alert_warning("2024 NLCD not yet available; using 2023")
   }
-  dest_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("Annual_NLCD_FctImp_{year}_CU_C1V0.tif"))
+  dest_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("Annual_NLCD_FctImp_{nlcd_year}_CU_C1V0.tif"))
   if (fs::file_exists(dest_path)) {
     return(dest_path)
   }
-  dl_url <- glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/Annual_NLCD_FctImp_{year}_CU_C1V0.tif")
+  dl_url <- glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/Annual_NLCD_FctImp_{nlcd_year}_CU_C1V0.tif")
   utils::download.file(dl_url, dest_path)
   return(dest_path)
 }

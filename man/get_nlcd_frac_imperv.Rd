@@ -2,26 +2,33 @@
 % Please edit documentation in R/nlcd_frac_imperv.R
 \name{get_nlcd_frac_imperv}
 \alias{get_nlcd_frac_imperv}
+\alias{install_nlcd_frac_imperv_data}
 \title{Get NLCD Fractional Impervious Surface}
 \usage{
 get_nlcd_frac_imperv(x, dates, fun = stats::median, buffer = 400)
+
+install_nlcd_frac_imperv_data(nlcd_year = as.character(2024:2017))
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
-\item{dates}{a list of date vectors for the NLCD data, must be the same length as \code{x}; each date is matched
-to the closest available year of \href{https://www.mrlc.gov/data/project/annual-nlcd}{Annual NLCD data}}
+\item{dates}{a list of date vectors for the NLCD data, must be the same length as \code{x}}
 
 \item{fun}{function to summarize extracted data}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
+
+\item{nlcd_year}{a character string that is the year for the NLCD data}
 }
 \value{
-for \code{get_nlcd_frac_imperv()}, a list of numeric vectors of fractional impervious surface pixel summaries,
-the same length as \code{x}; each vector has values for each date in dates, named according to the NLCD product year
+for \code{get_nlcd_frac_imperv()}, a list of numeric vectors of fractional impervious
+surface pixel summaries, the same length as \code{x};
+each vector has values for each date in dates, named according to the NLCD product year
+
+for \code{install_nlcd_frac_imperv_data()}, a character string path to NLCD raster data
 }
 \description{
-Get NLCD Fractional Impervious Surface
+NLCD data is from the \href{https://www.mrlc.gov/data/project/annual-nlcd}{Annual NLCD}
 }
 \examples{
 d <- list(
