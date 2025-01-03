@@ -196,30 +196,30 @@ call the <code><a href="../reference/predict_pm25.html">predict_pm25()</a></code
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pm25 <span class="op">=</span> <span class="fu"><a href="../reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dates</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> (down)loading random forest model</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[10.5s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[10.2s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> checking that s2 are within the contiguous US</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[57ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[65ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding coordinates</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[26ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[28ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding elevation</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[2.4s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[2.5s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data</span></span>
-<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■                       </span>  25% |  ETA:  4s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% |  ETA:  4s</span></span>
 <span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  75% |  ETA:  2s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data<span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[14s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data<span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[14.7s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding NARR</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[914ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[906ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding gridMET</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[888ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[825ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding MERRA</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[1.1s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[1.2s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding time components</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[24ms]</span></span></span>
