@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
-[![r-universe](https://r-lib.r-universe.dev/badges/appc)](https://geomarker-io.r-universe.dev/appc)
+[![r-universe](https://geomarker-io.r-universe.dev/badges/appc)](https://geomarker-io.r-universe.dev/appc)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/appc)](https://CRAN.R-project.org/package=appc)
 [![Lifecycle:
@@ -55,31 +55,31 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [10.2s]
+#> ✔ (down)loading random forest model [9.3s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [58ms]
+#> ✔ checking that s2 are within the contiguous US [55ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [10.3s]
+#> ✔ adding coordinates [2s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.5s]
+#> ✔ adding elevation [1.3s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [940ms]
+#> ✔ adding HMS smoke data [907ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [878ms]
+#> ✔ adding NARR [866ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [838ms]
+#> ✔ adding gridMET [828ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1.2s]
+#> ✔ adding MERRA [1.1s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [33ms]
+#> ✔ adding time components [22ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
