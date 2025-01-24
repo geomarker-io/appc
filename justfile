@@ -18,8 +18,20 @@ release_model:
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/training_data_v{{pkg_version}}.rds"
   gh release upload v{{pkg_version}} "{{geomarker_folder}}/rf_pm_v{{pkg_version}}.qs"
 
+# create example emscripten filesystem
+file_packager:
+  docker run -it --rm \
+  -v ./test_data:/the_data \
+  -w /the_data \
+  ghcr.io/r-wasm/webr:main \
+  R --silent \
+  -e "install.packages('pak')" \
+  -e "pak::pak('r-wasm/rwasm')" \
+  -e "library(rwasm)" \
+  -e "file_packager(in_dir = '/the_data', out_name = 'wasm-gridmet_tmmx_2023.rds', compress = FALSE)"
+
 # build wasm binary
-build_wasm_binary: create_wasm_repo
+build_wasm_binary:
   docker run -it --rm \
   -v ${PWD}:/the_package \
   -w /the_package \
@@ -28,7 +40,7 @@ build_wasm_binary: create_wasm_repo
   -e "install.packages('pak')" \
   -e "pak::pak('r-wasm/rwasm')" \
   -e "library(rwasm)" \
-  -e "add_pkg('addr=local::.', repo_dir = './repo', dependencies = FALSE)"
+  -e "build('addr=local::.', out = '.')"
 
 # create wasm repo folders
 create_wasm_repo:
@@ -41,4 +53,5 @@ create_wasm_repo:
 serve_test_repo:
   echo "go to https://webr.r-wasm.org/latest/ and run" && \
   echo "webr::install('appc', repos = c('http://127.0.0.1:9090', 'https://cloud.r-project.org'))" && \
+  echo "webr::mount(mountpoint = '/data', source = 'http://127.0.0.1:9090/test_data/vfs/gridmet_tmmx_2023.data')" && \
   R --silent -e "httpuv::runStaticServer(dir = '.', port = 9090, browse = FALSE, headers = list('Access-Control-Allow-Origin' =  '*'))"
