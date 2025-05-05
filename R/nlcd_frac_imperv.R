@@ -68,7 +68,7 @@ install_nlcd_frac_imperv_data <- function(nlcd_year = as.character(2024:2017)) {
   if (fs::file_exists(dest_path)) {
     return(dest_path)
   }
-  dl_url <- glue::glue("https://s3-us-west-2.amazonaws.com/mrlc/Annual_NLCD_FctImp_{nlcd_year}_CU_C1V0.tif")
+  dl_url <- glue::glue("https://www.mrlc.gov/downloads/sciweb1/shared/mrlc/data-bundles/Annual_NLCD_FctImp_{nlcd_year}_CU_C1V0.tif")
   utils::download.file(dl_url, dest_path)
   return(dest_path)
 }
