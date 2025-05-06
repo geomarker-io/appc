@@ -55,25 +55,25 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [9.3s]
+#> ✔ (down)loading random forest model [12s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [55ms]
+#> ✔ checking that s2 are within the contiguous US [70ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [2s]
+#> ✔ adding coordinates [8.9s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.3s]
+#> ✔ adding elevation [1.5s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [907ms]
+#> ✔ adding HMS smoke data [902ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [866ms]
+#> ✔ adding NARR [906ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [828ms]
+#> ✔ adding gridMET [829ms]
 #> 
 #> ℹ adding MERRA
 #> ✔ adding MERRA [1.1s]
@@ -128,7 +128,7 @@ themselves. View information and options about each geomarker:
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
-| 🏙 land cover | `get_urban_imperv()` |
+| 🏙 land cover | `get_nlcd_frac_imperv()` |
 
 Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in
 the `/inst` folder and are not integrated into this package.

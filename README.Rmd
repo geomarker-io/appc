@@ -79,7 +79,7 @@ Spatiotemporal geomarkers are used for predicting air pollution concentrations, 
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
-| 🏙 land cover | `get_urban_imperv()` |
+| 🏙 land cover | `get_nlcd_frac_imperv()` |
 
 Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in the `/inst` folder and are not integrated into this package.
 
