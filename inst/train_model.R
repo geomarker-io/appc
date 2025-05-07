@@ -14,6 +14,12 @@ train_file_output_path <-
     tools::R_user_dir("appc", "data"),
     glue::glue("training_data_v{packageVersion('appc')$major}.rds")
   )
+
+if (!file.exists(train_file_output_path)) {
+  maj <- packageVersion("appc")$major
+  download.file(glue::glue("https://github.com/geomarker-io/appc/releases/download/rf_pm_v{maj}/training_data_v{maj}.rds"), train_file)
+}
+
 d_train <- readRDS(train_file_output_path)
 
 

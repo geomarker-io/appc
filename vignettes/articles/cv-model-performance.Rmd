@@ -29,12 +29,13 @@ the_theme <-
 ```
 
 ```{r "load model and predictions"}
-grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
-if(!file.exists(grf_file)) appc:::install_released_data(glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
-grf <- qs::qread(grf_file)
+grf <- appc:::load_rf_pm_model()
 
-train_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')}.rds"))
-if(!file.exists(train_file)) appc:::install_released_data(glue::glue("training_data_v{packageVersion('appc')}.rds"))
+train_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')$major}.rds"))
+if(!file.exists(train_file)) {
+  maj <- packageVersion("appc")$major
+  download.file(glue::glue("https://github.com/geomarker-io/appc/releases/download/rf_pm_v{maj}/training_data_v{maj}.rds"), train_file)
+}
 d_train <- readRDS(train_file)
 ```
 
