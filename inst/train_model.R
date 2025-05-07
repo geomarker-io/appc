@@ -12,7 +12,7 @@ if (file.exists("./inst")) {
 train_file_output_path <-
   fs::path(
     tools::R_user_dir("appc", "data"),
-    glue::glue("training_data_v{packageVersion('appc')}.rds")
+    glue::glue("training_data_v{packageVersion('appc')$major}.rds")
   )
 d_train <- readRDS(train_file_output_path)
 
@@ -54,7 +54,7 @@ grf <-
   )
 
 cli::cli_progress_step("saving GRF")
-file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')}.qs"))
+file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{packageVersion('appc')$major}.qs"))
 qs::qsave(grf, file_output_path, preset = "fast")
-cli::cli_alert_info("saved rf_pm.rds ({fs::file_info(file_output_path)$size}) to {file_output_path}")
+cli::cli_alert_info("saved rf_pm rds file ({fs::file_info(file_output_path)$size}) to {file_output_path}")
 cli::cli_progress_done()

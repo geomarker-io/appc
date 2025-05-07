@@ -21,10 +21,23 @@ for more details on the cross validated accuracy of the daily PM2.5 model predic
 \description{
 Get daily PM2.5 model predictions
 }
+\details{
+Internally, loading the model file is cached, so repeated calls in the same R session
+will not require the overhead of loading the model file for a new prediction.
+}
 \examples{
 d <- list(
   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+)
+
+predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
+
+# takes less time after called once because model file is cached in memory
+
+d <- list(
+  "8841b39a7c46e25f" = as.Date(c("2023-05-13", "2023-11-16")),
+  "8841a45555555555" = as.Date(c("2023-06-21", "2023-08-25"))
 )
 predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
 }
