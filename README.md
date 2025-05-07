@@ -19,14 +19,17 @@ The goal of the appc package is to provide daily, high resolution, near
 real-time, model-based ambient air pollution exposure assessments. This
 is achieved by training a generalized random forest on several
 geomarkers to predict daily average EPA AQS concentrations from 2017
-until the present at exact locations across the contiguous United States
-(see `vignette("cv-model-performance")` for more details). The appc
-package contains functions for generating geomarker predictors and the
-ambient air pollution concentrations. Predictor geomarkers include
-weather and atmospheric information, wildfire smoke plumes, elevation,
-and satellite-based aerosol diagnostics products. Source files included
-with the package train and evaluate models that can be updated with any
-release to use more recent AQS measurements and/or geomarker predictors.
+until the near-present (currently October 2024) at exact locations
+across the contiguous United States (see
+`vignette("cv-model-performance")` for more details).
+
+The appc package contains functions for generating geomarker predictors
+and the ambient air pollution concentrations. Predictor geomarkers
+include weather and atmospheric information, wildfire smoke plumes,
+elevation, and satellite-based aerosol diagnostics products. Source
+files included with the package train and evaluate models that can be
+updated with any release to use more recent AQS measurements and/or
+geomarker predictors.
 
 ## Installing
 
@@ -55,31 +58,32 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [8.9s]
+#> loaded rf_pm_v0 in 9s
+#> ✔ (down)loading random forest model [9.3s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [67ms]
+#> ✔ checking that s2 are within the contiguous US [65ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [2.5s]
+#> ✔ adding coordinates [1.8s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [951ms]
+#> ✔ adding HMS smoke data [991ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [920ms]
+#> ✔ adding NARR [928ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [820ms]
+#> ✔ adding gridMET [834ms]
 #> 
 #> ℹ adding MERRA
 #> ✔ adding MERRA [1.2s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [23ms]
+#> ✔ adding time components [22ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
