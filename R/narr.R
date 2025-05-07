@@ -16,7 +16,7 @@
 #' )
 #' get_narr_data(x = s2::as_s2_cell(names(d)), dates = d, narr_var = "air.2m")
 get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")) {
-  check_s2_dates(x, dates)
+  check_s2_dates(x, dates, check_date_min = "1979-01-01", check_date_max = NULL)
   narr_var <- rlang::arg_match(narr_var)
   narr_raster <-
     dates |>

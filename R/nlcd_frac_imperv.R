@@ -20,7 +20,7 @@
 #' get_nlcd_frac_imperv(x = s2::as_s2_cell(names(d)), dates = d)
 #' get_nlcd_frac_imperv(x = s2::as_s2_cell(names(d)), dates = d, fun = mean, buffer = 1000)
 get_nlcd_frac_imperv <- function(x, dates, fun = stats::median, buffer = 400) {
-  check_s2_dates(x, dates)
+  check_s2_dates(x, dates, check_date_min = "2017-01-01", check_date_max = "2024-12-31")
   nlcd_years <-
     purrr::reduce(dates, c) |>
     format("%Y") |>

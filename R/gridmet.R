@@ -35,7 +35,7 @@
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "tmmx")
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "pr")
 get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph")) {
-  check_s2_dates(x, dates)
+  check_s2_dates(x, dates, check_date_min = "1979-01-01", check_date_max = NULL)
   gridmet_var <- rlang::arg_match(gridmet_var)
   gridmet_years <-
     dates |>

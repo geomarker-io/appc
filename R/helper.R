@@ -49,8 +49,7 @@ get_closest_year <- function(x, years = as.character(1800:2400)) {
   return(the_closest_years)
 }
 
-check_s2_dates <- function(s2, dates = NULL) {
-  # TODO add date arguments for min and max dates that default to what is below
+check_s2_dates <- function(s2, dates = NULL, check_date_min = "2017-01-01", check_date_max = "2024-12-31") {
   if (!inherits(s2, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   if (any(is.na(s2))) stop("s2 must not contain any missing values", call. = FALSE)
   if (!any(s2::s2_cell_level(s2) == 30L)) stop("all s2 cell levels must be 30", call. = FALSE)
@@ -58,8 +57,12 @@ check_s2_dates <- function(s2, dates = NULL) {
     if (length(s2) != length(dates)) stop("s2 and dates must be the same length", call. = FALSE)
     if (!inherits(dates, "list")) stop("dates must be a list", call. = FALSE)
     if (!all(sapply(dates, \(.) inherits(., "Date")))) stop("everything in the dates list must be `Date` objects", call. = FALSE)
-    if (!all(lapply(dates, min) > as.Date("2016-12-31"))) stop("all dates must be later than 2017-01-01", call. = FALSE)
-    if (!all(lapply(dates, max) < as.Date("2025-01-01"))) stop("all dates must be earlier than 2025-01-01", call. = FALSE)
+    if (!is.null(check_date_min)) {
+      if (!all(lapply(dates, min) >= as.Date(check_date_min))) stop("all dates must be later than `check_date_min`", call. = FALSE)
+    }
+    if (!is.null(check_date_max)) {
+      if (!all(lapply(dates, max) < as.Date(check_date_max))) stop("all dates must be earlier than `check_date_max", call. = FALSE)
+    }
   }
 }
 
