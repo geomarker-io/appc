@@ -1,11 +1,11 @@
-pandoc: '3.2'
+pandoc: 3.6.3
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   case-crossover-example: case-crossover-example.html
   cv-model-performance: cv-model-performance.html
   timeline-example: timeline-example.html
-last_built: 2025-01-03T00:23Z
+last_built: 2025-05-07T03:16Z
 urls:
   reference: http://geomarker.io/appc/reference
   article: http://geomarker.io/appc/articles

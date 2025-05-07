@@ -26,3 +26,22 @@ test_that("predict_pm25() works with duplicated locations", {
   expect_identical(sapply(out, nrow), c(2L, 2L))
   expect_length(out, 2)
 })
+
+test_that("predict_pm25_date_range() works", {
+  out <- predict_pm25_date_range(
+    x = c("8841b39a7c46e25f", "8841a45555555555"),
+    start_date = as.Date(c("2023-05-18", "2023-01-06")),
+    end_date = as.Date(c("2023-06-22", "2023-08-15"))
+  )
+  expect_length(out, 2)
+  expect_identical(sapply(out, nrow), c(36L, 222L))
+
+  out_averaged <- predict_pm25_date_range(
+    x = c("8841b39a7c46e25f", "8841a45555555555"),
+    start_date = as.Date(c("2023-05-18", "2023-01-06")),
+    end_date = as.Date(c("2023-06-22", "2023-08-15")),
+    average = TRUE
+  )
+  expect_length(out_averaged, 2)
+  expect_identical(sapply(out_averaged, nrow), c(1L, 1L))
+})

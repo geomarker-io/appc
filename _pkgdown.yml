@@ -13,6 +13,7 @@ reference:
 - title: Air pollution assessment
   contents:
   - predict_pm25
+  - predict_pm25_date_range
   - assemble_predictors
 - title: Helpers
   contents:
