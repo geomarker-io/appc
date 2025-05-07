@@ -50,8 +50,10 @@ get_closest_year <- function(x, years = as.character(1800:2400)) {
 }
 
 check_s2_dates <- function(s2, dates = NULL) {
+  # TODO add date arguments for min and max dates that default to what is below
   if (!inherits(s2, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
   if (any(is.na(s2))) stop("s2 must not contain any missing values", call. = FALSE)
+  if (!any(s2::s2_cell_level(s2) == 30L)) stop("all s2 cell levels must be 30", call. = FALSE)
   if (!is.null(dates)) {
     if (length(s2) != length(dates)) stop("s2 and dates must be the same length", call. = FALSE)
     if (!inherits(dates, "list")) stop("dates must be a list", call. = FALSE)

@@ -55,31 +55,31 @@ appc::predict_pm25(
   dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
-#> ✔ (down)loading random forest model [12s]
+#> ✔ (down)loading random forest model [8.9s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [70ms]
+#> ✔ checking that s2 are within the contiguous US [67ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [8.9s]
+#> ✔ adding coordinates [2.5s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.5s]
+#> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [902ms]
+#> ✔ adding HMS smoke data [951ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [906ms]
+#> ✔ adding NARR [920ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [829ms]
+#> ✔ adding gridMET [820ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1.1s]
+#> ✔ adding MERRA [1.2s]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [22ms]
+#> ✔ adding time components [23ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
@@ -115,6 +115,9 @@ s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 #> <s2_cell[2]>
 #> [1] 8841ad122d9774a7 88404ebdac3ea7d1
 ```
+
+By default, s2 cells are created as “leaf-level cells”, which is
+resolution 30; these cells have areas of about one meter squared.
 
 ## Geomarker Assessment
 

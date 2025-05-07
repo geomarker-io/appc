@@ -17,6 +17,7 @@ reference:
   - assemble_predictors
 - title: Helpers
   contents:
+  - latlon_to_s2_cell
   - get_daily_aqs
   - get_closest_year
   - appc_clean_data_directory

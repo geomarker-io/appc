@@ -24,8 +24,10 @@ is calculated, assuming they are independent, as the square root of the sum of s
 individual standard errors divided the total number of individual daily pm25 exposures.
 }
 \examples{
-predict_pm25_date_range(x = c("8841b39a7c46e25f", "8841a45555555555"),
-             start_date = as.Date(c("2023-05-18", "2023-01-06")),
-             end_date = as.Date(c("2023-06-22", "2023-08-15")),
-             average = TRUE)
+predict_pm25_date_range(
+  x = c("8841b39a7c46e25f", "8841a45555555555"),
+  start_date = as.Date(c("2023-05-18", "2023-01-06")),
+  end_date = as.Date(c("2023-06-22", "2023-08-15")),
+  average = TRUE
+)
 }

@@ -69,6 +69,8 @@ In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell
 s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 ```
 
+By default, s2 cells are created as "leaf-level cells", which is resolution 30; these cells have areas of about one meter squared.
+
 ## Geomarker Assessment
 
 Spatiotemporal geomarkers are used for predicting air pollution concentrations, but also serve as exposures or confounding exposures themselves. View information and options about each geomarker:

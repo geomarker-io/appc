@@ -2,6 +2,11 @@ test_that("check_s2_dates() works", {
   check_s2_dates(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123"))) |>
     expect_silent()
 
+  s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")) |>
+    s2::s2_cell_parent(29) |>
+    check_s2_dates() |>
+    expect_error("s2 cell levels must be 30")
+
   check_s2_dates(c("8841b399ced97c47", "8841b38578834123")) |>
     expect_error("s2_cell vector")
 
