@@ -1,5 +1,4 @@
 .onLoad <- function(...) {
-  .appc_cache <<- new.env(parent = emptyenv())
   dir.create(tools::R_user_dir("appc", "data"), recursive = TRUE, showWarnings = FALSE)
   options(
     timeout = max(2500, getOption("timeout")),

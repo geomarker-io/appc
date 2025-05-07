@@ -1,3 +1,5 @@
+.appc_cache <- new.env(parent = emptyenv())
+
 load_rf_pm_model <- function(model_version = "0") {
   st <- Sys.time()
   if (is.null(.appc_cache$model)) {
