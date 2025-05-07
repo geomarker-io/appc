@@ -73,6 +73,9 @@
     <loc>http://geomarker.io/appc/reference/index.html</loc>
   </url>
   <url>
+    <loc>http://geomarker.io/appc/reference/latlon_to_s2_cell.html</loc>
+  </url>
+  <url>
     <loc>http://geomarker.io/appc/reference/predict_pm25.html</loc>
   </url>
   <url>

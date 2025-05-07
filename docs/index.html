@@ -96,31 +96,31 @@
 <span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-05-18"</span>, <span class="st">"2024-06-10"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ (down)loading random forest model</span></span>
-<span><span class="co">#&gt; ✔ (down)loading random forest model [12s]</span></span>
+<span><span class="co">#&gt; ✔ (down)loading random forest model [8.9s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ checking that s2 are within the contiguous US</span></span>
-<span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [70ms]</span></span>
+<span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [67ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding coordinates</span></span>
-<span><span class="co">#&gt; ✔ adding coordinates [8.9s]</span></span>
+<span><span class="co">#&gt; ✔ adding coordinates [2.5s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding elevation</span></span>
-<span><span class="co">#&gt; ✔ adding elevation [1.5s]</span></span>
+<span><span class="co">#&gt; ✔ adding elevation [1.4s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding HMS smoke data</span></span>
-<span><span class="co">#&gt; ✔ adding HMS smoke data [902ms]</span></span>
+<span><span class="co">#&gt; ✔ adding HMS smoke data [951ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding NARR</span></span>
-<span><span class="co">#&gt; ✔ adding NARR [906ms]</span></span>
+<span><span class="co">#&gt; ✔ adding NARR [920ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding gridMET</span></span>
-<span><span class="co">#&gt; ✔ adding gridMET [829ms]</span></span>
+<span><span class="co">#&gt; ✔ adding gridMET [820ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding MERRA</span></span>
-<span><span class="co">#&gt; ✔ adding MERRA [1.1s]</span></span>
+<span><span class="co">#&gt; ✔ adding MERRA [1.2s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding time components</span></span>
-<span><span class="co">#&gt; ✔ adding time components [22ms]</span></span>
+<span><span class="co">#&gt; ✔ adding time components [23ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
@@ -145,6 +145,7 @@
 <code class="sourceCode R"><span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_lnglat.html" class="external-link">s2_lnglat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">84.4126</span>, <span class="op">-</span><span class="fl">84.5036</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">39.1582</span>, <span class="fl">39.2875</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;s2_cell[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8841ad122d9774a7 88404ebdac3ea7d1</span></span></code></pre></div>
+<p>By default, s2 cells are created as “leaf-level cells”, which is resolution 30; these cells have areas of about one meter squared.</p>
 </div>
 <div class="section level2">
 <h2 id="geomarker-assessment">Geomarker Assessment<a class="anchor" aria-label="anchor" href="#geomarker-assessment"></a>
