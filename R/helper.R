@@ -1,5 +1,9 @@
 .onLoad <- function(...) {
-  dir.create(tools::R_user_dir("appc", "data"), recursive = TRUE, showWarnings = FALSE)
+  dir.create(
+    tools::R_user_dir("appc", "data"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
   options(
     timeout = max(2500, getOption("timeout")),
     download.file.method = "libcurl"
@@ -7,23 +11,58 @@
 }
 
 utils::globalVariables(c(
-  "s2", "NAME",
-  "Sample Duration", "Observation Percent",
-  "State Code", "County Code", "Site Num",
-  "Latitude", "Longitude", "Arithmetic Mean", "Date Local",
-  "lon", "lat", "conc",
-  "DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25",
-  "SO4SMASS", "merra_dust", "merra_oc", "merra_oc",
-  "merra_bc", "merra_ss", "merra_so4", "value",
-  "d", "pollutant code", "site longitude", "site latitude", "total_emissions",
-  "air.2m", "hpbl", "acpcp", "rhum.2m",
-  "vis", "pres.sfc", "uwnd.10m", "vwnd.10m",
+  "s2",
+  "NAME",
+  "Sample Duration",
+  "Observation Percent",
+  "State Code",
+  "County Code",
+  "Site Num",
+  "Latitude",
+  "Longitude",
+  "Arithmetic Mean",
+  "Date Local",
+  "lon",
+  "lat",
+  "conc",
+  "DUSMASS25",
+  "OCSMASS",
+  "BCSMASS",
+  "SSSMASS25",
+  "SO4SMASS",
+  "merra_dust",
+  "merra_oc",
+  "merra_oc",
+  "merra_bc",
+  "merra_ss",
+  "merra_so4",
+  "value",
+  "d",
+  "pollutant code",
+  "site longitude",
+  "site latitude",
+  "total_emissions",
+  "air.2m",
+  "hpbl",
+  "acpcp",
+  "rhum.2m",
+  "vis",
+  "pres.sfc",
+  "uwnd.10m",
+  "vwnd.10m",
   "frac_imperv",
   "merra_pm25",
-  "plume_smoke", ".rowid",
-  "predictions", "variance.estimates",
-  "precipitation", "solar_radiation", "specific_humidity",
-  "temperature_max", "temperature_min", "wind_direction", "wind_speed"
+  "plume_smoke",
+  ".rowid",
+  "predictions",
+  "variance.estimates",
+  "precipitation",
+  "solar_radiation",
+  "specific_humidity",
+  "temperature_max",
+  "temperature_min",
+  "wind_direction",
+  "wind_speed"
 ))
 
 #' Get the closest years to a vector of dates
@@ -49,19 +88,31 @@ get_closest_year <- function(x, years = as.character(1800:2400)) {
   return(the_closest_years)
 }
 
-check_s2_dates <- function(s2, dates = NULL, check_date_min = "2017-01-01", check_date_max = "2024-12-31") {
-  if (!inherits(s2, "s2_cell")) stop("x must be a s2_cell vector", call. = FALSE)
-  if (any(is.na(s2))) stop("s2 must not contain any missing values", call. = FALSE)
-  if (!any(s2::s2_cell_level(s2) == 30L)) stop("all s2 cell levels must be 30", call. = FALSE)
+check_s2_dates <- function(
+  s2,
+  dates = NULL,
+  check_date_min = "2017-01-01",
+  check_date_max = "2024-12-31"
+) {
+  if (!inherits(s2, "s2_cell"))
+    stop("x must be a s2_cell vector", call. = FALSE)
+  if (any(is.na(s2)))
+    stop("s2 must not contain any missing values", call. = FALSE)
+  if (!any(s2::s2_cell_level(s2) == 30L))
+    stop("all s2 cell levels must be 30", call. = FALSE)
   if (!is.null(dates)) {
-    if (length(s2) != length(dates)) stop("s2 and dates must be the same length", call. = FALSE)
+    if (length(s2) != length(dates))
+      stop("s2 and dates must be the same length", call. = FALSE)
     if (!inherits(dates, "list")) stop("dates must be a list", call. = FALSE)
-    if (!all(sapply(dates, \(.) inherits(., "Date")))) stop("everything in the dates list must be `Date` objects", call. = FALSE)
+    if (!all(sapply(dates, \(.) inherits(., "Date"))))
+      stop("everything in the dates list must be `Date` objects", call. = FALSE)
     if (!is.null(check_date_min)) {
-      if (!all(lapply(dates, min) >= as.Date(check_date_min))) stop("all dates must be later than `check_date_min`", call. = FALSE)
+      if (!all(lapply(dates, min) >= as.Date(check_date_min)))
+        stop("all dates must be later than `check_date_min`", call. = FALSE)
     }
     if (!is.null(check_date_max)) {
-      if (!all(lapply(dates, max) < as.Date(check_date_max))) stop("all dates must be earlier than `check_date_max", call. = FALSE)
+      if (!all(lapply(dates, max) < as.Date(check_date_max)))
+        stop("all dates must be earlier than `check_date_max", call. = FALSE)
     }
   }
 }
@@ -71,7 +122,9 @@ check_s2_dates <- function(s2, dates = NULL, check_date_min = "2017-01-01", chec
 #' @export
 appc_clean_data_directory <- function() {
   fls <- fs::dir_info(tools::R_user_dir("appc", "data"))
-  cli::cli_alert_warning("Running this command will delete all {nrow(fls)} file{?s} in {tools::R_user_dir('appc', 'data')}")
+  cli::cli_alert_warning(
+    "Running this command will delete all {nrow(fls)} file{?s} in {tools::R_user_dir('appc', 'data')}"
+  )
   ui_confirm()
   fs::dir_delete(tools::R_user_dir("appc", "data"))
   cli::cli_alert_success("Removed {sum(fls$size)}")
@@ -80,7 +133,9 @@ appc_clean_data_directory <- function() {
 
 ui_confirm <- function() {
   if (!interactive()) {
-    cli::cli_alert_warning("User input requested, but session is not interactive.")
+    cli::cli_alert_warning(
+      "User input requested, but session is not interactive."
+    )
     cli::cli_alert_info("Assuming this is okay.")
     return(TRUE)
   }
@@ -96,11 +151,17 @@ install_source_preference <- function() {
   )
 }
 
-install_released_data <- function(released_data_name, package_version = utils::packageVersion("appc")) {
+install_released_data <- function(
+  released_data_name,
+  package_version = utils::packageVersion("appc")
+) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), released_data_name)
   dl_url <- glue::glue(
-    "https://github.com", "geomarker-io",
-    "appc", "releases", "download",
+    "https://github.com",
+    "geomarker-io",
+    "appc",
+    "releases",
+    "download",
     "v{package_version}",
     released_data_name,
     .sep = "/"

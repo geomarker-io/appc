@@ -27,15 +27,24 @@ get_hms_smoke_data <- function(x, dates) {
   date_smoke_geoms <- purrr::map(dates, \(.) d_smoke[as.character(.)])
   withr::with_options(list(sf_use_s2 = FALSE, future.rng.onMisuse = "ignore"), {
     out <-
-      purrr::map(seq_along(x), \(i) {
-        purrr::map(date_smoke_geoms[[i]], \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .)) |>
-          suppressMessages() |>
-          purrr::map("Density") |>
-          purrr::map(\(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))) |>
-          purrr::map_dbl(sum, na.rm = TRUE) |>
-          as.numeric() |>
-          suppressWarnings()
-      }, .progress = "intersecting smoke data")
+      purrr::map(
+        seq_along(x),
+        \(i) {
+          purrr::map(
+            date_smoke_geoms[[i]],
+            \(.) sf::st_join(sf::st_as_sf(s2::s2_cell_to_lnglat(x[[i]])), .)
+          ) |>
+            suppressMessages() |>
+            purrr::map("Density") |>
+            purrr::map(
+              \(.) as.numeric(factor(., levels = c("Light", "Medium", "Heavy")))
+            ) |>
+            purrr::map_dbl(sum, na.rm = TRUE) |>
+            as.numeric() |>
+            suppressWarnings()
+        },
+        .progress = "intersecting smoke data"
+      )
   })
   return(out)
 }
@@ -46,7 +55,10 @@ get_hms_smoke_data <- function(x, dates) {
 #' @return for `install_hms_smoke_data()`, a character string path to the installed RDS file
 #' @rdname get_hms_smoke_data
 #' @export
-install_hms_smoke_data <- function(hms_smoke_start_date = as.Date("2017-01-01"), hms_smoke_end_date = as.Date("2024-12-31")) {
+install_hms_smoke_data <- function(
+  hms_smoke_start_date = as.Date("2017-01-01"),
+  hms_smoke_end_date = as.Date("2024-12-31")
+) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
   if (file.exists(dest_file)) {
     return(as.character(dest_file))
@@ -56,7 +68,9 @@ install_hms_smoke_data <- function(hms_smoke_start_date = as.Date("2017-01-01"),
     purrr::map(
       smoke_days,
       download_daily_smoke_data,
-      .progress = glue::glue("downloading HMS smoke data: {hms_smoke_start_date} - {hms_smoke_end_date}")
+      .progress = glue::glue(
+        "downloading HMS smoke data: {hms_smoke_start_date} - {hms_smoke_end_date}"
+      )
     ) |>
     purrr::map("result") |>
     stats::setNames(smoke_days)
@@ -65,7 +79,10 @@ install_hms_smoke_data <- function(hms_smoke_start_date = as.Date("2017-01-01"),
 }
 
 download_daily_smoke_data <- function(date) {
-  safe_st_read <- purrr::safely(sf::st_read, otherwise = sf::st_sf(sf::st_sfc(crs = sf::st_crs("epsg:4326"))))
+  safe_st_read <- purrr::safely(
+    sf::st_read,
+    otherwise = sf::st_sf(sf::st_sfc(crs = sf::st_crs("epsg:4326")))
+  )
   smoke_shapefile <-
     glue::glue(
       "/vsizip//vsicurl",

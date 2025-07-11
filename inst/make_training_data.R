@@ -49,7 +49,12 @@ d_train <- assemble_predictors(x = d$s2, dates = d$dates)
 d_train$conc <- unlist(d$conc)
 
 cli::cli_progress_step("saving training data")
-train_file_output_path <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')$major}.rds"))
+train_file_output_path <- fs::path(
+  tools::R_user_dir("appc", "data"),
+  glue::glue("training_data_v{packageVersion('appc')$major}.rds")
+)
 saveRDS(d_train, train_file_output_path)
-cli::cli_alert_info("saved {fs::file_info(train_file_output_path)$size} to {train_file_output_path}")
+cli::cli_alert_info(
+  "saved {fs::file_info(train_file_output_path)$size} to {train_file_output_path}"
+)
 cli::cli_progress_done()

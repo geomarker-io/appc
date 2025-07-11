@@ -16,7 +16,11 @@
 #' get_traffic_summary(
 #'   s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
 #'   buffer = 1500)
-get_traffic_summary <- function(x, buffer = 400, s2_approx_level = c("14", "15", "16")) {
+get_traffic_summary <- function(
+  x,
+  buffer = 400,
+  s2_approx_level = c("14", "15", "16")
+) {
   check_s2_dates(x)
   s2_approx_level <- rlang::arg_match(s2_approx_level)
   aadt_data <-
@@ -25,15 +29,28 @@ get_traffic_summary <- function(x, buffer = 400, s2_approx_level = c("14", "15",
       s2_centroid,
       length,
       aadt_total = AADT,
-      aadt_truck = sum(AADT_SINGLE_UNIT, AADT_COMBINATION, na.rm = TRUE)
+      aadt_truck = sum(
+        AADT_SINGLE_UNIT,
+        AADT_COMBINATION,
+        na.rm = TRUE
+      )
     ) |>
-    dplyr::group_by(s2_parent = s2::s2_cell_parent(s2_centroid, level = as.numeric(s2_approx_level))) |>
+    dplyr::group_by(
+      s2_parent = s2::s2_cell_parent(
+        s2_centroid,
+        level = as.numeric(s2_approx_level)
+      )
+    ) |>
     dplyr::summarize(
       aadt_total_m = sum(aadt_total * length, na.rm = TRUE),
       aadt_truck_m = sum(aadt_truck * length, na.rm = TRUE)
     )
   xx <- unique(x)
-  withins <- s2::s2_dwithin_matrix(s2::s2_cell_to_lnglat(xx), s2::s2_cell_to_lnglat(aadt_data$s2_parent), distance = buffer)
+  withins <- s2::s2_dwithin_matrix(
+    s2::s2_cell_to_lnglat(xx),
+    s2::s2_cell_to_lnglat(aadt_data$s2_parent),
+    distance = buffer
+  )
   summarize_traffic <- function(i) {
     aadt_data[withins[[i]], ] |>
       dplyr::summarize(
@@ -51,7 +68,11 @@ get_traffic_summary <- function(x, buffer = 400, s2_approx_level = c("14", "15",
 #' @rdname get_traffic_summary
 #' @export
 install_traffic <- function() {
-  out_path <- fs::path(tools::R_user_dir("appc", "data"), "hpms_f123_aadt", ext = "rds")
+  out_path <- fs::path(
+    tools::R_user_dir("appc", "data"),
+    "hpms_f123_aadt",
+    ext = "rds"
+  )
   if (file.exists(out_path)) {
     return(out_path)
   }
@@ -71,7 +92,8 @@ install_traffic <- function() {
     out <-
       sf::st_read(
         dsn = dest_path,
-        query = glue::glue("SELECT F_SYSTEM, AADT, AADT_SINGLE_UNIT, AADT_COMBINATION",
+        query = glue::glue(
+          "SELECT F_SYSTEM, AADT, AADT_SINGLE_UNIT, AADT_COMBINATION",
           "FROM HPMS_FULL_{state}_2020",
           "WHERE F_SYSTEM IN ('1', '2', '3')",
           .sep = " "
@@ -79,15 +101,25 @@ install_traffic <- function() {
         quiet = TRUE
       ) |>
       sf::st_zm() |>
-      dplyr::mutate(s2_geography = s2::as_s2_geography(Shape)) |>
+      dplyr::mutate(
+        s2_geography = s2::as_s2_geography(Shape)
+      ) |>
       sf::st_drop_geometry() |>
       tibble::as_tibble()
     out$length <- s2::s2_length(out$s2_geography)
-    out$s2_centroid <- purrr::map_vec(out$s2_geography, \(x) s2::as_s2_cell(s2::s2_centroid(x)), .ptype = s2::s2_cell())
+    out$s2_centroid <- purrr::map_vec(
+      out$s2_geography,
+      \(x) s2::as_s2_cell(s2::s2_centroid(x)),
+      .ptype = s2::s2_cell()
+    )
     out$s2_geography <- NULL
     return(out)
   }
-  hpms_pa_aadt <- purrr::map(hpms_states, extract_F123_AADT, .progress = "extracting state F123 AADT files")
+  hpms_pa_aadt <- purrr::map(
+    hpms_states,
+    extract_F123_AADT,
+    .progress = "extracting state F123 AADT files"
+  )
   out <- dplyr::bind_rows(hpms_pa_aadt)
   saveRDS(out, out_path)
   return(as.character(out_path))

@@ -22,7 +22,10 @@
 #' @examples
 #' get_daily_aqs("pm25", "2024")
 #' @export
-get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = as.character(2017:2024)) {
+get_daily_aqs <- function(
+  pollutant = c("pm25", "ozone", "no2"),
+  year = as.character(2017:2024)
+) {
   rlang::check_installed("readr", "to read daily AQS CSV files from the EPA.")
   pollutant <- rlang::arg_match(pollutant)
   year <- rlang::arg_match(year)
@@ -33,7 +36,12 @@ get_daily_aqs <- function(pollutant = c("pm25", "ozone", "no2"), year = as.chara
       "no2" = "42602"
     )[pollutant]
   tf <- tempfile()
-  utils::download.file(glue::glue("https://aqs.epa.gov/aqsweb/airdata/daily_{pollutant_code}_{year}.zip"), tf)
+  utils::download.file(
+    glue::glue(
+      "https://aqs.epa.gov/aqsweb/airdata/daily_{pollutant_code}_{year}.zip"
+    ),
+    tf
+  )
   d_in <- readr::read_csv(tf, show_col_types = FALSE)
   if (pollutant_code %in% c("88101", "88502")) {
     d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")

@@ -11,7 +11,12 @@ test_that("get_nlcd_frac_imperv works", {
         `8841a45555555555` = c(`2023` = 8, `2023` = 8)
       )
     )
-  get_nlcd_frac_imperv(x = s2::as_s2_cell(names(d)), dates = d, fun = max, buffer = 1000) |>
+  get_nlcd_frac_imperv(
+    x = s2::as_s2_cell(names(d)),
+    dates = d,
+    fun = max,
+    buffer = 1000
+  ) |>
     expect_equal(
       list(
         `8841b39a7c46e25f` = c(`2023` = 93, `2023` = 93),
