@@ -1,6 +1,6 @@
 #' Get NLCD Fractional Impervious Surface
 #'
-#' NLCD data is from the [Annual NLCD](https://www.mrlc.gov/data/project/annual-nlcd)
+#' NLCD data is from v1 of the [Annual NLCD](https://www.mrlc.gov/data/project/annual-nlcd)
 #'
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the NLCD data, must be the same length as `x`
@@ -51,7 +51,6 @@ get_nlcd_frac_imperv <- function(x, dates, fun = stats::median, buffer = 400) {
     terra::project(nlcd_raster)
 
   d_nlcd <- terra::extract(nlcd_raster, x_vect, fun = fun, ID = FALSE)
-  # use 2023 NLCD data for 2024 dates; emit message?
 
   out <-
     dates |>
@@ -69,21 +68,21 @@ get_nlcd_frac_imperv <- function(x, dates, fun = stats::median, buffer = 400) {
 #' @return for `install_nlcd_frac_imperv_data()`, a character string path to NLCD raster data
 #' @export
 #' @rdname get_nlcd_frac_imperv
-install_nlcd_frac_imperv_data <- function(nlcd_year = as.character(2024:2017)) {
+install_nlcd_frac_imperv_data <- function(nlcd_year = as.character(2025:2017)) {
   nlcd_year <- rlang::arg_match(nlcd_year)
-  if (nlcd_year == "2024") {
-    nlcd_year <- "2023"
-    cli::cli_alert_warning("2024 NLCD not yet available; using 2023")
+  if (nlcd_year == "2025") {
+    nlcd_year <- "2024"
+    cli::cli_alert_warning("2025 NLCD not yet available; using 2024")
   }
   dest_path <- fs::path(
     tools::R_user_dir("appc", "data"),
-    glue::glue("Annual_NLCD_FctImp_{nlcd_year}_CU_C1V0.tif")
+    glue::glue("Annual_NLCD_FctImp_{nlcd_year}_CU_C1V1.tif")
   )
   if (fs::file_exists(dest_path)) {
     return(dest_path)
   }
   dl_url <- glue::glue(
-    "https://www.mrlc.gov/downloads/sciweb1/shared/mrlc/data-bundles/Annual_NLCD_FctImp_{nlcd_year}_CU_C1V0.tif"
+    "https://www.mrlc.gov/downloads/sciweb1/shared/mrlc/data-bundles/Annual_NLCD_FctImp_{nlcd_year}_CU_C1V1.tif"
   )
   utils::download.file(dl_url, dest_path)
   return(dest_path)
