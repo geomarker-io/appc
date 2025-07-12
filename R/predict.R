@@ -3,25 +3,38 @@
 load_rf_pm_model <- function(model_version = "0") {
   st <- Sys.time()
   if (is.null(.appc_cache$model)) {
-    grf_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("rf_pm_v{model_version}.qs"))
+    grf_file <- fs::path(
+      tools::R_user_dir("appc", "data"),
+      glue::glue("rf_pm_v{model_version}.qs")
+    )
     if (!file.exists(grf_file)) {
       message("downloading rf_pm_v", model_version)
       utils::download.file(
         glue::glue(
-          "https://github.com", "geomarker-io",
-          "appc", "releases", "download",
+          "https://github.com",
+          "geomarker-io",
+          "appc",
+          "releases",
+          "download",
           "rf_pm_v{model_version}",
           "rf_pm_v{model_version}.qs",
           .sep = "/"
         ),
         grf_file,
-        quiet = FALSE, mode = "wb"
+        quiet = FALSE,
+        mode = "wb"
       )
     }
     .appc_cache$model <- qs::qread(grf_file)
   }
   et <- Sys.time()
-  message("loaded rf_pm_v", model_version, " in ", as.integer(difftime(et, st, units = "secs")), "s")
+  message(
+    "loaded rf_pm_v",
+    model_version,
+    " in ",
+    as.integer(difftime(et, st, units = "secs")),
+    "s"
+  )
   return(.appc_cache$model)
 }
 
@@ -45,9 +58,9 @@ load_rf_pm_model <- function(model_version = "0") {
 #' )
 #'
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
-#' 
+#'
 #' # takes less time after called once because model file is cached in memory
-#' 
+#'
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-13", "2023-11-16")),
 #'   "8841a45555555555" = as.Date(c("2023-06-21", "2023-08-25"))
@@ -64,7 +77,8 @@ predict_pm25 <- function(x, dates) {
   stopifnot(inherits(grf, "regression_forest"))
   foofy <- grf::regression_forest
   d_pred <-
-    stats::predict(grf,
+    stats::predict(
+      grf,
       dplyr::select(d, dplyr::all_of(required_predictors)),
       estimate.variance = TRUE
     ) |>
@@ -111,7 +125,11 @@ predict_pm25_date_range <- function(x, start_date, end_date, average = FALSE) {
   end_date <- as.Date(end_date)
   stopifnot(length(x) == length(start_date))
   stopifnot(all(start_date < end_date))
-  dates <- purrr::map2(start_date, end_date, \(.sd, .ed) seq.Date(from = .sd, to = .ed, by = "day"))
+  dates <- purrr::map2(
+    start_date,
+    end_date,
+    \(.sd, .ed) seq.Date(from = .sd, to = .ed, by = "day")
+  )
   preds <- predict_pm25(x = x, dates = dates)
   if (average) {
     preds <- purrr::modify(preds, \(.x) {

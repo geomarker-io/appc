@@ -16,3 +16,4 @@ data-raw
 merra_cache
 vignettes/articles
 ^vignettes/articles$
+air.toml

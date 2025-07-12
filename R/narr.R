@@ -15,7 +15,20 @@
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' get_narr_data(x = s2::as_s2_cell(names(d)), dates = d, narr_var = "air.2m")
-get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m")) {
+get_narr_data <- function(
+  x,
+  dates,
+  narr_var = c(
+    "air.2m",
+    "hpbl",
+    "acpcp",
+    "rhum.2m",
+    "vis",
+    "pres.sfc",
+    "uwnd.10m",
+    "vwnd.10m"
+  )
+) {
   check_s2_dates(x, dates, check_date_min = "1979-01-01", check_date_max = NULL)
   narr_var <- rlang::arg_match(narr_var)
   narr_raster <-
@@ -25,7 +38,9 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
     unique() |>
     format("%Y") |>
     unique() |>
-    purrr::map_chr(\(.) install_narr_data(narr_var = narr_var, narr_year = .)) |>
+    purrr::map_chr(
+      \(.) install_narr_data(narr_var = narr_var, narr_year = .)
+    ) |>
     purrr::map(terra::rast) |>
     purrr::reduce(c)
   names(narr_raster) <- as.Date(terra::time(narr_raster))
@@ -44,19 +59,36 @@ get_narr_data <- function(x, dates, narr_var = c("air.2m", "hpbl", "acpcp", "rhu
 #' @return for `install_narr_data()`, a character string path to NARR raster data
 #' @export
 #' @rdname get_narr_data
-install_narr_data <- function(narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"),
-                              narr_year = as.character(2016:2024)) {
+install_narr_data <- function(
+  narr_var = c(
+    "air.2m",
+    "hpbl",
+    "acpcp",
+    "rhum.2m",
+    "vis",
+    "pres.sfc",
+    "uwnd.10m",
+    "vwnd.10m"
+  ),
+  narr_year = as.character(2016:2024)
+) {
   narr_var <- rlang::arg_match(narr_var)
   narr_year <- rlang::arg_match(narr_year)
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("narr_{narr_var}_{narr_year}.nc"))
+  dest_file <- fs::path(
+    tools::R_user_dir("appc", "data"),
+    glue::glue("narr_{narr_var}_{narr_year}.nc")
+  )
   if (file.exists(dest_file)) return(dest_file)
   message(glue::glue("downloading {narr_year} {narr_var}:"))
-  glue::glue("https://downloads.psl.noaa.gov",
-    "Datasets", "NARR", "Dailies", "monolevel",
+  glue::glue(
+    "https://downloads.psl.noaa.gov",
+    "Datasets",
+    "NARR",
+    "Dailies",
+    "monolevel",
     "{narr_var}.{narr_year}.nc",
     .sep = "/"
   ) |>
     utils::download.file(destfile = dest_file, mode = "wb")
   return(dest_file)
 }
-

@@ -7,7 +7,7 @@
 \usage{
 get_nlcd_frac_imperv(x, dates, fun = stats::median, buffer = 400)
 
-install_nlcd_frac_imperv_data(nlcd_year = as.character(2024:2017))
+install_nlcd_frac_imperv_data(nlcd_year = as.character(2025:2017))
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
@@ -28,7 +28,7 @@ each vector has values for each date in dates, named according to the NLCD produ
 for \code{install_nlcd_frac_imperv_data()}, a character string path to NLCD raster data
 }
 \description{
-NLCD data is from the \href{https://www.mrlc.gov/data/project/annual-nlcd}{Annual NLCD}
+NLCD data is from v1 of the \href{https://www.mrlc.gov/data/project/annual-nlcd}{Annual NLCD}
 }
 \examples{
 d <- list(

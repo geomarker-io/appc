@@ -45,7 +45,9 @@ get_merra_data <- function(x, dates, merra_release = "merra-2025-01-02") {
     unique() |>
     format("%Y") |>
     unique() |>
-    purrr::map_chr(\(.) install_merra_data(merra_year = ., merra_release = merra_release)) |>
+    purrr::map_chr(
+      \(.) install_merra_data(merra_year = ., merra_release = merra_release)
+    ) |>
     purrr::map(readRDS) |>
     purrr::list_rbind() |>
     dplyr::nest_by(s2) |>
@@ -65,7 +67,8 @@ get_merra_data <- function(x, dates, merra_release = "merra-2025-01-02") {
 
   out <-
     purrr::map2(
-      x_closest_merra$data, dates,
+      x_closest_merra$data,
+      dates,
       \(xx, dd) {
         tibble::tibble(date = dd) |>
           dplyr::left_join(xx, by = "date") |>
@@ -81,9 +84,13 @@ get_merra_data <- function(x, dates, merra_release = "merra-2025-01-02") {
 #' @return for `install_merra_data()`, a character string path to the merra data
 #' @export
 #' @rdname get_merra_data
-install_merra_data <- function(merra_year = as.character(2017:2024), merra_release = "merra-2025-01-02") {
+install_merra_data <- function(
+  merra_year = as.character(2017:2024),
+  merra_release = "merra-2025-01-02"
+) {
   merra_year <- rlang::arg_match(merra_year)
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"),
+  dest_file <- fs::path(
+    tools::R_user_dir("appc", "data"),
     paste0(c("merra", merra_year), collapse = "_"),
     ext = "rds"
   )
@@ -92,8 +99,11 @@ install_merra_data <- function(merra_year = as.character(2017:2024), merra_relea
   }
   if (!install_source_preference()) {
     dl_url <- glue::glue(
-      "https://github.com", "geomarker-io",
-      "appc", "releases", "download",
+      "https://github.com",
+      "geomarker-io",
+      "appc",
+      "releases",
+      "download",
       merra_release,
       "merra_{merra_year}.rds",
       .sep = "/"
@@ -101,14 +111,25 @@ install_merra_data <- function(merra_year = as.character(2017:2024), merra_relea
     utils::download.file(dl_url, dest_file, quiet = FALSE, mode = "wb")
     return(as.character(dest_file))
   }
-  date_seq <- seq(as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
+  date_seq <- seq(
+    as.Date(paste(c(merra_year, "01", "01"), collapse = "-")),
     as.Date(paste(c(merra_year, "12", "31"), collapse = "-")),
     by = 1
   )
-  message(glue::glue("downloading and subsetting daily MERRA files for {merra_year}"))
+  message(glue::glue(
+    "downloading and subsetting daily MERRA files for {merra_year}"
+  ))
   # takes a long time, so cache intermediate daily downloads and extractions
-  rlang::check_installed("mappp", "to cache the processing of daily MERRA files.")
-  merra_data <- mappp::mappp(date_seq, create_daily_merra_data, cache = TRUE, cache_name = "merra_cache")
+  rlang::check_installed(
+    "mappp",
+    "to cache the processing of daily MERRA files."
+  )
+  merra_data <- mappp::mappp(
+    date_seq,
+    create_daily_merra_data,
+    cache = TRUE,
+    cache_name = "merra_cache"
+  )
   names(merra_data) <- date_seq
   tibble::enframe(merra_data, name = "date") |>
     dplyr::mutate(date = as.Date(date)) |>
@@ -124,33 +145,53 @@ install_merra_data <- function(merra_year = as.character(2017:2024), merra_relea
 #' @rdname get_merra_data
 create_daily_merra_data <- function(merra_date) {
   rlang::check_installed("tidync", "to read daily MERRA files.")
-  rlang::check_installed("dotenv", "to read Earthdata credentials; see Details.")
+  rlang::check_installed(
+    "dotenv",
+    "to read Earthdata credentials; see Details."
+  )
   the_date <- as.Date(merra_date)
   if (file.exists(".env")) dotenv::load_dot_env()
-  earthdata_secrets <- Sys.getenv(c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"), unset = NA)
-  if (any(is.na(earthdata_secrets))) stop("EARTHDATA_USERNAME or EARTHDATA_PASSWORD environment variables are unset", call. = FALSE)
+  earthdata_secrets <- Sys.getenv(
+    c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"),
+    unset = NA
+  )
+  if (any(is.na(earthdata_secrets)))
+    stop(
+      "EARTHDATA_USERNAME or EARTHDATA_PASSWORD environment variables are unset",
+      call. = FALSE
+    )
   tf <- tempfile(fileext = ".nc4")
   req_url <-
-    fs::path("https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
+    fs::path(
+      "https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
       "M2T1NXAER.5.12.4",
       format(the_date, "%Y"),
       format(the_date, "%m"),
       paste0("MERRA2_400.tavg1_2d_aer_Nx.", format(the_date, "%Y%m%d")),
       ext = "nc4"
     )
-  if ((format(the_date, "%Y") == "2020" & format(the_date, "%m") == "09") ||
-    (format(the_date, "%Y") == "2021" & format(the_date, "%m") %in% c("06", "07", "08", "09"))) {
+  if (
+    (format(the_date, "%Y") == "2020" & format(the_date, "%m") == "09") ||
+      (format(the_date, "%Y") == "2021" &
+        format(the_date, "%m") %in% c("06", "07", "08", "09"))
+  ) {
     req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
   }
   resp <-
     httr::GET(
       req_url,
-      httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"])
+      httr::authenticate(
+        user = earthdata_secrets["EARTHDATA_USERNAME"],
+        password = earthdata_secrets["EARTHDATA_PASSWORD"]
+      )
     )
 
   httr::GET(
     resp$url,
-    httr::authenticate(user = earthdata_secrets["EARTHDATA_USERNAME"], password = earthdata_secrets["EARTHDATA_PASSWORD"]),
+    httr::authenticate(
+      user = earthdata_secrets["EARTHDATA_USERNAME"],
+      password = earthdata_secrets["EARTHDATA_PASSWORD"]
+    ),
     ## httr::progress(),
     httr::write_disk(tf, overwrite = TRUE)
   )
@@ -161,8 +202,13 @@ create_daily_merra_data <- function(merra_date) {
       lat = lat > 24.7669 & lat < 49.89,
       lon = lon > -126.4746 & lon < -66.4453
     ) |>
-    tidync::hyper_tibble(select_var = c("DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25", "SO4SMASS")) |>
-    dplyr::mutate(dplyr::across(c(DUSMASS25, OCSMASS, BCSMASS, SSSMASS25, SO4SMASS), \(.) . * 1e9)) |>
+    tidync::hyper_tibble(
+      select_var = c("DUSMASS25", "OCSMASS", "BCSMASS", "SSSMASS25", "SO4SMASS")
+    ) |>
+    dplyr::mutate(dplyr::across(
+      c(DUSMASS25, OCSMASS, BCSMASS, SSSMASS25, SO4SMASS),
+      \(.) . * 1e9
+    )) |>
     dplyr::rename(
       merra_dust = DUSMASS25,
       merra_oc = OCSMASS,
@@ -170,9 +216,18 @@ create_daily_merra_data <- function(merra_date) {
       merra_ss = SSSMASS25,
       merra_so4 = SO4SMASS
     ) |>
-    dplyr::mutate(merra_pm25 = merra_dust + merra_oc + merra_bc + merra_ss + (merra_so4 * 132.14 / 96.06)) |>
+    dplyr::mutate(
+      merra_pm25 = merra_dust +
+        merra_oc +
+        merra_bc +
+        merra_ss +
+        (merra_so4 * 132.14 / 96.06)
+    ) |>
     dplyr::group_by(lon, lat) |>
-    dplyr::summarize(dplyr::across(dplyr::starts_with("merra"), mean), .groups = "drop") |>
+    dplyr::summarize(
+      dplyr::across(dplyr::starts_with("merra"), mean),
+      .groups = "drop"
+    ) |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>
     dplyr::select(-lon, -lat)
   return(out)

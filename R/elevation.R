@@ -16,7 +16,10 @@ get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
   x_vect <-
     tibble::tibble(
       s2 = unique(x),
-      s2_geography = s2::s2_buffer_cells(s2::s2_cell_to_lnglat(s2), distance = buffer)
+      s2_geography = s2::s2_buffer_cells(
+        s2::s2_cell_to_lnglat(s2),
+        distance = buffer
+      )
     ) |>
     sf::st_as_sf() |>
     terra::vect() |>
@@ -34,11 +37,16 @@ get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
 #' @rdname get_elevation_summary
 #' @export
 install_elevation_data <- function() {
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), "PRISM_us_dem_800m_bil.bil")
+  dest_file <- fs::path(
+    tools::R_user_dir("appc", "data"),
+    "PRISM_us_dem_800m_bil.bil"
+  )
   if (fs::file_exists(dest_file)) return(dest_file)
   elevation_zip <- tempfile("elevation", fileext = ".zip")
-  utils::download.file("https://prism.oregonstate.edu/downloads/data/PRISM_us_dem_800m_bil.zip",
-    destfile = elevation_zip, mode = "wb"
+  utils::download.file(
+    "https://prism.oregonstate.edu/downloads/data/PRISM_us_dem_800m_bil.zip",
+    destfile = elevation_zip,
+    mode = "wb"
   )
   utils::unzip(elevation_zip, exdir = tools::R_user_dir("appc", "data"))
   return(dest_file)

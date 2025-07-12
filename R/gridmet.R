@@ -34,7 +34,21 @@
 #' )
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "tmmx")
 #' get_gridmet_data(x = s2::as_s2_cell(names(d)), dates = d, gridmet_var = "pr")
-get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph")) {
+get_gridmet_data <- function(
+  x,
+  dates,
+  gridmet_var = c(
+    "tmmx",
+    "tmmn",
+    "pr",
+    "srad",
+    "vs",
+    "th",
+    "rmax",
+    "rmin",
+    "sph"
+  )
+) {
   check_s2_dates(x, dates, check_date_min = "1979-01-01", check_date_max = NULL)
   gridmet_var <- rlang::arg_match(gridmet_var)
   gridmet_years <-
@@ -47,7 +61,9 @@ get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "sr
     unique()
   gridmet_raster <-
     gridmet_years |>
-    purrr::map_chr(\(.) install_gridmet_data(gridmet_var = gridmet_var, gridmet_year = .)) |>
+    purrr::map_chr(
+      \(.) install_gridmet_data(gridmet_var = gridmet_var, gridmet_year = .)
+    ) |>
     purrr::map(terra::rast) |>
     purrr::map2(gridmet_years, \(.x, .y) {
       stats::setNames(
@@ -75,16 +91,33 @@ get_gridmet_data <- function(x, dates, gridmet_var = c("tmmx", "tmmn", "pr", "sr
 #' @return for `install_gridmet_data()`, a character string path to gridMET raster data
 #' @export
 #' @rdname get_gridmet_data
-install_gridmet_data <- function(gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph"),
-                                 gridmet_year = as.character(1979:format(Sys.Date(), "%Y"))) {
+install_gridmet_data <- function(
+  gridmet_var = c(
+    "tmmx",
+    "tmmn",
+    "pr",
+    "srad",
+    "vs",
+    "th",
+    "rmax",
+    "rmin",
+    "sph"
+  ),
+  gridmet_year = as.character(1979:format(Sys.Date(), "%Y"))
+) {
   gridmet_var <- rlang::arg_match(gridmet_var)
   gridmet_year <- rlang::arg_match(gridmet_year)
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("gridmet_{gridmet_var}_{gridmet_year}.nc"))
+  dest_file <- fs::path(
+    tools::R_user_dir("appc", "data"),
+    glue::glue("gridmet_{gridmet_var}_{gridmet_year}.nc")
+  )
   if (file.exists(dest_file)) {
     return(dest_file)
   }
   message(glue::glue("downloading {gridmet_year} {gridmet_var}:"))
-  glue::glue("https://www.northwestknowledge.net/metdata/data/{gridmet_var}_{gridmet_year}.nc") |>
+  glue::glue(
+    "https://www.northwestknowledge.net/metdata/data/{gridmet_var}_{gridmet_year}.nc"
+  ) |>
     utils::download.file(destfile = dest_file, mode = "wb")
   return(dest_file)
 }
