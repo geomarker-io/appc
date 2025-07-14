@@ -16,7 +16,7 @@
 #' GitHub data binary.
 #'   - An [Earthdata account linked with
 #' permissions for GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) is required.
-#' The `EARTHDATA_USERNAME` and `EARTHDATA_PASSWORD` must be set. If
+#' The `EARTHDATA_USER` and `EARTHDATA_PASSWORD` must be set. If
 #' a `.env` file is present, environment variables will be loaded
 #' using the dotenv package.
 #'   - Set a proxy to be used by all httr calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`
@@ -152,12 +152,12 @@ create_daily_merra_data <- function(merra_date) {
   the_date <- as.Date(merra_date)
   if (file.exists(".env")) dotenv::load_dot_env()
   earthdata_secrets <- Sys.getenv(
-    c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"),
+    c("EARTHDATA_USER", "EARTHDATA_PASSWORD"),
     unset = NA
   )
   if (any(is.na(earthdata_secrets)))
     stop(
-      "EARTHDATA_USERNAME or EARTHDATA_PASSWORD environment variables are unset",
+      "EARTHDATA_USER or EARTHDATA_PASSWORD environment variables are unset",
       call. = FALSE
     )
   tf <- tempfile(fileext = ".nc4")
@@ -181,7 +181,7 @@ create_daily_merra_data <- function(merra_date) {
     httr::GET(
       req_url,
       httr::authenticate(
-        user = earthdata_secrets["EARTHDATA_USERNAME"],
+        user = earthdata_secrets["EARTHDATA_USER"],
         password = earthdata_secrets["EARTHDATA_PASSWORD"]
       )
     )
@@ -189,7 +189,7 @@ create_daily_merra_data <- function(merra_date) {
   httr::GET(
     resp$url,
     httr::authenticate(
-      user = earthdata_secrets["EARTHDATA_USERNAME"],
+      user = earthdata_secrets["EARTHDATA_USER"],
       password = earthdata_secrets["EARTHDATA_PASSWORD"]
     ),
     ## httr::progress(),

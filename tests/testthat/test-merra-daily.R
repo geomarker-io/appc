@@ -1,6 +1,6 @@
 if (file.exists(".env")) dotenv::load_dot_env()
 earthdata_secrets <- Sys.getenv(
-  c("EARTHDATA_USERNAME", "EARTHDATA_PASSWORD"),
+  c("EARTHDATA_USER", "EARTHDATA_PASSWORD"),
   unset = NA
 )
 skip_if(

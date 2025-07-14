@@ -56,7 +56,7 @@ to any non-empty value to install MERRA-2 directly from their sources instead of
 GitHub data binary.
 \itemize{
 \item An \href{https://disc.gsfc.nasa.gov/information/documents?title=Data\%20Access}{Earthdata account linked with permissions for GES DISC} is required.
-The \code{EARTHDATA_USERNAME} and \code{EARTHDATA_PASSWORD} must be set. If
+The \code{EARTHDATA_USER} and \code{EARTHDATA_PASSWORD} must be set. If
 a \code{.env} file is present, environment variables will be loaded
 using the dotenv package.
 \item Set a proxy to be used by all httr calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}
