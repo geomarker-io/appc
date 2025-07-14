@@ -111,7 +111,7 @@ check_s2_dates <- function(
         stop("all dates must be later than `check_date_min`", call. = FALSE)
     }
     if (!is.null(check_date_max)) {
-      if (!all(lapply(dates, max) < as.Date(check_date_max)))
+      if (!all(lapply(dates, max) <= as.Date(check_date_max)))
         stop("all dates must be earlier than `check_date_max", call. = FALSE)
     }
   }
