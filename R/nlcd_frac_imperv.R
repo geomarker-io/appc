@@ -86,6 +86,6 @@ install_nlcd_frac_imperv_data <- function(nlcd_year = as.character(2025:2017)) {
   )
   tf <- tempfile()
   utils::download.file(dl_url, tf)
-  unzip(tf, exdir = fs::path_dir(dest_path))
+  utils::unzip(tf, exdir = fs::path_dir(dest_path))
   return(dest_path)
 }
