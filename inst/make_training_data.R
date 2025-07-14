@@ -21,6 +21,11 @@ d <-
   ) |>
   purrr::pmap(get_daily_aqs)
 
+message(
+  "latest available AQS PM2.5 measurements: ",
+  max(dplyr::bind_rows(d)$date)
+)
+
 # structure for pipeline
 d <-
   d |>

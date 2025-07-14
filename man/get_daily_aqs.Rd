@@ -32,6 +32,7 @@ s2 location, the average measurement is returned, ensuring unique measurements f
 Note: Historical measurements are subject to change and the EPA AQS website only stores
 the latest versions.  Since this function always downloads the latest data from EPA AQS,
 that means that it will could different results depending on the date it was run.
+Similarly, the most recent year might not contain measurements for the entire calendar year.
 
 Get all the files on the page and the date they were last updated:
 \code{readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")}
