@@ -90,10 +90,6 @@ install_traffic <- function(traffic_release = "hpms_f123_aadt-2024-02-04") {
     utils::download.file(dl_url, dest_file, quiet = FALSE, mode = "wb")
     return(as.character(dest_file))
   }
-  # if (!install_source_preference()) {
-  #   install_released_data(released_data_name = "hpms_f123_aadt.rds")
-  #   return(as.character(out_path))
-  # }
   message("downloading and installing HPMS data from source")
   dest_path <- tempfile(fileext = ".gdb.zip")
   "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data" |>
