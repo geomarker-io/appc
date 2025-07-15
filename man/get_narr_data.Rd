@@ -15,7 +15,8 @@ get_narr_data(
 install_narr_data(
   narr_var = c("air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m",
     "vwnd.10m"),
-  narr_year = as.character(2016:2024)
+  narr_year = as.character(2016:2024),
+  force_reinstall = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ install_narr_data(
 \item{narr_var}{a character string that is the name of a NARR variable}
 
 \item{narr_year}{a character string that is the year for the NARR data}
+
+\item{force_reinstall}{logical; download data from original source instead of reusing older downloads}
 }
 \value{
 for \code{get_narr_data()}, a list of numeric vectors of NARR values (the same length as \code{x} and \code{dates})

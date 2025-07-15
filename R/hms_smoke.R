@@ -52,15 +52,17 @@ get_hms_smoke_data <- function(x, dates) {
 #' installs HMS smoke data into user's data directory for the `appc` package
 #' @param hms_smoke_start_date a date object that is the first day of hms smoke data installed
 #' @param hms_smoke_end_date a date object that is the last day of hms smoke data installed
+#' @param force_reinstall logical; download data from original source instead of reusing older downloads
 #' @return for `install_hms_smoke_data()`, a character string path to the installed RDS file
 #' @rdname get_hms_smoke_data
 #' @export
 install_hms_smoke_data <- function(
   hms_smoke_start_date = as.Date("2017-01-01"),
-  hms_smoke_end_date = as.Date("2024-12-31")
+  hms_smoke_end_date = as.Date("2024-12-31"),
+  force_reinstall = FALSE
 ) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
-  if (file.exists(dest_file)) {
+  if (file.exists(dest_file) & !force_reinstall) {
     return(as.character(dest_file))
   }
   smoke_days <- seq(hms_smoke_start_date, hms_smoke_end_date, by = 1)

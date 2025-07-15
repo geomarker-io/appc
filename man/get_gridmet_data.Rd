@@ -13,7 +13,8 @@ get_gridmet_data(
 
 install_gridmet_data(
   gridmet_var = c("tmmx", "tmmn", "pr", "srad", "vs", "th", "rmax", "rmin", "sph"),
-  gridmet_year = as.character(1979:format(Sys.Date(), "\%Y"))
+  gridmet_year = as.character(1979:format(Sys.Date(), "\%Y")),
+  force_reinstall = FALSE
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ install_gridmet_data(
 \item{gridmet_var}{a character string that is the name of a gridMET variable}
 
 \item{gridmet_year}{a character string that is the year for the gridMET data; see details}
+
+\item{force_reinstall}{logical; download data from original source instead of reusing older downloads}
 }
 \value{
 for \code{get_gridmet_data()}, a list of numeric vectors of gridMET values (the same length as \code{x} and \code{dates})

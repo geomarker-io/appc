@@ -88,6 +88,7 @@ get_gridmet_data <- function(
 }
 
 #' Installs gridMET raster data into user's data directory for the `appc` package
+#' @param force_reinstall logical; download data from original source instead of reusing older downloads
 #' @return for `install_gridmet_data()`, a character string path to gridMET raster data
 #' @export
 #' @rdname get_gridmet_data
@@ -103,7 +104,8 @@ install_gridmet_data <- function(
     "rmin",
     "sph"
   ),
-  gridmet_year = as.character(1979:format(Sys.Date(), "%Y"))
+  gridmet_year = as.character(1979:format(Sys.Date(), "%Y")),
+  force_reinstall = FALSE
 ) {
   gridmet_var <- rlang::arg_match(gridmet_var)
   gridmet_year <- rlang::arg_match(gridmet_year)
@@ -111,7 +113,7 @@ install_gridmet_data <- function(
     tools::R_user_dir("appc", "data"),
     glue::glue("gridmet_{gridmet_var}_{gridmet_year}.nc")
   )
-  if (file.exists(dest_file)) {
+  if (file.exists(dest_file) & !force_reinstall) {
     return(dest_file)
   }
   message(glue::glue("downloading {gridmet_year} {gridmet_var}:"))

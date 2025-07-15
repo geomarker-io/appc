@@ -9,7 +9,8 @@ get_hms_smoke_data(x, dates)
 
 install_hms_smoke_data(
   hms_smoke_start_date = as.Date("2017-01-01"),
-  hms_smoke_end_date = as.Date("2024-12-31")
+  hms_smoke_end_date = as.Date("2024-12-31"),
+  force_reinstall = FALSE
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ install_hms_smoke_data(
 \item{hms_smoke_start_date}{a date object that is the first day of hms smoke data installed}
 
 \item{hms_smoke_end_date}{a date object that is the last day of hms smoke data installed}
+
+\item{force_reinstall}{logical; download data from original source instead of reusing older downloads}
 }
 \value{
 for \code{get_hms_smoke_data()}, a list of numeric vectors of smoke plume scores (the same length as \code{x} and \code{dates})
