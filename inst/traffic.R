@@ -67,7 +67,7 @@ get_traffic_summary <- function(
 #' `install_traffic()` installs traffic data into user's data directory for the `appc` package
 #' @rdname get_traffic_summary
 #' @export
-install_traffic <- function() {
+install_traffic <- function(traffic_release = "hpms_f123_aadt-2024-02-04") {
   out_path <- fs::path(
     tools::R_user_dir("appc", "data"),
     "hpms_f123_aadt",
@@ -77,9 +77,23 @@ install_traffic <- function() {
     return(out_path)
   }
   if (!install_source_preference()) {
-    install_released_data(released_data_name = "hpms_f123_aadt.rds")
-    return(as.character(out_path))
+    dl_url <- glue::glue(
+      "https://github.com",
+      "geomarker-io",
+      "appc",
+      "releases",
+      "download",
+      traffic_release,
+      "hpms_f123_aadt.rds",
+      .sep = "/"
+    )
+    utils::download.file(dl_url, dest_file, quiet = FALSE, mode = "wb")
+    return(as.character(dest_file))
   }
+  # if (!install_source_preference()) {
+  #   install_released_data(released_data_name = "hpms_f123_aadt.rds")
+  #   return(as.character(out_path))
+  # }
   message("downloading and installing HPMS data from source")
   dest_path <- tempfile(fileext = ".gdb.zip")
   "https://www.arcgis.com/sharing/rest/content/items/c199f2799b724ffbacf4cafe3ee03e55/data" |>
