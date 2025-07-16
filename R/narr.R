@@ -56,6 +56,7 @@ get_narr_data <- function(
 }
 
 #' Installs NARR raster data into user's data directory for the `appc` package
+#' @param force_reinstall logical; download data from original source instead of reusing older downloads
 #' @return for `install_narr_data()`, a character string path to NARR raster data
 #' @export
 #' @rdname get_narr_data
@@ -70,7 +71,8 @@ install_narr_data <- function(
     "uwnd.10m",
     "vwnd.10m"
   ),
-  narr_year = as.character(2016:2024)
+  narr_year = as.character(2016:2024),
+  force_reinstall = FALSE
 ) {
   narr_var <- rlang::arg_match(narr_var)
   narr_year <- rlang::arg_match(narr_year)
@@ -78,7 +80,7 @@ install_narr_data <- function(
     tools::R_user_dir("appc", "data"),
     glue::glue("narr_{narr_var}_{narr_year}.nc")
   )
-  if (file.exists(dest_file)) return(dest_file)
+  if (file.exists(dest_file) & !force_reinstall) return(dest_file)
   message(glue::glue("downloading {narr_year} {narr_var}:"))
   glue::glue(
     "https://downloads.psl.noaa.gov",
