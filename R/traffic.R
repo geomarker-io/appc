@@ -12,23 +12,48 @@
 #' are used. Passenger vehicles (FHWA 1-3) are calculated as the total minus FHWA class 4-7 (single unit) and 8-13 (combo)
 #' @references <https://www.fhwa.dot.gov/policyinformation/hpms.cfm>
 #' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
-#' @references <https://www.fhwa.dot.gov/policyinformation/hpms/fieldmanual/hpms_field_manual_dec2016.pdf>
 #' @export
 #' @examples
 #' get_traffic_summary(
 #'   s2::as_s2_cell(c("8841b6abd8207619", "8841b4f6affffffb", "8841b39f07f7d899")))
+#' \notrun{
+#' # randomly sample 100 level 18 cells from s2 level-9: 8841b4
+#' # https://igorgatis.github.io/ws2/?cells=8841b4
+#' # use their centroids as the level 30 s2 cells
+#' set.seed(1)
+#' my_s2_cells <-
+#'   s2::s2_covering_cell_ids(s2::s2_cell_polygon(s2::as_s2_cell("8841b4")),
+#'                            min_level = 18, max_level = 18) |>
+#'   unlist()|>
+#'   sample(size = 100)|>
+#'   s2::s2_cell_center()|>
+#'   s2::as_s2_cell()
+#' get_traffic_summary(my_s2_cells) |>
+#'   dplyr::bind_rows()
+#' }
 get_traffic_summary <- function(x, buffer = 400) {
   check_s2_dates(x)
-  hpms <- install_traffic()
   xx <- unique(x)
 
-  x_withins <-
-    s2::s2_dwithin_matrix(
-      s2::s2_cell_center(xx),
-      hpms_state_d$s2_geography,
-      distance = buffer + 100
-    )
+  cli::cli_progress_step("reading traffic data...")
+  hpms <-
+    sf::read_sf(install_traffic(), quiet = TRUE) |>
+    dplyr::mutate(s2_geography = s2::as_s2_geography(geom)) |>
+    sf::st_drop_geometry()
 
+  cli::cli_progress_step("finding nearby roadways")
+  x_withins <- purrr::map(
+    s2::s2_cell_center(xx),
+    \(x) {
+      # cli::cli_progress_update(.envir = parent.frame(3))
+      which(s2::s2_prepared_dwithin(hpms$s2_geography, x, distance = buffer))
+    },
+    .progress = list(
+      format = "finding nearby roadways for {cli::pb_current} of {cli::pb_total} unique locations {cli::pb_eta_str}"
+    )
+  )
+
+  cli::cli_progress_step("calculating length-based traffic-length totals")
   get_intersection_aadtm <- function(the_s2, the_s2_withins) {
     hpms_withins <- hpms[the_s2_withins, ]
     lengths <- s2::s2_intersection(
@@ -41,12 +66,7 @@ get_traffic_summary <- function(x, buffer = 400) {
       aadtm_tractor_trailer = sum(hpms_withins$AADT_COMBINATION * lengths),
       aadtm_passenger = with(
         hpms_withins,
-        sum(
-          {
-            AADT - AADT_SINGLE_UNIT - AADT_COMBINATION
-          } *
-            lengths
-        )
+        sum((AADT - AADT_SINGLE_UNIT - AADT_COMBINATION) * lengths)
       )
     )
     return(out)
