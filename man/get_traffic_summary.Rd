@@ -13,6 +13,8 @@ install_traffic(traffic_release = "hpms_2020_f12_aadt-2025-07-16")
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{buffer}{distance from s2 cell (in meters) to summarize data}
+
+\item{traffic_release}{name of github release to download traffic data file from}
 }
 \value{
 a list the same length as \code{x}, which each element having a numeric vector of
@@ -30,7 +32,7 @@ are used. Passenger vehicles (FHWA 1-3) are calculated as the total minus FHWA c
 \examples{
 get_traffic_summary(
   s2::as_s2_cell(c("8841b6abd8207619", "8841b4f6affffffb", "8841b39f07f7d899")))
-\notrun{
+\dontrun{
 # randomly sample 100 level 18 cells from s2 level-9: 8841b4
 # https://igorgatis.github.io/ws2/?cells=8841b4
 # use their centroids as the level 30 s2 cells

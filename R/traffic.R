@@ -16,7 +16,7 @@
 #' @examples
 #' get_traffic_summary(
 #'   s2::as_s2_cell(c("8841b6abd8207619", "8841b4f6affffffb", "8841b39f07f7d899")))
-#' \notrun{
+#' \dontrun{
 #' # randomly sample 100 level 18 cells from s2 level-9: 8841b4
 #' # https://igorgatis.github.io/ws2/?cells=8841b4
 #' # use their centroids as the level 30 s2 cells
@@ -82,6 +82,7 @@ get_traffic_summary <- function(x, buffer = 400) {
 }
 
 #' `install_traffic()` installs pacakge released traffic data into user's data directory for the `appc` package
+#' @param traffic_release name of github release to download traffic data file from
 #' @rdname get_traffic_summary
 #' @export
 install_traffic <- function(traffic_release = "hpms_2020_f12_aadt-2025-07-16") {
