@@ -12,6 +12,7 @@
 
 utils::globalVariables(c(
   "s2",
+  "dist_to_point",
   "NAME",
   "Sample Duration",
   "Observation Percent",
