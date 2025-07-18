@@ -55,42 +55,42 @@ concentrations at exact locations on specific dates using the
 ``` r
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-  dates = list(as.Date(c("2024-05-18", "2024-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
+  dates = list(as.Date(c("2023-05-18", "2023-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
 )
 #> ℹ (down)loading random forest model
 #> loaded rf_pm_v0 in 9s
-#> ✔ (down)loading random forest model [9.3s]
+#> ✔ (down)loading random forest model [9.1s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [65ms]
+#> ✔ checking that s2 are within the contiguous US [54ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [1.8s]
+#> ✔ adding coordinates [4s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [991ms]
+#> ✔ adding HMS smoke data [926ms]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [928ms]
+#> ✔ adding NARR [464ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [834ms]
+#> ✔ adding gridMET [435ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [1.2s]
+#> ✔ adding MERRA [549ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [22ms]
+#> ✔ adding time components [24ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  6.89   1.02 
-#> 2  5.54   0.628
+#> 1  7.76   0.837
+#> 2 14.9    1.68 
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
@@ -136,9 +136,8 @@ themselves. View information and options about each geomarker:
 | 🔥 wildfire smoke | `get_hms_smoke_data()` |
 | 🗻 elevation | `get_elevation_summary()` |
 | 🏙 land cover | `get_nlcd_frac_imperv()` |
-
-Currently, `get_traffic()`, and `get_nei_point_summary()` are stashed in
-the `/inst` folder and are not integrated into this package.
+| 🚦 traffic | `get_traffic_summary()` |
+| 🏭 emissions | `get_nei_point_summary()` |
 
 ## Installing Geomarker Data Sources
 
