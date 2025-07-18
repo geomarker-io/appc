@@ -9,10 +9,10 @@
 #' @return for `get_nei_point_summary()`, a numeric vector (the same length as `x`)
 #' @references <https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei>
 #' @references <https://www.epa.gov/air-emissions-inventories/2020-national-emissions-inventory-nei-technical-support-document-tsd>
+#' @details The full NEI is conducted every three years, with the latest release being 2020.
 #' @export
 #' @examples
-#' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2020")
-#' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")), year = "2017")
+#' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
 get_nei_point_summary <- function(
   x,
   year = c("2020", "2017"),
@@ -44,7 +44,7 @@ get_nei_point_summary <- function(
     summarize_emissions,
     .progress = "summarizing intersections"
   )
-  # TODO set names of output object?
+  names(nei_pollutant_id2w) <- as.character(x)
   return(nei_pollutant_id2w)
 }
 
@@ -69,10 +69,6 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
   if (file.exists(dest_file)) {
     return(dest_file)
   }
-  if (!install_source_preference()) {
-    install_released_data(released_data_name = glue::glue("nei_{year}.rds"))
-    return(as.character(dest_file))
-  }
   message(glue::glue("downloading {year} NEI file"))
   zip_path <- fs::path(tempdir(), glue::glue("nei_{year}.zip"))
   dl_url <-
@@ -82,7 +78,23 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
       year == "2017" ~
         "https://gaftp.epa.gov/air/nei/2017/data_summaries/2017v1/2017neiJan_facility.zip"
     )
-  utils::download.file(dl_url, zip_path, quiet = FALSE, mode = "wb")
+  if (grepl("linux", R.version$os, ignore.case = TRUE)) {
+    utils::download.file(
+      dl_url,
+      zip_path,
+      quiet = FALSE,
+      mode = "wb",
+      method = "wget",
+      extra = "--no-check-certificate"
+    )
+  } else {
+    utils::download.file(
+      dl_url,
+      zip_path,
+      quiet = FALSE,
+      mode = "wb"
+    )
+  }
   nei_raw_paths <- utils::unzip(zip_path, exdir = tempdir())
   grep(".csv", nei_raw_paths, fixed = TRUE, value = TRUE) |>
     readr::read_csv(
@@ -91,7 +103,6 @@ install_nei_point_data <- function(year = c("2020", "2017")) {
         `site longitude` = readr::col_double(),
         `pollutant code` = readr::col_character(),
         `total emissions` = readr::col_double(),
-        `emissions uom` = readr::col_character()
       )
     ) |>
     dplyr::filter(

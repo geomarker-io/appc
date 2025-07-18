@@ -12,6 +12,7 @@
 
 utils::globalVariables(c(
   "s2",
+  "dist_to_point",
   "NAME",
   "Sample Duration",
   "Observation Percent",
@@ -150,22 +151,4 @@ install_source_preference <- function() {
     getOption("appc_install_data_from_source", "") != "",
     Sys.getenv("APPC_INSTALL_DATA_FROM_SOURCE", "") != ""
   )
-}
-
-install_released_data <- function(
-  released_data_name,
-  package_version = utils::packageVersion("appc")
-) {
-  dest_file <- fs::path(tools::R_user_dir("appc", "data"), released_data_name)
-  dl_url <- glue::glue(
-    "https://github.com",
-    "geomarker-io",
-    "appc",
-    "releases",
-    "download",
-    "v{package_version}",
-    released_data_name,
-    .sep = "/"
-  )
-  utils::download.file(dl_url, dest_file, quiet = FALSE, mode = "wb")
 }
