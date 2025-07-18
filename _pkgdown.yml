@@ -2,23 +2,24 @@ url: http://geomarker.io/appc/
 template:
   bootstrap: 5
 reference:
-- title: Geomarker assessment
-  contents:
-  - get_elevation_summary
-  - get_gridmet_data
-  - get_narr_data
-  - get_merra_data
-  - get_hms_smoke_data
-  - get_nlcd_frac_imperv
-- title: Air pollution assessment
-  contents:
-  - predict_pm25
-  - predict_pm25_date_range
-  - assemble_predictors
-- title: Helpers
-  contents:
-  - latlon_to_s2_cell
-  - get_daily_aqs
-  - get_closest_year
-  - appc_clean_data_directory
-
+  - title: Geomarker assessment
+    contents:
+      - get_elevation_summary
+      - get_gridmet_data
+      - get_narr_data
+      - get_merra_data
+      - get_hms_smoke_data
+      - get_nlcd_frac_imperv
+      - get_nei_point_summary
+      - get_traffic_summary
+  - title: Air pollution assessment
+    contents:
+      - predict_pm25
+      - predict_pm25_date_range
+      - assemble_predictors
+  - title: Helpers
+    contents:
+      - latlon_to_s2_cell
+      - get_daily_aqs
+      - get_closest_year
+      - appc_clean_data_directory

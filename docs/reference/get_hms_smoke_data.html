@@ -69,7 +69,8 @@ can cover one another, the total smoke plume exposure is estimated as the weight
 <span></span>
 <span><span class="fu">install_hms_smoke_data</span><span class="op">(</span></span>
 <span>  hms_smoke_start_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2017-01-01"</span><span class="op">)</span>,</span>
-<span>  hms_smoke_end_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2024-12-31"</span><span class="op">)</span></span>
+<span>  hms_smoke_end_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2024-12-31"</span><span class="op">)</span>,</span>
+<span>  force_reinstall <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,6 +90,10 @@ can cover one another, the total smoke plume exposure is estimated as the weight
 
 <dt>hms_smoke_end_date</dt>
 <dd><p>a date object that is the last day of hms smoke data installed</p></dd>
+
+
+<dt>force_reinstall</dt>
+<dd><p>logical; download data from original source instead of reusing older downloads</p></dd>
 
 </dl></div>
     <div class="section level2">

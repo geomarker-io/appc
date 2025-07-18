@@ -69,7 +69,8 @@ Installs NARR raster data into user's data directory for the appc package"><!-- 
 <span><span class="fu">install_narr_data</span><span class="op">(</span></span>
 <span>  narr_var <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"air.2m"</span>, <span class="st">"hpbl"</span>, <span class="st">"acpcp"</span>, <span class="st">"rhum.2m"</span>, <span class="st">"vis"</span>, <span class="st">"pres.sfc"</span>, <span class="st">"uwnd.10m"</span>,</span>
 <span>    <span class="st">"vwnd.10m"</span><span class="op">)</span>,</span>
-<span>  narr_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fl">2016</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span></span>
+<span>  narr_year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fl">2016</span><span class="op">:</span><span class="fl">2024</span><span class="op">)</span>,</span>
+<span>  force_reinstall <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -89,6 +90,10 @@ Installs NARR raster data into user's data directory for the appc package"><!-- 
 
 <dt>narr_year</dt>
 <dd><p>a character string that is the year for the NARR data</p></dd>
+
+
+<dt>force_reinstall</dt>
+<dd><p>logical; download data from original source instead of reusing older downloads</p></dd>
 
 </dl></div>
     <div class="section level2">

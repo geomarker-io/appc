@@ -126,7 +126,7 @@ the formula in <a href="https://gmao.gsfc.nasa.gov/reanalysis/MERRA-2/FAQ/#Q4" c
 <li><p>Set options("appc_install_data_from_source"), or the environment variable <code>APPC_INSTALL_DATA_FROM_SOURCE</code>
 to any non-empty value to install MERRA-2 directly from their sources instead of using the released
 GitHub data binary.</p><ul><li><p>An <a href="https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access" class="external-link">Earthdata account linked with permissions for GES DISC</a> is required.
-The <code>EARTHDATA_USERNAME</code> and <code>EARTHDATA_PASSWORD</code> must be set. If
+The <code>EARTHDATA_USER</code> and <code>EARTHDATA_PASSWORD</code> must be set. If
 a <code>.env</code> file is present, environment variables will be loaded
 using the dotenv package.</p></li>
 <li><p>Set a proxy to be used by all httr calls in the merra functions with <code>httr::set_config(httr::use_proxy( ... ))</code></p></li>

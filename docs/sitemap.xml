@@ -67,7 +67,13 @@
     <loc>http://geomarker.io/appc/reference/get_narr_data.html</loc>
   </url>
   <url>
+    <loc>http://geomarker.io/appc/reference/get_nei_point_summary.html</loc>
+  </url>
+  <url>
     <loc>http://geomarker.io/appc/reference/get_nlcd_frac_imperv.html</loc>
+  </url>
+  <url>
+    <loc>http://geomarker.io/appc/reference/get_traffic_summary.html</loc>
   </url>
   <url>
     <loc>http://geomarker.io/appc/reference/index.html</loc>

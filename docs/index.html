@@ -94,42 +94,42 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">appc</span><span class="fu">::</span><span class="fu"><a href="reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b39a7c46e25f"</span>, <span class="st">"8841a45555555555"</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2024-05-18"</span>, <span class="st">"2024-06-10"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-05-18"</span>, <span class="st">"2023-06-10"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-22"</span>, <span class="st">"2023-08-15"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ (down)loading random forest model</span></span>
 <span><span class="co">#&gt; loaded rf_pm_v0 in 9s</span></span>
-<span><span class="co">#&gt; ✔ (down)loading random forest model [9.3s]</span></span>
+<span><span class="co">#&gt; ✔ (down)loading random forest model [9.1s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ checking that s2 are within the contiguous US</span></span>
-<span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [65ms]</span></span>
+<span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [54ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding coordinates</span></span>
-<span><span class="co">#&gt; ✔ adding coordinates [1.8s]</span></span>
+<span><span class="co">#&gt; ✔ adding coordinates [4s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding elevation</span></span>
 <span><span class="co">#&gt; ✔ adding elevation [1.4s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding HMS smoke data</span></span>
-<span><span class="co">#&gt; ✔ adding HMS smoke data [991ms]</span></span>
+<span><span class="co">#&gt; ✔ adding HMS smoke data [926ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding NARR</span></span>
-<span><span class="co">#&gt; ✔ adding NARR [928ms]</span></span>
+<span><span class="co">#&gt; ✔ adding NARR [464ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding gridMET</span></span>
-<span><span class="co">#&gt; ✔ adding gridMET [834ms]</span></span>
+<span><span class="co">#&gt; ✔ adding gridMET [435ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding MERRA</span></span>
-<span><span class="co">#&gt; ✔ adding MERRA [1.2s]</span></span>
+<span><span class="co">#&gt; ✔ adding MERRA [549ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding time components</span></span>
-<span><span class="co">#&gt; ✔ adding time components [22ms]</span></span>
+<span><span class="co">#&gt; ✔ adding time components [24ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
 <span><span class="co">#&gt;    pm25 pm25_se</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt;   &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1  6.89   1.02 </span></span>
-<span><span class="co">#&gt; 2  5.54   0.628</span></span>
+<span><span class="co">#&gt; 1  7.76   0.837</span></span>
+<span><span class="co">#&gt; 2 14.9    1.68 </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
@@ -185,9 +185,16 @@
 <td>🏙 land cover</td>
 <td><code><a href="reference/get_nlcd_frac_imperv.html">get_nlcd_frac_imperv()</a></code></td>
 </tr>
+<tr>
+<td>🚦 traffic</td>
+<td><code><a href="reference/get_traffic_summary.html">get_traffic_summary()</a></code></td>
+</tr>
+<tr>
+<td>🏭 emissions</td>
+<td><code><a href="reference/get_nei_point_summary.html">get_nei_point_summary()</a></code></td>
+</tr>
 </tbody>
 </table>
-<p>Currently, <code>get_traffic()</code>, and <code>get_nei_point_summary()</code> are stashed in the <code>/inst</code> folder and are not integrated into this package.</p>
 </div>
 <div class="section level2">
 <h2 id="installing-geomarker-data-sources">Installing Geomarker Data Sources<a class="anchor" aria-label="anchor" href="#installing-geomarker-data-sources"></a>
