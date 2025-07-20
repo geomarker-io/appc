@@ -71,7 +71,7 @@ install_narr_data <- function(
     "uwnd.10m",
     "vwnd.10m"
   ),
-  narr_year = as.character(2016:2024),
+  narr_year = as.character(2016:2025),
   force_reinstall = FALSE
 ) {
   narr_var <- rlang::arg_match(narr_var)

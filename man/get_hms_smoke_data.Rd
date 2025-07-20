@@ -9,7 +9,7 @@ get_hms_smoke_data(x, dates)
 
 install_hms_smoke_data(
   hms_smoke_start_date = as.Date("2017-01-01"),
-  hms_smoke_end_date = as.Date("2024-12-31"),
+  hms_smoke_end_date = as.Date("2024-07-19"),
   force_reinstall = FALSE
 )
 }
