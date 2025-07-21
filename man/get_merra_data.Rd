@@ -6,11 +6,11 @@
 \alias{create_daily_merra_data}
 \title{Get MERRA-2 aerosol diagnostics data}
 \usage{
-get_merra_data(x, dates, merra_release = "merra-2025-01-02")
+get_merra_data(x, dates, merra_release = "merra-2025-07-19")
 
 install_merra_data(
-  merra_year = as.character(2017:2024),
-  merra_release = "merra-2025-01-02"
+  merra_year = as.character(2017:2025),
+  merra_release = "merra-2025-07-19"
 )
 
 create_daily_merra_data(merra_date)
@@ -59,7 +59,8 @@ GitHub data binary.
 The \code{EARTHDATA_USER} and \code{EARTHDATA_PASSWORD} must be set. If
 a \code{.env} file is present, environment variables will be loaded
 using the dotenv package.
-\item Set a proxy to be used by all httr calls in the merra functions with \code{httr::set_config(httr::use_proxy( ... ))}
+\item Under the hood, appc creates a secure netrc file for earthdata.nasa.gov using the provided credentials
+and uses httr2 package to download eathdata files with curl
 }
 }
 }
