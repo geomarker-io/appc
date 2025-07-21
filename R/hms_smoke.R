@@ -58,7 +58,7 @@ get_hms_smoke_data <- function(x, dates) {
 #' @export
 install_hms_smoke_data <- function(
   hms_smoke_start_date = as.Date("2017-01-01"),
-  hms_smoke_end_date = as.Date("2024-07-19"),
+  hms_smoke_end_date = as.Date("2025-07-19"),
   force_reinstall = FALSE
 ) {
   dest_file <- fs::path(tools::R_user_dir("appc", "data"), "hms_smoke.rds")
