@@ -18,7 +18,7 @@ Imports:
     fs,
     glue,
     grf,
-    httr,
+    httr2,
     purrr,
     qs,
     rlang,
