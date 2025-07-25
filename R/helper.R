@@ -5,7 +5,7 @@
     showWarnings = FALSE
   )
   options(
-    timeout = max(2500, getOption("timeout")),
+    timeout = max(5000, getOption("timeout")),
     download.file.method = "libcurl"
   )
 }

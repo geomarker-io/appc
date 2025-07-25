@@ -19,7 +19,8 @@
 #' The `EARTHDATA_USER` and `EARTHDATA_PASSWORD` must be set. If
 #' a `.env` file is present, environment variables will be loaded
 #' using the dotenv package.
-#'   - Set a proxy to be used by all httr calls in the merra functions with `httr::set_config(httr::use_proxy( ... ))`
+#'   - Under the hood, appc creates a secure netrc file for earthdata.nasa.gov using the provided credentials
+#'     and uses httr2 package to download eathdata files with curl
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the MERRA data, must be the same length as `x`
 #' @param merra_year a character string that is the year for the merra data
@@ -36,7 +37,7 @@
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-get_merra_data <- function(x, dates, merra_release = "merra-2025-01-02") {
+get_merra_data <- function(x, dates, merra_release = "merra-2025-07-19") {
   check_s2_dates(x, dates)
   d_merra <-
     dates |>
@@ -85,8 +86,8 @@ get_merra_data <- function(x, dates, merra_release = "merra-2025-01-02") {
 #' @export
 #' @rdname get_merra_data
 install_merra_data <- function(
-  merra_year = as.character(2017:2024),
-  merra_release = "merra-2025-01-02"
+  merra_year = as.character(2017:2025),
+  merra_release = "merra-2025-07-19"
 ) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(
@@ -177,24 +178,43 @@ create_daily_merra_data <- function(merra_date) {
   ) {
     req_url <- gsub("MERRA2_400.", "MERRA2_401.", req_url, fixed = TRUE)
   }
-  resp <-
-    httr::GET(
-      req_url,
-      httr::authenticate(
-        user = earthdata_secrets["EARTHDATA_USER"],
-        password = earthdata_secrets["EARTHDATA_PASSWORD"]
-      )
-    )
 
-  httr::GET(
-    resp$url,
-    httr::authenticate(
-      user = earthdata_secrets["EARTHDATA_USER"],
-      password = earthdata_secrets["EARTHDATA_PASSWORD"]
-    ),
-    ## httr::progress(),
-    httr::write_disk(tf, overwrite = TRUE)
+  secure_netrc <- list(
+    user = earthdata_secrets["EARTHDATA_USER"],
+    pass = earthdata_secrets["EARTHDATA_PASSWORD"],
+    netrc = fs::path(tools::R_user_dir("appc", "cache"), ".netrc"),
+    cookie = fs::path(tools::R_user_dir("appc", "cache"), ".urs_cookies")
   )
+
+  dir.create(tools::R_user_dir("appc", "cache"), showWarnings = FALSE)
+
+  with(
+    secure_netrc,
+    {
+      writeLines(
+        paste(
+          "machine urs.earthdata.nasa.gov",
+          "login",
+          user,
+          "password",
+          pass
+        ),
+        netrc
+      )
+      Sys.chmod(netrc, mode = "600")
+      if (!file.exists(cookie)) file.create(cookie)
+    }
+  )
+
+  httr2::request(req_url) |>
+    httr2::req_options(
+      netrc = 1L,
+      netrc_file = secure_netrc$netrc,
+      cookiefile = secure_netrc$cookie,
+      cookiejar = secure_netrc$cookie
+    ) |>
+    # httr2::req_progress() |>
+    httr2::req_perform(path = tf)
 
   out <-
     tidync::tidync(tf) |>
