@@ -64,7 +64,17 @@ utils::globalVariables(c(
   "temperature_min",
   "wind_direction",
   "wind_speed",
-  "geom"
+  "geom",
+  "arithmetic_mean",
+  "county_code",
+  "date_local",
+  "latitude",
+  "longitude",
+  "observation_percent",
+  "sample_duration",
+  "site_number",
+  "state_code",
+  "validity_indicator"
 ))
 
 #' Get the closest years to a vector of dates
