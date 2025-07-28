@@ -26,6 +26,8 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
       EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+      AQS_DATA_MART_API_EMAIL: ${{ secrets.AQS_DATA_MART_API_EMAIL }}
+      AQS_DATA_MART_API_KEY: ${{ secrets.AQS_DATA_MART_API_KEY }}
       R_KEEP_PKG_SOURCE: yes
 
     steps:
