@@ -135,6 +135,7 @@ install_merra_data <- function(
   tibble::enframe(merra_data, name = "date") |>
     dplyr::mutate(date = as.Date(date)) |>
     tidyr::unnest(cols = c(value)) |>
+    stats::na.omit() |> # remove dates that weren't available to be downloaded
     saveRDS(dest_file)
   return(as.character(dest_file))
 }
