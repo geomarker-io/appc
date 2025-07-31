@@ -118,7 +118,8 @@ install_gridmet_data <- function(
   }
   message(glue::glue("downloading {gridmet_year} {gridmet_var}:"))
   glue::glue(
-    "https://www.northwestknowledge.net/metdata/data/{gridmet_var}_{gridmet_year}.nc"
+    # "https://www.northwestknowledge.net/metdata/data/{gridmet_var}_{gridmet_year}.nc"
+    "http://thredds.northwestknowledge.net:8080/thredds/fileServer/MET/{gridmet_var}/{gridmet_var}_{gridmet_year}.nc"
   ) |>
     utils::download.file(destfile = dest_file, mode = "wb")
   return(dest_file)
