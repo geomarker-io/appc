@@ -12,30 +12,26 @@ message("using appc, version ", packageVersion("appc"))
 
 cli::cli_progress_step("creating AQS training data")
 
-# get AQS data
 d <-
-  tidyr::expand_grid(
-    ## pollutant = c("pm25", "ozone", "no2"),
-    pollutant = "pm25",
-    year = as.character(2017:2024)
-  ) |>
-  purrr::pmap(get_daily_aqs)
+  purrr::map(as.character(2017:2025), install_aqs) |>
+  purrr::map(readRDS) |>
+  dplyr::bind_rows() |>
+  dplyr::mutate(date = as.Date(date)) |>
+  summarize(pm25 = mean(conc), .by = c(s2, date))
 
 message(
   "latest available AQS PM2.5 measurements: ",
-  max(dplyr::bind_rows(d)$date)
+  max(d$date)
 )
 
 # structure for pipeline
 d <-
   d |>
-  purrr::list_rbind() |>
-  dplyr::mutate(dplyr::across(c(pollutant), as.factor)) |>
-  dplyr::nest_by(s2, pollutant) |>
+  nest_by(s2) |>
   dplyr::ungroup() |>
   dplyr::mutate(
     dates = purrr::map(data, "date"),
-    conc = purrr::map(data, "conc")
+    pm25 = purrr::map(data, "pm25")
   ) |>
   dplyr::select(-data)
 
@@ -51,7 +47,7 @@ cli::cli_progress_done()
 
 d_train <- assemble_predictors(x = d$s2, dates = d$dates)
 
-d_train$conc <- unlist(d$conc)
+d_train$conc <- unlist(d$pm25)
 
 cli::cli_progress_step("saving training data")
 train_file_output_path <- fs::path(

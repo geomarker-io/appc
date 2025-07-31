@@ -98,7 +98,7 @@ process_resp <- function(x) {
       lat = latitude,
       lon = longitude,
       conc = arithmetic_mean,
-      date = date_local,
+      date = as.Date(date_local),
       .keep = "none"
     ) |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>
