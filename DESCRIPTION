@@ -1,6 +1,6 @@
 Package: appc
 Title: Air Pollution Predictor Commons
-Version: 0.6.1
+Version: 1.0.0
 Authors@R: c(
     person("Cole", "Brokamp", , "cole@colebrokamp.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0289-3151")),
