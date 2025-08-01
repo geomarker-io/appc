@@ -12,31 +12,30 @@ message("using appc, version ", packageVersion("appc"))
 
 cli::cli_progress_step("creating AQS training data")
 
+d_aqs <- map(as.character(2017:2024), get_daily_aqs, pollutant = "pm25")
+
 d <-
-  purrr::map(as.character(2017:2025), install_aqs) |>
-  purrr::map(readRDS) |>
-  dplyr::bind_rows() |>
-  dplyr::mutate(date = as.Date(date)) |>
-  summarize(pm25 = mean(conc), .by = c(s2, date))
+  bind_rows(
+    d_aqs,
+    readRDS(install_aqs("2025")) |>
+      mutate(pollutant = "pm25")
+  )
 
 message(
   "latest available AQS PM2.5 measurements: ",
   max(d$date)
 )
 
-# structure for pipeline
+# structure for pipeline and subset to contiguous US
 d <-
   d |>
   nest_by(s2) |>
   dplyr::ungroup() |>
   dplyr::mutate(
     dates = purrr::map(data, "date"),
-    pm25 = purrr::map(data, "pm25")
+    pm25 = purrr::map(data, "conc")
   ) |>
-  dplyr::select(-data)
-
-# subset to contiguous US
-d <- d |>
+  dplyr::select(-data) |>
   dplyr::filter(
     s2::s2_intersects(
       s2::as_s2_geography(s2::s2_cell_to_lnglat(s2)),
