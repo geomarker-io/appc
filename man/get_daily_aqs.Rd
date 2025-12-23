@@ -6,7 +6,7 @@
 \usage{
 get_daily_aqs(
   pollutant = c("pm25", "ozone", "no2"),
-  year = as.character(2017:2024)
+  year = as.character(2017:2025)
 )
 }
 \arguments{
