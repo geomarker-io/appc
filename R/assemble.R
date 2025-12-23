@@ -21,11 +21,12 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
     s2::s2_cell_center(d$s2),
     s2::as_s2_geography(contiguous_us)
   )
-  if (!all(contig_us_flag))
+  if (!all(contig_us_flag)) {
     stop(
       "not all s2 locations are within the contiguous united states",
       call. = FALSE
     )
+  }
 
   cli::cli_progress_step("adding coordinates")
   conus_coords <-
@@ -57,15 +58,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
 
   cli::cli_progress_step("adding NARR")
-  my_narr <- purrr::partial(get_narr_data, x = d$s2, dates = d$dates)
-  ## d$air.2m <- my_narr("air.2m")
-  d$hpbl <- my_narr("hpbl")
-  ## d$acpcp <- my_narr("acpcp")
-  ## d$rhum.2m <- my_narr("rhum.2m")
-  ## d$vis <- my_narr("vis")
-  ## d$pres.sfc <- my_narr("pres.sfc")
-  ## d$uwnd.10m <- my_narr("uwnd.10m")
-  ## d$vwnd.10m <- my_narr("vwnd.10m")
+  d$hpbl <- get_narr_data("hpbl", x = d$s2, dates = d$dates)
 
   cli::cli_progress_step("adding gridMET")
   my_gridmet <- purrr::partial(get_gridmet_data, x = d$s2, dates = d$dates)
@@ -76,8 +69,6 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   d$wind_speed <- my_gridmet("vs")
   d$wind_direction <- my_gridmet("th")
   d$specific_humidity <- my_gridmet("sph")
-  ## d$relative_humidity_max <- my_gridmet("rmax")
-  ## d$relative_humidity_min <- my_gridmet("rmin")
 
   ## cli::cli_progress_step("adding NLCD")
   ## d$frac_imperv <- get_nlcd_frac_imperv(d$s2, d$dates, fun = stats::median, buffer = 1200)
