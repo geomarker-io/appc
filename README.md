@@ -58,14 +58,14 @@ appc::predict_pm25(
   dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 #> ℹ (down)loading random forest model
-#> loaded rf_pm_v0 in 9s
-#> ✔ (down)loading random forest model [9.9s]
+#> loaded rf_pm_v1 in 11s
+#> ✔ (down)loading random forest model [11.8s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [69ms]
+#> ✔ checking that s2 are within the contiguous US [63ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [8.5s]
+#> ✔ adding coordinates [1.6s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
@@ -74,30 +74,30 @@ appc::predict_pm25(
 #> ✔ adding HMS smoke data [1s]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [385ms]
+#> ✔ adding NARR [444ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [451ms]
+#> ✔ adding gridMET [440ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [638ms]
+#> ✔ adding MERRA [618ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [29ms]
+#> ✔ adding time components [27ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.17   0.883
-#> 2 11.0    1.49 
+#> 1  7.66   0.624
+#> 2 12.3    1.89 
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  9.67   0.676
-#> 2 11.5    0.654
+#> 1  12.5    2.09
+#> 2  12.0    1.30
 ```
 
 See more examples in `vignette("timeline-example")`.

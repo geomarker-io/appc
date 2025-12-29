@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,125 +80,71 @@
     
     
 <div class="section level2">
-<h2 id="training-data">Training data<a class="anchor" aria-label="anchor" href="#training-data"></a>
+<h2 id="training-data">Training Data<a class="anchor" aria-label="anchor" href="#training-data"></a>
 </h2>
-<p>521,015 daily PM<span class="math inline">\(_{2.5}\)</span>
-measurements on 2,861 different days across 767 unique stations from
-2017-01-01 to 2024-10-31.</p>
-<p>Measured PM<span class="math inline">\(_{2.5}\)</span> concentration
-(<span class="math inline">\(\mu g/ m^3\)</span>) quantiles are:</p>
-<table class="table">
-<thead><tr class="header">
-<th align="left">percentile</th>
-<th align="right">concentration</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">0%</td>
-<td align="right">0.0</td>
-</tr>
-<tr class="even">
-<td align="left">5%</td>
-<td align="right">2.4</td>
-</tr>
-<tr class="odd">
-<td align="left">25%</td>
-<td align="right">4.6</td>
-</tr>
-<tr class="even">
-<td align="left">50%</td>
-<td align="right">7.0</td>
-</tr>
-<tr class="odd">
-<td align="left">75%</td>
-<td align="right">10.2</td>
-</tr>
-<tr class="even">
-<td align="left">95%</td>
-<td align="right">17.5</td>
-</tr>
-<tr class="odd">
-<td align="left">100%</td>
-<td align="right">593.0</td>
-</tr>
-</tbody>
-</table>
+<p>Training data consisted of 575,301 daily average PM<span class="math inline">\(_{2.5}\)</span> concentrations from 778 EPA AQS
+monitors on 3,226 days between 2017-01-01 and 2025-10-31.</p>
+<p>Overall, the median measured PM<span class="math inline">\(_{2.5}\)</span> was 7 <span class="math inline">\(\mu g/ m^3\)</span> and 99.5% of all measurements
+were between 1.8 and 21.8 <span class="math inline">\(\mu g/
+m^3\)</span>:</p>
+<p><img src="cv-model-performance_files/figure-html/pm25_histogram-1.png" width="700"></p>
 </div>
 <div class="section level2">
-<h2 id="random-forest">Random Forest<a class="anchor" aria-label="anchor" href="#random-forest"></a>
+<h2 id="model-training">Model Training<a class="anchor" aria-label="anchor" href="#model-training"></a>
 </h2>
-<p>The generalized regression forest has 200 trees and was trained using
-a sample fraction of 0.5, a minimum node size of 5, and an <span class="math inline">\(m_{try}\)</span> value of 20.</p>
-</div>
-<div class="section level2">
-<h2 id="variable-importance">Variable Importance<a class="anchor" aria-label="anchor" href="#variable-importance"></a>
-</h2>
-<p>The variable importance is calculated as an exponentially-weighted
-sum of how many times each feature was selected within the first 6
-splits of each tree in the forest.</p>
+<p>The EPA AQS monitor concentrations were used to train a generalized
+regression forest with 200 trees, a subsample fraction of 0.5, a minimum
+node size of 5, and an <span class="math inline">\(m_{try}\)</span>
+value of 20.</p>
+<p>Model predictors listed in the table below are ordered according to
+their importance. Here, the variable importance is calculated as an
+exponentially-weighted sum of how many times each feature was selected
+within the first 6 splits of each tree in the forest.</p>
 <table class="table">
+<colgroup>
+<col width="6%">
+<col width="93%">
+</colgroup>
 <thead><tr class="header">
 <th align="right">importance</th>
 <th align="left">predictor</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.718</td>
+<td align="right">0.74</td>
 <td align="left">merra_oc</td>
 </tr>
 <tr class="even">
-<td align="right">0.097</td>
+<td align="right">0.09</td>
 <td align="left">merra_bc</td>
 </tr>
 <tr class="odd">
-<td align="right">0.066</td>
+<td align="right">0.06</td>
 <td align="left">hpbl</td>
 </tr>
 <tr class="even">
-<td align="right">0.038</td>
+<td align="right">0.03</td>
 <td align="left">plume_smoke</td>
 </tr>
 <tr class="odd">
-<td align="right">0.021</td>
-<td align="left">x</td>
+<td align="right">0.02</td>
+<td align="left">x, temperature_max</td>
 </tr>
 <tr class="even">
-<td align="right">0.019</td>
-<td align="left">temperature_max</td>
-</tr>
-<tr class="odd">
-<td align="right">0.013</td>
+<td align="right">0.01</td>
 <td align="left">merra_so4</td>
 </tr>
-<tr class="even">
-<td align="right">0.005</td>
-<td align="left">temperature_min</td>
-</tr>
 <tr class="odd">
-<td align="right">0.004</td>
-<td align="left">y, doy</td>
-</tr>
-<tr class="even">
-<td align="right">0.003</td>
-<td align="left">solar_radiation, specific_humidity, merra_dust</td>
-</tr>
-<tr class="odd">
-<td align="right">0.002</td>
-<td align="left">elevation_sd, wind_speed</td>
-</tr>
-<tr class="even">
-<td align="right">0.001</td>
-<td align="left">elevation_median, wind_direction</td>
-</tr>
-<tr class="odd">
-<td align="right">0.000</td>
-<td align="left">year, precipitation, merra_ss</td>
+<td align="right">0.00</td>
+<td align="left">y, doy, year, elevation_median, elevation_sd,
+temperature_min, precipitation, solar_radiation, wind_speed,
+wind_direction, specific_humidity, merra_dust, merra_ss</td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section level2">
-<h2 id="lolo-model-accuracy">LOLO Model Accuracy<a class="anchor" aria-label="anchor" href="#lolo-model-accuracy"></a>
+<h2 id="leave-one-location-out-lolo-cross-validated-model-performance">Leave One Location Out (LOLO) Cross Validated Model Performance<a class="anchor" aria-label="anchor" href="#leave-one-location-out-lolo-cross-validated-model-performance"></a>
 </h2>
 <p>Leave-one-location-out (LOLO) accuracy is calculated by using out of
 bag predictions from the trained random forest with resample clustering
@@ -208,17 +154,16 @@ by the location. Accuracy is characterized using median absolute error
 location and then summarized using the median accuracy statistic across
 all locations. This most closely captures the performance in a
 real-world scenario where we are trying to predict air pollution between
-2017 and 2023 in a place where it was not measured.</p>
-<p>Each left-out location, or AQS monitor, contains a variable number of
-days with air pollution measurements. This depends on the frequency of
-the daily measurements as well as when the monitoring station was
-initiated or deprecated. Some stations-time groupings only have a single
-measurement; exclude any station or station-time grouping that has 4 or
-less observations. In the tables below, <code>median_n</code> represents
-the median number of observations used in each station grouping to
-calculate the overall median accuracy metrics. <code>ci_coverage</code>
-is the percentage of the time that the 95% CI interval of the predicted
-concentration contained the measured concentration.</p>
+2017 and 2025 in a place where it was not measured.</p>
+<p>Each AQS monitor has a different number of measurements depending on
+its measurement frequency and when it was deployed. To calculate LOLO
+model performance, we exclude any station or station-time grouping that
+has 4 or less observations. In the tables below, <code>median_n</code>
+represents the median number of observations used in each station
+grouping to calculate the overall median accuracy metrics.
+<code>ci_coverage</code> is the percentage of the time that the 95% CI
+interval of the predicted concentration contained the measured
+concentration.</p>
 <div class="section level3">
 <h3 id="daily">Daily<a class="anchor" aria-label="anchor" href="#daily"></a>
 </h3>
@@ -231,9 +176,9 @@ concentration contained the measured concentration.</p>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="right">1.2</td>
-<td align="right">0.85</td>
-<td align="left">69%</td>
-<td align="right">601.5</td>
+<td align="right">0.84</td>
+<td align="left">70%</td>
+<td align="right">622</td>
 </tr></tbody>
 </table>
 <div class="section level4">
@@ -257,57 +202,64 @@ concentration contained the measured concentration.</p>
 <td align="right">2017</td>
 <td align="right">1.10</td>
 <td align="right">0.86</td>
-<td align="left">69%</td>
+<td align="left">70%</td>
 <td align="right">117</td>
 </tr>
 <tr class="even">
 <td align="right">2018</td>
-<td align="right">1.15</td>
+<td align="right">1.10</td>
 <td align="right">0.86</td>
-<td align="left">70%</td>
+<td align="left">71%</td>
 <td align="right">117</td>
 </tr>
 <tr class="odd">
 <td align="right">2019</td>
 <td align="right">1.20</td>
 <td align="right">0.85</td>
-<td align="left">69%</td>
+<td align="left">70%</td>
 <td align="right">116</td>
 </tr>
 <tr class="even">
 <td align="right">2020</td>
 <td align="right">1.20</td>
-<td align="right">0.84</td>
-<td align="left">69%</td>
+<td align="right">0.83</td>
+<td align="left">70%</td>
 <td align="right">115</td>
 </tr>
 <tr class="odd">
 <td align="right">2021</td>
 <td align="right">1.20</td>
 <td align="right">0.85</td>
-<td align="left">69%</td>
+<td align="left">70%</td>
 <td align="right">116</td>
 </tr>
 <tr class="even">
 <td align="right">2022</td>
 <td align="right">1.20</td>
 <td align="right">0.83</td>
-<td align="left">68%</td>
+<td align="left">70%</td>
 <td align="right">117</td>
 </tr>
 <tr class="odd">
 <td align="right">2023</td>
 <td align="right">1.30</td>
 <td align="right">0.85</td>
-<td align="left">70%</td>
+<td align="left">71%</td>
 <td align="right">116</td>
 </tr>
 <tr class="even">
 <td align="right">2024</td>
-<td align="right">1.20</td>
-<td align="right">0.84</td>
+<td align="right">1.25</td>
+<td align="right">0.83</td>
 <td align="left">70%</td>
-<td align="right">62</td>
+<td align="right">117</td>
+</tr>
+<tr class="odd">
+<td align="right">2025</td>
+<td align="right">1.20</td>
+<td align="right">0.85</td>
+<td align="left">70%</td>
+<td align="right">68</td>
 </tr>
 </tbody>
 </table>
@@ -327,8 +279,8 @@ concentration contained the measured concentration.</p>
 <tbody><tr class="odd">
 <td align="right">0.72</td>
 <td align="right">0.89</td>
-<td align="left">95%</td>
-<td align="right">75</td>
+<td align="left">96%</td>
+<td align="right">77</td>
 </tr></tbody>
 </table>
 </div>
@@ -344,10 +296,10 @@ concentration contained the measured concentration.</p>
 <th align="right">median_n</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="right">0.61</td>
-<td align="right">0.88</td>
+<td align="right">0.58</td>
+<td align="right">0.85</td>
 <td align="left">100%</td>
-<td align="right">8</td>
+<td align="right">9</td>
 </tr></tbody>
 </table>
 </div>
