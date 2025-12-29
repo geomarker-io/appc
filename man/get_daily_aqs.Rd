@@ -39,5 +39,4 @@ Get all the files on the page and the date they were last updated:
 }
 \examples{
 get_daily_aqs("pm25", "2024")
-get_daily_aqs("pm25", "2020")
 }
