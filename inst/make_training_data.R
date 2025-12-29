@@ -12,14 +12,13 @@ message("using appc, version ", packageVersion("appc"))
 
 cli::cli_progress_step("creating AQS training data")
 
-d_aqs <- map(as.character(2017:2025), get_daily_aqs, pollutant = "pm25")
+c_get_daily_aqs <- memoise::memoise(
+  get_daily_aqs,
+  cache = memoise::cache_filesystem(getwd())
+)
+d_aqs <- map(as.character(2017:2025), c_get_daily_aqs, pollutant = "pm25")
 
-d <- d_aqs
-# bind_rows(
-#   d_aqs,
-#   readRDS(install_aqs("2025")) |>
-#     mutate(pollutant = "pm25")
-# )
+d <- bind_rows(d_aqs)
 
 message(
   "latest available AQS PM2.5 measurements: ",

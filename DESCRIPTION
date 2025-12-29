@@ -38,6 +38,7 @@ Suggests:
     lubridate,
     lwgeom,
     mappp,
+    memoise,
     readr,
     rmarkdown,
     scales,
