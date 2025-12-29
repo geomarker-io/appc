@@ -23,8 +23,10 @@
 #' @export
 #' @examples
 #' # on 2025-07-22, 2025 data goes until the end of March 2025
-#' install_aqs("2025")|>
+#' \dontrun{
+#' install_aqs("2025") |>
 #'   readRDS()
+#' }
 install_aqs <- function(
   year = as.character(2025:2017),
   force_reinstall = FALSE

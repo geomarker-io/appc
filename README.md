@@ -55,49 +55,49 @@ concentrations at exact locations on specific dates using the
 ``` r
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-  dates = list(as.Date(c("2023-05-18", "2023-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
+  dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 #> ℹ (down)loading random forest model
 #> loaded rf_pm_v0 in 9s
-#> ✔ (down)loading random forest model [9.1s]
+#> ✔ (down)loading random forest model [9.9s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [54ms]
+#> ✔ checking that s2 are within the contiguous US [69ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [4s]
+#> ✔ adding coordinates [8.5s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.4s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [926ms]
+#> ✔ adding HMS smoke data [1s]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [464ms]
+#> ✔ adding NARR [385ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [435ms]
+#> ✔ adding gridMET [451ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [549ms]
+#> ✔ adding MERRA [638ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [24ms]
+#> ✔ adding time components [29ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.76   0.837
-#> 2 14.9    1.68 
+#> 1  7.17   0.883
+#> 2 11.0    1.49 
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  5.10   0.386
-#> 2  5.75   0.843
+#> 1  9.67   0.676
+#> 2 11.5    0.654
 ```
 
 See more examples in `vignette("timeline-example")`.
@@ -154,8 +154,8 @@ and future values. To “refresh” geomarker for the current year, delete
 the installed file and reinstall the data; for example:
 
 ``` r
-file.remove(install_daymet_data("tmmx", "2024"))
-install_daymet_data("tmmx", "2024")
+file.remove(install_daymet_data("tmmx", "2025"))
+install_daymet_data("tmmx", "2025")
 ```
 
 ## Developing

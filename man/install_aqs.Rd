@@ -36,6 +36,8 @@ s2 location, the average measurement is returned, ensuring unique measurements f
 }
 \examples{
 # on 2025-07-22, 2025 data goes until the end of March 2025
-install_aqs("2025")|>
+\dontrun{
+install_aqs("2025") |>
   readRDS()
+}
 }

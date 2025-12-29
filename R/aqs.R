@@ -21,7 +21,9 @@
 #' Get all the files on the page and the date they were last updated:
 #' `readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
 #' @examples
+#' \dontrun{
 #' get_daily_aqs("pm25", "2024")
+#' }
 #' @export
 get_daily_aqs <- function(
   pollutant = c("pm25", "ozone", "no2"),

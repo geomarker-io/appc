@@ -54,7 +54,7 @@ In R, create model-based predictions of ambient air pollution concentrations at 
 #| message: true
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
-  dates = list(as.Date(c("2023-05-18", "2023-06-10")), as.Date(c("2023-06-22", "2023-08-15")))
+  dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 ```
 
@@ -96,8 +96,8 @@ To "refresh" geomarker for the current year, delete the installed file and reins
 the data; for example:
 
 ```r
-file.remove(install_daymet_data("tmmx", "2024"))
-install_daymet_data("tmmx", "2024")
+file.remove(install_daymet_data("tmmx", "2025"))
+install_daymet_data("tmmx", "2025")
 ```
 
 ## Developing
