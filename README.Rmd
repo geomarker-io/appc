@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 ## About
 
 The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments.
-This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently October 2024) at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
+This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently October 2025) at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
 
 The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations.
 Predictor geomarkers include weather and atmospheric information, wildfire smoke plumes, elevation, and satellite-based aerosol diagnostics products.

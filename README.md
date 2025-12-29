@@ -19,7 +19,7 @@ The goal of the appc package is to provide daily, high resolution, near
 real-time, model-based ambient air pollution exposure assessments. This
 is achieved by training a generalized random forest on several
 geomarkers to predict daily average EPA AQS concentrations from 2017
-until the near-present (currently October 2024) at exact locations
+until the near-present (currently October 2025) at exact locations
 across the contiguous United States (see
 `vignette("cv-model-performance")` for more details).
 
@@ -58,29 +58,29 @@ appc::predict_pm25(
   dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 #> ℹ (down)loading random forest model
-#> loaded rf_pm_v1 in 11s
-#> ✔ (down)loading random forest model [11.8s]
+#> loaded rf_pm_v1 in 12s
+#> ✔ (down)loading random forest model [12.3s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [63ms]
+#> ✔ checking that s2 are within the contiguous US [62ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [1.6s]
+#> ✔ adding coordinates [4.4s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.4s]
+#> ✔ adding elevation [1.5s]
 #> 
 #> ℹ adding HMS smoke data
 #> ✔ adding HMS smoke data [1s]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [444ms]
+#> ✔ adding NARR [402ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [440ms]
+#> ✔ adding gridMET [427ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [618ms]
+#> ✔ adding MERRA [624ms]
 #> 
 #> ℹ adding time components
 #> ✔ adding time components [27ms]
