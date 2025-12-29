@@ -55,12 +55,7 @@ assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   ## d$traffic <- NULL
 
   cli::cli_progress_step("adding HMS smoke data")
-  rlang::check_installed("memoise", "cache smoke intersection calculations")
-  c_get_hms_smoke_data <- memoise::memoise(
-    get_hms_smoke_data,
-    cache = memoise::cache_filesystem(getwd())
-  )
-  d$plume_smoke <- c_get_hms_smoke_data(x = d$s2, dates = d$dates)
+  d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
 
   cli::cli_progress_step("adding NARR")
   d$hpbl <- get_narr_data("hpbl", x = d$s2, dates = d$dates)

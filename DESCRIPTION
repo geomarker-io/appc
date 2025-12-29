@@ -8,7 +8,7 @@ Authors@R: c(
     person("Qing", "Duan", role = "aut")
 	   )
 URL: https://github.com/geomarker-io/appc, http://geomarker.io/appc/
-Description: Functions for geomarker assessment for s2 locations and dates. These are used to train and predict daily ambient air pollution concentrations across the contiguous US January 2017 - October 2024.
+Description: Functions for geomarker assessment for s2 locations and dates. These are used to train and predict daily ambient air pollution concentrations across the contiguous US January 2017 - October 2025.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -38,7 +38,6 @@ Suggests:
     lubridate,
     lwgeom,
     mappp,
-    memoise,
     readr,
     rmarkdown,
     scales,
