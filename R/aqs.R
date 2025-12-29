@@ -60,6 +60,9 @@ get_daily_aqs <- function(
   if (pollutant_code %in% c("88101", "88502")) {
     d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")
   }
+  if (pollutant == "pm25" && year == "2020") {
+    d_in$`Date Local` <- as.Date(d_in$`Date Local`, format = "%m/%d/%Y")
+  }
   d_out <-
     d_in |>
     dplyr::filter(`Observation Percent` >= 75) |>
@@ -68,7 +71,7 @@ get_daily_aqs <- function(
       lat = Latitude,
       lon = Longitude,
       conc = `Arithmetic Mean`,
-      date = `Date Local`,
+      date = as.Date(`Date Local`),
       pollutant = pollutant
     ) |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>
