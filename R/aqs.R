@@ -22,6 +22,7 @@
 #' `readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
 #' @examples
 #' get_daily_aqs("pm25", "2024")
+#' get_daily_aqs("pm25", "2020")
 #' @export
 get_daily_aqs <- function(
   pollutant = c("pm25", "ozone", "no2"),
@@ -43,7 +44,19 @@ get_daily_aqs <- function(
     ),
     tf
   )
-  d_in <- readr::read_csv(tf, show_col_types = FALSE)
+  the_files <- utils::unzip(tf, list = TRUE)$Name
+  first_csv_file <- grep(
+    "\\.csv$",
+    the_files,
+    ignore.case = TRUE,
+    value = TRUE
+  )[[1]]
+  stopifnot(
+    "did not find a single CSV file in AQS download" = length(first_csv_file) ==
+      1
+  )
+
+  d_in <- readr::read_csv(unz(tf, first_csv_file), show_col_types = FALSE)
   if (pollutant_code %in% c("88101", "88502")) {
     d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")
   }

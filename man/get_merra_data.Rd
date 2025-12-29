@@ -6,11 +6,11 @@
 \alias{create_daily_merra_data}
 \title{Get MERRA-2 aerosol diagnostics data}
 \usage{
-get_merra_data(x, dates, merra_release = "merra-2025-07-19")
+get_merra_data(x, dates, merra_release = "merra-2025-12-23")
 
 install_merra_data(
   merra_year = as.character(2017:2025),
-  merra_release = "merra-2025-07-19"
+  merra_release = "merra-2025-12-23"
 )
 
 create_daily_merra_data(merra_date)
