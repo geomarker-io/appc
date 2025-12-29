@@ -22,7 +22,7 @@
 #' `readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
 #' @examples
 #' get_daily_aqs("pm25", "2024")
-#' get_daily_aqs("pm25", "2020")
+#' get_daily_aqs("pm25", "2024")
 #' @export
 get_daily_aqs <- function(
   pollutant = c("pm25", "ozone", "no2"),
@@ -60,7 +60,7 @@ get_daily_aqs <- function(
   if (pollutant_code %in% c("88101", "88502")) {
     d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")
   }
-  if (pollutant == "pm25" && year == "2020") {
+  if (pollutant == "pm25" && year %in% c("2020", "2021", "2022", "2023")) {
     d_in$`Date Local` <- as.Date(d_in$`Date Local`, format = "%m/%d/%Y")
   }
   d_out <-
