@@ -88,7 +88,9 @@ utils::globalVariables(c(
 #' get_closest_year(x = as.Date(c("2021-05-15", "2022-09-01")), years = c("2020", "2022"))
 get_closest_year <- function(x, years = as.character(1800:2400)) {
   years <- rlang::arg_match(years, multiple = TRUE)
-  if (!inherits(x, "Date")) stop("x must be a date vector", call. = FALSE)
+  if (!inherits(x, "Date")) {
+    stop("x must be a date vector", call. = FALSE)
+  }
   year_midpoints <-
     years |>
     as.character() |>
@@ -104,27 +106,36 @@ check_s2_dates <- function(
   s2,
   dates = NULL,
   check_date_min = "2017-01-01",
-  check_date_max = "2024-12-31"
+  check_date_max = "2025-10-31"
 ) {
-  if (!inherits(s2, "s2_cell"))
+  if (!inherits(s2, "s2_cell")) {
     stop("x must be a s2_cell vector", call. = FALSE)
-  if (any(is.na(s2)))
+  }
+  if (any(is.na(s2))) {
     stop("s2 must not contain any missing values", call. = FALSE)
-  if (!any(s2::s2_cell_level(s2) == 30L))
+  }
+  if (!any(s2::s2_cell_level(s2) == 30L)) {
     stop("all s2 cell levels must be 30", call. = FALSE)
+  }
   if (!is.null(dates)) {
-    if (length(s2) != length(dates))
+    if (length(s2) != length(dates)) {
       stop("s2 and dates must be the same length", call. = FALSE)
-    if (!inherits(dates, "list")) stop("dates must be a list", call. = FALSE)
-    if (!all(sapply(dates, \(.) inherits(., "Date"))))
+    }
+    if (!inherits(dates, "list")) {
+      stop("dates must be a list", call. = FALSE)
+    }
+    if (!all(sapply(dates, \(.) inherits(., "Date")))) {
       stop("everything in the dates list must be `Date` objects", call. = FALSE)
+    }
     if (!is.null(check_date_min)) {
-      if (!all(lapply(dates, min) >= as.Date(check_date_min)))
+      if (!all(lapply(dates, min) >= as.Date(check_date_min))) {
         stop("all dates must be later than `check_date_min`", call. = FALSE)
+      }
     }
     if (!is.null(check_date_max)) {
-      if (!all(lapply(dates, max) <= as.Date(check_date_max)))
+      if (!all(lapply(dates, max) <= as.Date(check_date_max))) {
         stop("all dates must be earlier than `check_date_max", call. = FALSE)
+      }
     }
   }
 }
@@ -152,7 +163,9 @@ ui_confirm <- function() {
     return(TRUE)
   }
   ans <- readline("Are you sure (y/n)? ")
-  if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
+  if (!ans %in% c("", "y", "Y")) {
+    stop("aborted", call. = FALSE)
+  }
   return(invisible(TRUE))
 }
 

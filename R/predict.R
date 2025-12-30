@@ -1,6 +1,6 @@
 .appc_cache <- new.env(parent = emptyenv())
 
-load_rf_pm_model <- function(model_version = "0") {
+load_rf_pm_model <- function(model_version = "1") {
   st <- Sys.time()
   if (is.null(.appc_cache$model)) {
     grf_file <- fs::path(

@@ -23,8 +23,10 @@
 #' @export
 #' @examples
 #' # on 2025-07-22, 2025 data goes until the end of March 2025
-#' install_aqs("2025")|>
+#' \dontrun{
+#' install_aqs("2025") |>
 #'   readRDS()
+#' }
 install_aqs <- function(
   year = as.character(2025:2017),
   force_reinstall = FALSE
@@ -98,7 +100,7 @@ process_resp <- function(x) {
       lat = latitude,
       lon = longitude,
       conc = arithmetic_mean,
-      date = date_local,
+      date = as.Date(date_local),
       .keep = "none"
     ) |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>

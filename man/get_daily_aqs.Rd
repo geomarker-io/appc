@@ -6,7 +6,7 @@
 \usage{
 get_daily_aqs(
   pollutant = c("pm25", "ozone", "no2"),
-  year = as.character(2017:2024)
+  year = as.character(2017:2025)
 )
 }
 \arguments{
@@ -38,5 +38,7 @@ Get all the files on the page and the date they were last updated:
 \code{readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")}
 }
 \examples{
+\dontrun{
 get_daily_aqs("pm25", "2024")
+}
 }

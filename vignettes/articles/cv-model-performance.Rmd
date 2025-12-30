@@ -12,7 +12,7 @@ if (file.exists("./inst") || basename(getwd()) == "inst") {
   library(appc)
 }
 library(grf)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 library(ggplot2)
 
 the_theme <- 
@@ -28,8 +28,8 @@ the_theme <-
   )
 ```
 
-```{r "load model and predictions"}
-grf <- appc:::load_rf_pm_model()
+```{r load_model_and_predictions}
+grf <- appc:::load_rf_pm_model(model_version = packageVersion('appc')$major)
 
 train_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')$major}.rds"))
 if(!file.exists(train_file)) {
@@ -39,30 +39,37 @@ if(!file.exists(train_file)) {
 d_train <- readRDS(train_file)
 ```
 
-## Training data
+## Training Data
 
-`r prettyNum(nrow(d_train), ",")` daily PM$_{2.5}$ measurements on `r prettyNum(n_distinct(d_train$date), ",")` different days across `r prettyNum(n_distinct(d_train$s2), ",")` unique stations from `r min(d_train$date)` to `r max(d_train$date)`.
-
-Measured PM$_{2.5}$ concentration ($\mu g/ m^3$) quantiles are:
-
-```{r "training data"}
-quantile(d_train$conc, c(0, 0.05, 0.25, 0.5, 0.75, 0.95, 1)) |>
-  tibble::enframe(name = "percentile", value = "concentration") |>
-  knitr::kable()
+```{r pm_edges}
+pm_main <- quantile(d_train$conc, c(0.025, 0.975))
 ```
 
-## Random Forest
+Training data consisted of `r prettyNum(nrow(d_train), ",")` daily average PM$_{2.5}$ concentrations from `r prettyNum(n_distinct(d_train$s2), ",")` EPA AQS monitors on `r prettyNum(n_distinct(d_train$date), ",")` days between `r min(d_train$date)` and `r max(d_train$date)`.
 
-The generalized regression forest has `r grf[["_num_trees"]]` trees and was trained using a sample fraction of `r grf$tunable.params$sample.fraction`, a minimum node size of `r grf$tunable.params$min.node.size`, and an $m_{try}$ value of `r grf$tunable.params$mtry`.
+Overall, the median measured PM$_{2.5}$ was `r median(d_train$conc)` $\mu g/ m^3$
+and 99.5% of all measurements were between `r pm_main[1]` and `r pm_main[2]` $\mu g/ m^3$:
 
-## Variable Importance
+```{r pm25_histogram}
+d_train|>
+  ggplot(aes(conc)) +
+  geom_histogram(binwidth = 1) +
+  scale_x_continuous(limits = pm_main) +
+  the_theme +
+  xlab(expression(Measured ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
+  ylab("Number of Measurements")
+```
 
-The variable importance is calculated as an exponentially-weighted sum of how many times each feature was selected within the first 6 splits of each tree in the forest.
+## Model Training
+
+The EPA AQS monitor concentrations were used to train a generalized regression forest with `r grf[["_num_trees"]]` trees, a subsample fraction of `r grf$tunable.params$sample.fraction`, a minimum node size of `r grf$tunable.params$min.node.size`, and an $m_{try}$ value of `r grf$tunable.params$mtry`.
+
+Model predictors listed in the table below are ordered according to their importance.  Here, the variable importance is calculated as an exponentially-weighted sum of how many times each feature was selected within the first 6 splits of each tree in the forest.
 
 ```{r "variable importance"}
 pred_names <- names(grf$X.orig)
 
-tibble(importance = round(variable_importance(grf, decay.exponent = 2, max.depth = 6), 3),
+tibble(importance = round(variable_importance(grf, decay.exponent = 2, max.depth = 6), 2),
        variable = pred_names) |>
   nest_by(importance) |>
   arrange(desc(importance)) |>
@@ -73,7 +80,7 @@ tibble(importance = round(variable_importance(grf, decay.exponent = 2, max.depth
   knitr::kable()
 ```
 
-## LOLO Model Accuracy
+## Leave One Location Out (LOLO) Cross Validated Model Performance
 
 ```{r "estimate variance of predictions"}
 d <-
@@ -97,9 +104,15 @@ d$month <- as.numeric(format(d$date, "%m"))
 d$week <- as.numeric(format(d$date, "%U"))
 ```
 
-Leave-one-location-out (LOLO) accuracy is calculated by using out of bag predictions from the trained random forest with resample clustering by the location. Accuracy is characterized using median absolute error (`mae`) and the Spearman's correlation coefficient (`rho`). Accuracy metrics are calculated for each left out location and then summarized using the median accuracy statistic across all locations. This most closely captures the performance in a real-world scenario where we are trying to predict air pollution between 2017 and 2023 in a place where it was not measured.
+Leave-one-location-out (LOLO) accuracy is calculated by using out of bag predictions from the trained random forest with resample clustering by the location. 
+Accuracy is characterized using median absolute error (`mae`) and the Spearman's correlation coefficient (`rho`). 
+Accuracy metrics are calculated for each left out location and then summarized using the median accuracy statistic across all locations. 
+This most closely captures the performance in a real-world scenario where we are trying to predict air pollution between 2017 and 2025 in a place where it was not measured.
 
-Each left-out location, or AQS monitor, contains a variable number of days with air pollution measurements.  This depends on the frequency of the daily measurements as well as when the monitoring station was initiated or deprecated. Some stations-time groupings only have a single measurement; exclude any station or station-time grouping that has 4 or less observations. In the tables below, `median_n` represents the median number of observations used in each station grouping to calculate the overall median accuracy metrics. `ci_coverage` is the percentage of the time that the 95% CI interval of the predicted concentration contained the measured concentration.
+Each AQS monitor has a different number of measurements depending on its measurement frequency and when it was deployed. 
+To calculate LOLO model performance, we exclude any station or station-time grouping that has 4 or less observations. 
+In the tables below, `median_n` represents the median number of observations used in each station grouping to calculate the overall median accuracy metrics. 
+`ci_coverage` is the percentage of the time that the 95% CI interval of the predicted concentration contained the measured concentration.
 
 ### Daily
 
@@ -127,7 +140,7 @@ d |>
   stat_bin_hex(binwidth = c(0.05, 0.05)) +
   viridis::scale_fill_viridis(option = "C", trans = "log10", name = "Number \nof points") +
   geom_abline(slope = 1, intercept = 0, lty = 2, alpha = 0.8, color = "darkgrey") +
-  scale_x_log10(limits = c(1, 650)) + scale_y_log10(limits = c(1, 650)) +
+  scale_x_log10(limits = c(1, 300)) + scale_y_log10(limits = c(1, 300)) +
   xlab(expression(Observed ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
   ylab(expression(CV ~ Predicted ~ paste(PM[2.5], " (", mu, "g/", m^{3}, ") "))) +
   the_theme +

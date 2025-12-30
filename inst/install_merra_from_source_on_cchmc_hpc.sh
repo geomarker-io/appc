@@ -8,7 +8,7 @@
 module load singularity
 export APPC_INSTALL_DATA_FROM_SOURCE=1
 
-for year in "2024" "2023" "2022" "2021" "2020" "2019" "2018" "2017";
+for year in "2025" "2024" "2023" "2022" "2021" "2020" "2019" "2018" "2017";
 do
     rm -f ~/.local/share/R/appc/merra_$year.rds
     singularity exec ~/singr_latest.sif \

@@ -12,35 +12,29 @@ message("using appc, version ", packageVersion("appc"))
 
 cli::cli_progress_step("creating AQS training data")
 
-# get AQS data
-d <-
-  tidyr::expand_grid(
-    ## pollutant = c("pm25", "ozone", "no2"),
-    pollutant = "pm25",
-    year = as.character(2017:2024)
-  ) |>
-  purrr::pmap(get_daily_aqs)
+c_get_daily_aqs <- memoise::memoise(
+  get_daily_aqs,
+  cache = memoise::cache_filesystem(getwd())
+)
+d_aqs <- map(as.character(2017:2025), c_get_daily_aqs, pollutant = "pm25")
+
+d <- bind_rows(d_aqs)
 
 message(
   "latest available AQS PM2.5 measurements: ",
-  max(dplyr::bind_rows(d)$date)
+  max(d$date)
 )
 
-# structure for pipeline
+# structure for pipeline and subset to contiguous US
 d <-
   d |>
-  purrr::list_rbind() |>
-  dplyr::mutate(dplyr::across(c(pollutant), as.factor)) |>
-  dplyr::nest_by(s2, pollutant) |>
+  nest_by(s2) |>
   dplyr::ungroup() |>
   dplyr::mutate(
     dates = purrr::map(data, "date"),
-    conc = purrr::map(data, "conc")
+    pm25 = purrr::map(data, "conc")
   ) |>
-  dplyr::select(-data)
-
-# subset to contiguous US
-d <- d |>
+  dplyr::select(-data) |>
   dplyr::filter(
     s2::s2_intersects(
       s2::as_s2_geography(s2::s2_cell_to_lnglat(s2)),
@@ -51,7 +45,7 @@ cli::cli_progress_done()
 
 d_train <- assemble_predictors(x = d$s2, dates = d$dates)
 
-d_train$conc <- unlist(d$conc)
+d_train$conc <- unlist(d$pm25)
 
 cli::cli_progress_step("saving training data")
 train_file_output_path <- fs::path(

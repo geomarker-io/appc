@@ -21,5 +21,6 @@ reference:
     contents:
       - latlon_to_s2_cell
       - get_daily_aqs
+      - install_aqs
       - get_closest_year
       - appc_clean_data_directory

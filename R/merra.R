@@ -34,10 +34,10 @@
 #' @examples
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
+#'   "8841a45555555555" = as.Date(c("2023-06-22", "2025-10-31"))
 #' )
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-get_merra_data <- function(x, dates, merra_release = "merra-2025-07-19") {
+get_merra_data <- function(x, dates, merra_release = "merra-2025-12-29") {
   check_s2_dates(x, dates)
   d_merra <-
     dates |>
@@ -87,7 +87,7 @@ get_merra_data <- function(x, dates, merra_release = "merra-2025-07-19") {
 #' @rdname get_merra_data
 install_merra_data <- function(
   merra_year = as.character(2017:2025),
-  merra_release = "merra-2025-07-19"
+  merra_release = "merra-2025-12-29"
 ) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(
@@ -152,16 +152,19 @@ create_daily_merra_data <- function(merra_date) {
     "to read Earthdata credentials; see Details."
   )
   the_date <- as.Date(merra_date)
-  if (file.exists(".env")) dotenv::load_dot_env()
+  if (file.exists(".env")) {
+    dotenv::load_dot_env()
+  }
   earthdata_secrets <- Sys.getenv(
     c("EARTHDATA_USER", "EARTHDATA_PASSWORD"),
     unset = NA
   )
-  if (any(is.na(earthdata_secrets)))
+  if (any(is.na(earthdata_secrets))) {
     stop(
       "EARTHDATA_USER or EARTHDATA_PASSWORD environment variables are unset",
       call. = FALSE
     )
+  }
   tf <- tempfile(fileext = ".nc4")
   req_url <-
     fs::path(

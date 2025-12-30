@@ -21,11 +21,13 @@
 #' Get all the files on the page and the date they were last updated:
 #' `readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
 #' @examples
+#' \dontrun{
 #' get_daily_aqs("pm25", "2024")
+#' }
 #' @export
 get_daily_aqs <- function(
   pollutant = c("pm25", "ozone", "no2"),
-  year = as.character(2017:2024)
+  year = as.character(2017:2025)
 ) {
   rlang::check_installed("readr", "to read daily AQS CSV files from the EPA.")
   pollutant <- rlang::arg_match(pollutant)
@@ -43,9 +45,24 @@ get_daily_aqs <- function(
     ),
     tf
   )
-  d_in <- readr::read_csv(tf, show_col_types = FALSE)
+  the_files <- utils::unzip(tf, list = TRUE)$Name
+  first_csv_file <- grep(
+    "\\.csv$",
+    the_files,
+    ignore.case = TRUE,
+    value = TRUE
+  )[[1]]
+  stopifnot(
+    "did not find a single CSV file in AQS download" = length(first_csv_file) ==
+      1
+  )
+
+  d_in <- readr::read_csv(unz(tf, first_csv_file), show_col_types = FALSE)
   if (pollutant_code %in% c("88101", "88502")) {
     d_in <- dplyr::filter(d_in, `Sample Duration` == "24 HOUR")
+  }
+  if (pollutant == "pm25" && year %in% c("2020", "2021", "2022", "2023")) {
+    d_in$`Date Local` <- as.Date(d_in$`Date Local`, format = "%m/%d/%Y")
   }
   d_out <-
     d_in |>
@@ -55,7 +72,7 @@ get_daily_aqs <- function(
       lat = Latitude,
       lon = Longitude,
       conc = `Arithmetic Mean`,
-      date = `Date Local`,
+      date = as.Date(`Date Local`),
       pollutant = pollutant
     ) |>
     dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))) |>
