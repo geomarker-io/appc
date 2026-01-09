@@ -58,14 +58,14 @@ appc::predict_pm25(
   dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 #> ℹ (down)loading random forest model
-#> loaded rf_pm_v1 in 12s
-#> ✔ (down)loading random forest model [12.3s]
+#> loaded rf_pm_v1 in 14s
+#> ✔ (down)loading random forest model [14.4s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
 #> ✔ checking that s2 are within the contiguous US [62ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [4.4s]
+#> ✔ adding coordinates [8.8s]
 #> 
 #> ℹ adding elevation
 #> ✔ adding elevation [1.5s]
@@ -74,16 +74,16 @@ appc::predict_pm25(
 #> ✔ adding HMS smoke data [1s]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [402ms]
+#> ✔ adding NARR [392ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [427ms]
+#> ✔ adding gridMET [425ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [624ms]
+#> ✔ adding MERRA [641ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [27ms]
+#> ✔ adding time components [35ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
@@ -107,9 +107,22 @@ See more examples in `vignette("timeline-example")`.
 The [S2Geometry](https://s2geometry.io/) library is a
 [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html)
 geospatial index that uses [spherical
-geometry](https://s2geometry.io/about/overview). The appc package uses
-s2 cells via the [s2](https://r-spatial.github.io/s2/) package to
-specify geospatial locations. In R, s2 cells can be
+geometry](https://s2geometry.io/about/overview). Users familiar with
+latitude and longitude are probably accustomed to thinking of the Earth
+as a grid of (lat, lon) points and doing spatial calculations by
+projecting those points into planar coordinates. The S2Geometry library
+is faster and more portable, and usually just as accurate. S2 models
+earth as a sphere and represents locations as hierarchical cells on that
+sphere. At a high level, earth is projected onto the faces of a cube and
+those faces are recursively subdivided into smaller square cells, each
+with their own unique ID (often represented as a 64-bit integer or a hex
+string). Higher “levels” mean smaller cells (finer spatial resolution)
+and “geohash” usually refers to a s2 cell identifier in this context.
+the s2 geohash cell encodes both *location and resolution*.
+
+The appc package uses s2 cells via the
+[s2](https://r-spatial.github.io/s2/) package to specify geospatial
+locations. In R, s2 cells can be
 [created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples)
 using their character string representation, or by specifying latitude
 and longitude coordinates; e.g.:
@@ -120,8 +133,13 @@ s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 #> [1] 8841ad122d9774a7 88404ebdac3ea7d1
 ```
 
-By default, s2 cells are created as “leaf-level cells”, which is
-resolution 30; these cells have areas of about one meter squared.
+By default, s2 cells are created as “leaf-level cells”, which is the
+highest level of resolution (30); these cells have areas of about 0.74
+cm squared, and are best thought of as a point at this high resolution.
+Find more [s2 cell
+statistics](https://s2geometry.io/resources/s2cell_statistics) in the
+S2Geometry documentation. Another useful resource is the [S2 Region
+Coverer Online Viewer](https://igorgatis.github.io/ws2/).
 
 ## Geomarker Assessment
 

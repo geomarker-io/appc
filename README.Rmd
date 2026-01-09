@@ -63,6 +63,13 @@ See more examples in `vignette("timeline-example")`.
 ## S2 Geometry
 
 The [S2Geometry](https://s2geometry.io/) library is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview).
+Users familiar with latitude and longitude are probably accustomed to thinking of the Earth as a grid of (lat, lon) points and doing spatial calculations by projecting those points into planar coordinates.
+The S2Geometry library is faster and more portable, and usually just as accurate.
+S2 models earth as a sphere and represents locations as hierarchical cells on that sphere.
+At a high level, earth is projected onto the faces of a cube and those faces are recursively subdivided into smaller square cells, each with their own unique ID (often represented as a 64-bit integer or a hex string).
+Higher "levels" mean smaller cells (finer spatial resolution) and "geohash" usually refers to a s2 cell identifier in this context.
+the s2 geohash cell encodes both *location and resolution*.
+
 The appc package uses s2 cells via the [s2](https://r-spatial.github.io/s2/) package to specify geospatial locations.
 In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples) using their character string representation, or by specifying latitude and longitude coordinates; e.g.:
 
@@ -70,7 +77,9 @@ In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell
 s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 ```
 
-By default, s2 cells are created as "leaf-level cells", which is resolution 30; these cells have areas of about one meter squared.
+By default, s2 cells are created as "leaf-level cells", which is the highest level of resolution (30); these cells have areas of about 0.74 cm squared, and are best thought of as a point at this high resolution.
+Find more [s2 cell statistics](https://s2geometry.io/resources/s2cell_statistics) in the S2Geometry documentation.
+Another useful resource is the [S2 Region Coverer Online Viewer](https://igorgatis.github.io/ws2/), which can generate combinations of s2 cells that cover arbitrary drawn map boundaries or map combinations of cell identifers.
 
 ## Geomarker Assessment
 
