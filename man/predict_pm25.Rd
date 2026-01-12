@@ -4,7 +4,7 @@
 \alias{predict_pm25}
 \title{Get daily PM2.5 model predictions}
 \usage{
-predict_pm25(x, dates)
+predict_pm25(x, dates, keep_predictors = FALSE)
 }
 \arguments{
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
