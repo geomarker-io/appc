@@ -4,6 +4,15 @@ test_that("get_traffic_summary works", {
       "8841b6abd8207619",
       "8841b4f6affffffb",
       "8841b39f07f7d899"
+    )),
+    as.Date(c("2022-05-18", "2022-11-06"))
+  ) |>
+    expect_error()
+  get_traffic_summary(
+    s2::as_s2_cell(c(
+      "8841b6abd8207619",
+      "8841b4f6affffffb",
+      "8841b39f07f7d899"
     ))
   ) |>
     lapply(round, digits = -1) |>

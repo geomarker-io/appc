@@ -25,4 +25,13 @@ test_that("get_elevation_summary works", {
     "8841b38578834123"
   ))) |>
     expect_equal(c(231, 222.5))
+  get_elevation_summary(
+    s2::as_s2_cell(c(
+      "8841b399ced97c47",
+      "8841b38578834123"
+    )),
+    stats::median,
+    as.Date(c("2022-05-18", "2022-11-06"))
+  ) |>
+    expect_error()
 })

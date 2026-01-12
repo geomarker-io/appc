@@ -12,6 +12,7 @@
 #' get_elevation_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
 get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
   check_s2_dates(x)
+  check_buffer(buffer)
   elevation_raster <- terra::rast(install_elevation_data())
   x_vect <-
     tibble::tibble(
@@ -41,7 +42,9 @@ install_elevation_data <- function() {
     tools::R_user_dir("appc", "data"),
     "PRISM_us_dem_800m_bil.bil"
   )
-  if (fs::file_exists(dest_file)) return(dest_file)
+  if (fs::file_exists(dest_file)) {
+    return(dest_file)
+  }
   elevation_zip <- tempfile("elevation", fileext = ".zip")
   utils::download.file(
     "https://prism.oregonstate.edu/downloads/data/PRISM_us_dem_800m_bil.zip",

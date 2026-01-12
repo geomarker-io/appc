@@ -21,6 +21,7 @@ get_nei_point_summary <- function(
 ) {
   year <- rlang::arg_match(year)
   check_s2_dates(x)
+  check_buffer(buffer)
   nei_data <- readRDS(install_nei_point_data(year = year))
   pollutant_code <- rlang::arg_match(pollutant_code)
   withins <- s2::s2_dwithin_matrix(

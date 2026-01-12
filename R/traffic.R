@@ -35,6 +35,8 @@ get_traffic_summary <- function(x, buffer = 400) {
   check_s2_dates(x)
   xx <- unique(x)
 
+  check_buffer(buffer)
+
   cli::cli_progress_step("reading traffic data...")
   hpms <-
     sf::read_sf(install_traffic(), quiet = TRUE) |>

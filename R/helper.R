@@ -140,6 +140,18 @@ check_s2_dates <- function(
   }
 }
 
+check_buffer <- function(buffer) {
+  if (!inherits(buffer, "numeric")) {
+    stop("buffer must be an integer", call. = FALSE)
+  }
+  if (length(buffer) != 1) {
+    stop("buffer must be an integer of length 1", call. = FALSE)
+  }
+  if (buffer < 0) {
+    stop("buffer must be a positive integer", call. = FALSE)
+  }
+}
+
 #' delete all installed data files in the user's data directory for the `appc` package
 #' @return NULL
 #' @export

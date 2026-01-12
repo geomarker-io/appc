@@ -26,6 +26,7 @@ get_nlcd_frac_imperv <- function(x, dates, fun = stats::median, buffer = 400) {
     check_date_min = "2017-01-01",
     check_date_max = "2024-12-31"
   )
+  check_buffer(buffer)
   nlcd_years <-
     purrr::reduce(dates, c) |>
     format("%Y") |>
