@@ -10,6 +10,8 @@ predict_pm25(x, dates, keep_predictors = FALSE)
 \item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
 
 \item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
+
+\item{keep_predictors}{logical; return values for model predictors alongside PM2.5 estimates?}
 }
 \value{
 a list of tibbles the same length as \code{x}, each containing
