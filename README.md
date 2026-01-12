@@ -58,32 +58,32 @@ appc::predict_pm25(
   dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 #> ℹ (down)loading random forest model
-#> loaded rf_pm_v1 in 14s
-#> ✔ (down)loading random forest model [14.4s]
+#> loaded rf_pm_v1 in 40s
+#> ✔ (down)loading random forest model [40.5s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [62ms]
+#> ✔ checking that s2 are within the contiguous US [83ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [8.8s]
+#> ✔ adding coordinates [10.5s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.5s]
+#> ✔ adding elevation [1.7s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [1s]
+#> ✔ adding HMS smoke data [1.1s]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [392ms]
+#> ✔ adding NARR [427ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [425ms]
+#> ✔ adding gridMET [471ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [641ms]
+#> ✔ adding MERRA [673ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [35ms]
+#> ✔ adding time components [28ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
@@ -139,7 +139,9 @@ cm squared, and are best thought of as a point at this high resolution.
 Find more [s2 cell
 statistics](https://s2geometry.io/resources/s2cell_statistics) in the
 S2Geometry documentation. Another useful resource is the [S2 Region
-Coverer Online Viewer](https://igorgatis.github.io/ws2/).
+Coverer Online Viewer](https://igorgatis.github.io/ws2/), which can
+generate combinations of s2 cells that cover arbitrary drawn map
+boundaries or map combinations of cell identifers.
 
 ## Geomarker Assessment
 
