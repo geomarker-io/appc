@@ -66,7 +66,7 @@ load_rf_pm_model <- function(model_version = "1") {
 #'   "8841a45555555555" = as.Date(c("2023-06-21", "2023-08-25"))
 #' )
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
-predict_pm25 <- function(x, dates) {
+predict_pm25 <- function(x, dates, keep_predictors = FALSE) {
   check_s2_dates(x, dates)
   cli::cli_progress_step("(down)loading random forest model")
   grf <- load_rf_pm_model()
@@ -87,6 +87,13 @@ predict_pm25 <- function(x, dates) {
       pm25 = predictions,
       pm25_se = sqrt(variance.estimates)
     )
+
+  if (keep_predictors) {
+    d_pred <- dplyr::bind_cols(
+      d_pred,
+      dplyr::select(d, dplyr::all_of(required_predictors))
+    )
+  }
 
   d_pred$.rowid <- rep(seq_along(x), times = sapply(dates, length))
 

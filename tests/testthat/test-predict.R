@@ -6,6 +6,13 @@ test_that("predict_pm25() works", {
   out <- predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
   expect_identical(sapply(out, nrow), c(2L, 2L))
   expect_length(out, 2)
+  # keep predictors works
+  out <- predict_pm25(
+    x = s2::as_s2_cell(names(d)),
+    dates = d,
+    keep_predictors = TRUE
+  )
+  expect_length(names(out[[1]]), 22)
   # missing s2 location errors
   predict_pm25(
     s2::as_s2_cell(c("8841b39a7c46e25f", NA)),
