@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,14 +97,14 @@
 <span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2025-05-18"</span>, <span class="st">"2025-06-10"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2025-06-22"</span>, <span class="st">"2025-09-20"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ (down)loading random forest model</span></span>
-<span><span class="co">#&gt; loaded rf_pm_v1 in 12s</span></span>
-<span><span class="co">#&gt; ✔ (down)loading random forest model [12.3s]</span></span>
+<span><span class="co">#&gt; loaded rf_pm_v1 in 14s</span></span>
+<span><span class="co">#&gt; ✔ (down)loading random forest model [14.4s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ checking that s2 are within the contiguous US</span></span>
 <span><span class="co">#&gt; ✔ checking that s2 are within the contiguous US [62ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding coordinates</span></span>
-<span><span class="co">#&gt; ✔ adding coordinates [4.4s]</span></span>
+<span><span class="co">#&gt; ✔ adding coordinates [8.8s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding elevation</span></span>
 <span><span class="co">#&gt; ✔ adding elevation [1.5s]</span></span>
@@ -113,16 +113,16 @@
 <span><span class="co">#&gt; ✔ adding HMS smoke data [1s]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding NARR</span></span>
-<span><span class="co">#&gt; ✔ adding NARR [402ms]</span></span>
+<span><span class="co">#&gt; ✔ adding NARR [392ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding gridMET</span></span>
-<span><span class="co">#&gt; ✔ adding gridMET [427ms]</span></span>
+<span><span class="co">#&gt; ✔ adding gridMET [425ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding MERRA</span></span>
-<span><span class="co">#&gt; ✔ adding MERRA [624ms]</span></span>
+<span><span class="co">#&gt; ✔ adding MERRA [641ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ℹ adding time components</span></span>
-<span><span class="co">#&gt; ✔ adding time components [27ms]</span></span>
+<span><span class="co">#&gt; ✔ adding time components [35ms]</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
@@ -142,12 +142,13 @@
 <div class="section level2">
 <h2 id="s2-geometry">S2 Geometry<a class="anchor" aria-label="anchor" href="#s2-geometry"></a>
 </h2>
-<p>The <a href="https://s2geometry.io/" class="external-link">S2Geometry</a> library is a <a href="https://s2geometry.io/devguide/s2cell_hierarchy.html" class="external-link">hierarchical</a> geospatial index that uses <a href="https://s2geometry.io/about/overview" class="external-link">spherical geometry</a>. The appc package uses s2 cells via the <a href="https://r-spatial.github.io/s2/" class="external-link">s2</a> package to specify geospatial locations. In R, s2 cells can be <a href="https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples" class="external-link">created</a> using their character string representation, or by specifying latitude and longitude coordinates; e.g.:</p>
+<p>The <a href="https://s2geometry.io/" class="external-link">S2Geometry</a> library is a <a href="https://s2geometry.io/devguide/s2cell_hierarchy.html" class="external-link">hierarchical</a> geospatial index that uses <a href="https://s2geometry.io/about/overview" class="external-link">spherical geometry</a>. Users familiar with latitude and longitude are probably accustomed to thinking of the Earth as a grid of (lat, lon) points and doing spatial calculations by projecting those points into planar coordinates. The S2Geometry library is faster and more portable, and usually just as accurate. S2 models earth as a sphere and represents locations as hierarchical cells on that sphere. At a high level, earth is projected onto the faces of a cube and those faces are recursively subdivided into smaller square cells, each with their own unique ID (often represented as a 64-bit integer or a hex string). Higher “levels” mean smaller cells (finer spatial resolution) and “geohash” usually refers to a s2 cell identifier in this context. the s2 geohash cell encodes both <em>location and resolution</em>.</p>
+<p>The appc package uses s2 cells via the <a href="https://r-spatial.github.io/s2/" class="external-link">s2</a> package to specify geospatial locations. In R, s2 cells can be <a href="https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples" class="external-link">created</a> using their character string representation, or by specifying latitude and longitude coordinates; e.g.:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_lnglat.html" class="external-link">s2_lnglat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">84.4126</span>, <span class="op">-</span><span class="fl">84.5036</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">39.1582</span>, <span class="fl">39.2875</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;s2_cell[2]&gt;</span></span>
 <span><span class="co">#&gt; [1] 8841ad122d9774a7 88404ebdac3ea7d1</span></span></code></pre></div>
-<p>By default, s2 cells are created as “leaf-level cells”, which is resolution 30; these cells have areas of about one meter squared.</p>
+<p>By default, s2 cells are created as “leaf-level cells”, which is the highest level of resolution (30); these cells have areas of about 0.74 cm squared, and are best thought of as a point at this high resolution. Find more <a href="https://s2geometry.io/resources/s2cell_statistics" class="external-link">s2 cell statistics</a> in the S2Geometry documentation. Another useful resource is the <a href="https://igorgatis.github.io/ws2/" class="external-link">S2 Region Coverer Online Viewer</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="geomarker-assessment">Geomarker Assessment<a class="anchor" aria-label="anchor" href="#geomarker-assessment"></a>

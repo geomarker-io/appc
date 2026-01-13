@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,158 +125,145 @@ dates.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11</span></span></code></pre></div>
 <p>For this example, we want to estimate the average fine particulate
-matter from 90 days prior to birth until the date of birth. We define
-these dates and create a list-col of dates for each location in our
-example data:</p>
+matter from 90 days prior to birth until the date of birth. Using the
+dob column as the start date, we will define an end date in our example
+data and also define the s2 cell identifers based on the latitude and
+longitude coordinates.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
-<span>    start_date <span class="op">=</span> <span class="va">dob</span> <span class="op">-</span> <span class="fl">90</span>,</span>
-<span>    end_date <span class="op">=</span> <span class="va">dob</span></span>
-<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span>, by <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d</span>, dob_plus_90 <span class="op">=</span> <span class="va">dob</span> <span class="op">+</span> <span class="fl">90</span>,</span>
+<span>           s2 <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_geog_point.html" class="external-link">s2_geog_point</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 6</span></span></span>
-<span><span class="co">#&gt;      lon   lat dob        start_date end_date   dates      </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2023-08-02 2023-10-31 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2023-08-29 2023-11-27 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2023-07-20 2023-10-18 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-02-09 2023-05-10 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2023-09-10 2023-12-09 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-02-10 2023-05-11 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-10-21 2023-07-23 2023-10-21 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">83.3</span>  42.2 2023-08-22 2023-05-24 2023-08-22 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-03-06 2022-12-06 2023-03-06 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-08-19 2023-05-21 2023-08-19 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> -<span style="color: #BB0000;">83.2</span>  42.1 2023-05-30 2023-03-01 2023-05-30 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-05-27 2023-02-26 2023-05-27 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-09-15 2023-06-17 2023-09-15 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> -<span style="color: #BB0000;">83.3</span>  42.1 2023-11-16 2023-08-18 2023-11-16 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-02-09 2022-11-11 2023-02-09 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-07-12 2023-04-13 2023-07-12 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> -<span style="color: #BB0000;">83.5</span>  42.4 2023-06-05 2023-03-07 2023-06-05 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> -<span style="color: #BB0000;">83.4</span>  42.3 2023-01-12 2022-10-14 2023-01-12 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24 2023-07-26 2023-10-24 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11 2022-11-13 2023-02-11 <span style="color: #949494;">&lt;date [91]&gt;</span></span></span></code></pre></div>
-<p>Next, we will use the <code>lon</code> and <code>lat</code> columns
-to create the s2 geohash:</p>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
+<span><span class="co">#&gt;     lon   lat dob        dob_plus_90 s2              </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2024-01-29  883b539fde6f468f</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2024-02-25  882529be4afb184b</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2024-01-16  883b5cadcae041d3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-08-08  883b36dae69ea671</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2024-03-08  883b339ae99f458f</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-08-09  883b4b9750a4f19d</span></span></code></pre></div>
+<p>Next, use the newly created columns to call the
+<code><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range()</a></code> function, which is a simpler
+implementation of predict_pm25 that takes vectors of start and end dates
+instead of lists of date vectors for each s2 cell location:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>s2 <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_geog_point.html" class="external-link">s2_geog_point</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">d</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 7</span></span></span>
-<span><span class="co">#&gt;      lon   lat dob        start_date end_date   dates       s2              </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2023-08-02 2023-10-31 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b539fde6f468f</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2023-08-29 2023-11-27 <span style="color: #949494;">&lt;date [91]&gt;</span> 882529be4afb184b</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2023-07-20 2023-10-18 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b5cadcae041d3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-02-09 2023-05-10 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b36dae69ea671</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2023-09-10 2023-12-09 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b339ae99f458f</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-02-10 2023-05-11 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b4b9750a4f19d</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-10-21 2023-07-23 2023-10-21 <span style="color: #949494;">&lt;date [91]&gt;</span> 8824d53e3f2addd3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">83.3</span>  42.2 2023-08-22 2023-05-24 2023-08-22 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b462c96efefa9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-03-06 2022-12-06 2023-03-06 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b37c7f61125bf</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-08-19 2023-05-21 2023-08-19 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b44e161d94b5d</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> -<span style="color: #BB0000;">83.2</span>  42.1 2023-05-30 2023-03-01 2023-05-30 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b3f38bc72bc79</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-05-27 2023-02-26 2023-05-27 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b5129692a69f7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-09-15 2023-06-17 2023-09-15 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b362d7f446e2d</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> -<span style="color: #BB0000;">83.3</span>  42.1 2023-11-16 2023-08-18 2023-11-16 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b41493a95f44f</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-02-09 2022-11-11 2023-02-09 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b451132452249</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-07-12 2023-04-13 2023-07-12 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b56ca718e3a5b</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> -<span style="color: #BB0000;">83.5</span>  42.4 2023-06-05 2023-03-07 2023-06-05 <span style="color: #949494;">&lt;date [91]&gt;</span> 8824abeaf2f4640b</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> -<span style="color: #BB0000;">83.4</span>  42.3 2023-01-12 2022-10-14 2023-01-12 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b4ef3cd3ded53</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24 2023-07-26 2023-10-24 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b496b4a4bf401</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11 2022-11-13 2023-02-11 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b3733a728db21</span></span></code></pre></div>
-<p>Directly use the <code>s2</code> and <code>dates</code> columns to
-call the <code><a href="../reference/predict_pm25.html">predict_pm25()</a></code> function:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pm25 <span class="op">=</span> <span class="fu"><a href="../reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dates</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d</span>, pm25 <span class="op">=</span> <span class="fu"><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dob</span>, <span class="va">dob_plus_90</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> (down)loading random forest model</span></span>
-<span><span class="co">#&gt; loaded rf_pm_v1 in 15s</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[15.2s]</span></span></span>
+<span><span class="co">#&gt; loaded rf_pm_v1 in 13s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[13.2s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> checking that s2 are within the contiguous US</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[64ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[59ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding coordinates</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[34ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[26ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding elevation</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[1.8s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[1.9s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data</span></span>
-<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■                     </span>  35% |  ETA:  4s</span></span>
-<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  75% |  ETA:  2s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■                         </span>  20% |  ETA:  4s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% |  ETA:  3s</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data<span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[7.9s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding NARR</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[1s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[958ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding gridMET</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[874ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[895ms]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding MERRA</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[12.1s]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[20.6s]</span></span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding time components</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[41ms]</span></span></span>
-<span></span>
-<span><span class="va">d</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 8</span></span></span>
-<span><span class="co">#&gt;      lon   lat dob        start_date end_date   dates       s2          pm25    </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2023-08-02 2023-10-31 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b539fde… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2023-08-29 2023-11-27 <span style="color: #949494;">&lt;date [91]&gt;</span> 882529be4a… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2023-07-20 2023-10-18 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b5cadca… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-02-09 2023-05-10 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b36dae6… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2023-09-10 2023-12-09 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b339ae9… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-02-10 2023-05-11 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b4b9750… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-10-21 2023-07-23 2023-10-21 <span style="color: #949494;">&lt;date [91]&gt;</span> 8824d53e3f… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">83.3</span>  42.2 2023-08-22 2023-05-24 2023-08-22 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b462c96… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-03-06 2022-12-06 2023-03-06 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b37c7f6… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-08-19 2023-05-21 2023-08-19 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b44e161… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> -<span style="color: #BB0000;">83.2</span>  42.1 2023-05-30 2023-03-01 2023-05-30 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b3f38bc… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-05-27 2023-02-26 2023-05-27 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b512969… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-09-15 2023-06-17 2023-09-15 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b362d7f… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> -<span style="color: #BB0000;">83.3</span>  42.1 2023-11-16 2023-08-18 2023-11-16 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b41493a… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-02-09 2022-11-11 2023-02-09 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b451132… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-07-12 2023-04-13 2023-07-12 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b56ca71… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> -<span style="color: #BB0000;">83.5</span>  42.4 2023-06-05 2023-03-07 2023-06-05 <span style="color: #949494;">&lt;date [91]&gt;</span> 8824abeaf2… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> -<span style="color: #BB0000;">83.4</span>  42.3 2023-01-12 2022-10-14 2023-01-12 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b4ef3cd… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24 2023-07-26 2023-10-24 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b496b4a… <span style="color: #949494;">&lt;tibble&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11 2022-11-13 2023-02-11 <span style="color: #949494;">&lt;date [91]&gt;</span> 883b3733a7… <span style="color: #949494;">&lt;tibble&gt;</span></span></span></code></pre></div>
-<p>With daily exposures, we could average fine particulate matter
-throughout the study period:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">d</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mean_pm25 <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">pm25</span>, \<span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">pm25</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 9</span></span></span>
-<span><span class="co">#&gt;      lon   lat dob        start_date end_date   dates  s2     pm25     mean_pm25</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;s2ce&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2023-08-02 2023-10-31 <span style="color: #949494;">&lt;date&gt;</span> 883b5… <span style="color: #949494;">&lt;tibble&gt;</span>      8.17</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2023-08-29 2023-11-27 <span style="color: #949494;">&lt;date&gt;</span> 88252… <span style="color: #949494;">&lt;tibble&gt;</span>      7.09</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2023-07-20 2023-10-18 <span style="color: #949494;">&lt;date&gt;</span> 883b5… <span style="color: #949494;">&lt;tibble&gt;</span>      8.85</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-02-09 2023-05-10 <span style="color: #949494;">&lt;date&gt;</span> 883b3… <span style="color: #949494;">&lt;tibble&gt;</span>      7.62</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2023-09-10 2023-12-09 <span style="color: #949494;">&lt;date&gt;</span> 883b3… <span style="color: #949494;">&lt;tibble&gt;</span>      7.55</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-02-10 2023-05-11 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>      7.03</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-10-21 2023-07-23 2023-10-21 <span style="color: #949494;">&lt;date&gt;</span> 8824d… <span style="color: #949494;">&lt;tibble&gt;</span>      9.00</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">83.3</span>  42.2 2023-08-22 2023-05-24 2023-08-22 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>     15.0 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-03-06 2022-12-06 2023-03-06 <span style="color: #949494;">&lt;date&gt;</span> 883b3… <span style="color: #949494;">&lt;tibble&gt;</span>      9.12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-08-19 2023-05-21 2023-08-19 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>     14.8 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> -<span style="color: #BB0000;">83.2</span>  42.1 2023-05-30 2023-03-01 2023-05-30 <span style="color: #949494;">&lt;date&gt;</span> 883b3… <span style="color: #949494;">&lt;tibble&gt;</span>      7.85</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-05-27 2023-02-26 2023-05-27 <span style="color: #949494;">&lt;date&gt;</span> 883b5… <span style="color: #949494;">&lt;tibble&gt;</span>      7.77</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-09-15 2023-06-17 2023-09-15 <span style="color: #949494;">&lt;date&gt;</span> 883b3… <span style="color: #949494;">&lt;tibble&gt;</span>     12.7 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> -<span style="color: #BB0000;">83.3</span>  42.1 2023-11-16 2023-08-18 2023-11-16 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>      7.20</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-02-09 2022-11-11 2023-02-09 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>      9.12</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-07-12 2023-04-13 2023-07-12 <span style="color: #949494;">&lt;date&gt;</span> 883b5… <span style="color: #949494;">&lt;tibble&gt;</span>     12.7 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> -<span style="color: #BB0000;">83.5</span>  42.4 2023-06-05 2023-03-07 2023-06-05 <span style="color: #949494;">&lt;date&gt;</span> 8824a… <span style="color: #949494;">&lt;tibble&gt;</span>      8.32</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> -<span style="color: #BB0000;">83.4</span>  42.3 2023-01-12 2022-10-14 2023-01-12 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>      9.04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24 2023-07-26 2023-10-24 <span style="color: #949494;">&lt;date&gt;</span> 883b4… <span style="color: #949494;">&lt;tibble&gt;</span>      8.51</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11 2022-11-13 2023-02-11 <span style="color: #949494;">&lt;date&gt;</span> 883b3… <span style="color: #949494;">&lt;tibble&gt;</span>      9.28</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[115ms]</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 6</span></span></span>
+<span><span class="co">#&gt;      lon   lat dob        dob_plus_90 s2               pm25             </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2024-01-29  883b539fde6f468f <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2024-02-25  882529be4afb184b <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2024-01-16  883b5cadcae041d3 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-08-08  883b36dae69ea671 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2024-03-08  883b339ae99f458f <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-08-09  883b4b9750a4f19d <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-10-21 2024-01-19  8824d53e3f2addd3 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">83.3</span>  42.2 2023-08-22 2023-11-20  883b462c96efefa9 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-03-06 2023-06-04  883b37c7f61125bf <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-08-19 2023-11-17  883b44e161d94b5d <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> -<span style="color: #BB0000;">83.2</span>  42.1 2023-05-30 2023-08-28  883b3f38bc72bc79 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-05-27 2023-08-25  883b5129692a69f7 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-09-15 2023-12-14  883b362d7f446e2d <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> -<span style="color: #BB0000;">83.3</span>  42.1 2023-11-16 2024-02-14  883b41493a95f44f <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-02-09 2023-05-10  883b451132452249 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-07-12 2023-10-10  883b56ca718e3a5b <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> -<span style="color: #BB0000;">83.5</span>  42.4 2023-06-05 2023-09-03  8824abeaf2f4640b <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> -<span style="color: #BB0000;">83.4</span>  42.3 2023-01-12 2023-04-12  883b4ef3cd3ded53 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24 2024-01-22  883b496b4a4bf401 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11 2023-05-12  883b3733a728db21 <span style="color: #949494;">&lt;tibble [91 × 2]&gt;</span></span></span></code></pre></div>
+<p>If interested in average exposures (and their uncertainties) from
+start date to end date (instead of daily exposures), we can extract
+those directly:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">d_pm25</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">d</span>, <span class="fu"><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dob</span>, <span class="va">dob_plus_90</span>, average <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> (down)loading random forest model</span></span>
+<span><span class="co">#&gt; loaded rf_pm_v1 in 0s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> (down)loading random forest model <span style="color: #B2B2B2;">[21ms]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> checking that s2 are within the contiguous US</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[81ms]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding coordinates</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[66ms]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding elevation</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[632ms]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■                           </span>  15% |  ETA: 12s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■                      </span>  30% |  ETA: 11s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■                </span>  50% |  ETA:  8s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■             </span>  60% |  ETA:  7s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■         </span>  75% |  ETA:  5s</span></span>
+<span><span class="co">#&gt; intersecting smoke data <span style="color: #00BB00;">■■■■■■■■■■■■■■■■■■■■■■■■■■■     </span>  85% |  ETA:  3s</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data<span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[24s]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding NARR</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[2s]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding gridMET</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[2.1s]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding MERRA</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[3.6s]</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> adding time components</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[22ms]</span></span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">d</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">d_pm25</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 20 × 7</span></span></span>
+<span><span class="co">#&gt;      lon   lat dob        dob_plus_90 s2                pm25 pm25_se</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-10-31 2024-01-29  883b539fde6f468f  9.05   0.165</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-11-27 2024-02-25  882529be4afb184b  9.06   0.156</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> -<span style="color: #BB0000;">83.4</span>  42.1 2023-10-18 2024-01-16  883b5cadcae041d3  8.23   0.146</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-05-10 2023-08-08  883b36dae69ea671 15.0    0.369</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> -<span style="color: #BB0000;">83.2</span>  42.3 2023-12-09 2024-03-08  883b339ae99f458f  9.23   0.177</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-05-11 2023-08-09  883b4b9750a4f19d 14.5    0.357</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> -<span style="color: #BB0000;">82.9</span>  42.4 2023-10-21 2024-01-19  8824d53e3f2addd3  8.48   0.159</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> -<span style="color: #BB0000;">83.3</span>  42.2 2023-08-22 2023-11-20  883b462c96efefa9  7.04   0.107</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-03-06 2023-06-04  883b37c7f61125bf  8.15   0.123</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-08-19 2023-11-17  883b44e161d94b5d  7.13   0.116</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> -<span style="color: #BB0000;">83.2</span>  42.1 2023-05-30 2023-08-28  883b3f38bc72bc79 14.8    0.448</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-05-27 2023-08-25  883b5129692a69f7 14.5    0.327</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-09-15 2023-12-14  883b362d7f446e2d  7.17   0.121</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> -<span style="color: #BB0000;">83.3</span>  42.1 2023-11-16 2024-02-14  883b41493a95f44f  9.01   0.158</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> -<span style="color: #BB0000;">83.4</span>  42.2 2023-02-09 2023-05-10  883b451132452249  7.26   0.113</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> -<span style="color: #BB0000;">83.5</span>  42.3 2023-07-12 2023-10-10  883b56ca718e3a5b  9.62   0.134</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> -<span style="color: #BB0000;">83.5</span>  42.4 2023-06-05 2023-09-03  8824abeaf2f4640b 14.0    0.386</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> -<span style="color: #BB0000;">83.4</span>  42.3 2023-01-12 2023-04-12  883b4ef3cd3ded53  7.63   0.128</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> -<span style="color: #BB0000;">83.3</span>  42.3 2023-10-24 2024-01-22  883b496b4a4bf401  8.58   0.160</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">20</span> -<span style="color: #BB0000;">83.2</span>  42.2 2023-02-11 2023-05-12  883b3733a728db21  7.68   0.134</span></span></code></pre></div>
   </main>
 </div>
 

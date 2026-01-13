@@ -42,6 +42,7 @@ load_rf_pm_model <- function(model_version = "1") {
 #'
 #' @param x a vector of s2 cell identifers (`s2_cell` object)
 #' @param dates a list of date vectors for the predictions, must be the same length as `x`
+#' @param keep_predictors logical; return values for model predictors alongside PM2.5 estimates?
 #' @return a list of tibbles the same length as `x`, each containing
 #' columns for the predicted (`pm25`) and its standard error (`pm25_se`);
 #' with one row per date in `dates`. These numerics are the concentrations of fine
