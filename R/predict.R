@@ -5,7 +5,7 @@ load_rf_pm_model <- function(model_version = "1") {
   if (is.null(.appc_cache$model)) {
     grf_file <- fs::path(
       tools::R_user_dir("appc", "data"),
-      glue::glue("rf_pm_v{model_version}.qs")
+      glue::glue("rf_pm_v{model_version}.qs2")
     )
     if (!file.exists(grf_file)) {
       message("downloading rf_pm_v", model_version)
@@ -17,7 +17,7 @@ load_rf_pm_model <- function(model_version = "1") {
           "releases",
           "download",
           "rf_pm_v{model_version}",
-          "rf_pm_v{model_version}.qs",
+          "rf_pm_v{model_version}.qs2",
           .sep = "/"
         ),
         grf_file,
@@ -25,7 +25,7 @@ load_rf_pm_model <- function(model_version = "1") {
         mode = "wb"
       )
     }
-    .appc_cache$model <- qs::qread(grf_file)
+    .appc_cache$model <- qs2::qs_read(grf_file)
   }
   et <- Sys.time()
   message(

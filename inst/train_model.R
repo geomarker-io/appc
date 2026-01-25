@@ -81,7 +81,7 @@ file_output_path <- fs::path(
   tools::R_user_dir("appc", "data"),
   glue::glue("rf_pm_v{packageVersion('appc')$major}.qs")
 )
-qs::qsave(grf, file_output_path, preset = "fast")
+qs2::qs_save(grf, file_output_path)
 cli::cli_alert_info(
   "saved rf_pm rds file ({fs::file_info(file_output_path)$size}) to {file_output_path}"
 )
