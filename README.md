@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# Air Pollution Prediction Commons
+# Air Pollution Prediction Commons <img src="man/figures/logo.svg" align="right" height="139" alt="appc logo" />
 
 <!-- badges: start -->
 

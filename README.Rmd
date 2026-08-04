@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Air Pollution Prediction Commons
+# Air Pollution Prediction Commons <img src="man/figures/logo.svg" align="right" height="139" alt="appc logo" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
