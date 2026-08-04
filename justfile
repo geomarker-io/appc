@@ -3,7 +3,7 @@
 set dotenv-load := true
 
 pkg_version := `Rscript -e "cat(desc::desc_get('Version'))"`
-pkg_version_major := "1"
+pkg_version_major := "2"
 geomarker_folder := `Rscript -e "cat(tools::R_user_dir('appc', 'data'))"`
 
 # make training data for GRF
@@ -23,8 +23,8 @@ render_model_dash:
 draft_release_model:
     gh release create rf_pm_v{{ pkg_version_major }} \
     --title "{appc} random forest PM2.5 prediction model, v{{ pkg_version_major }}" \
-    --notes "This .rds file contains a {grf} object designed to be used with the {appc} package (major version: v{{ pkg_version_major }})." \
+    --notes "The .qs2 file contains a {grf} object designed to be used with the {appc} package (major version: v{{ pkg_version_major }}). Model and training data cover January 1, 2017 through June 30, 2026." \
     --draft \
-    "{{ geomarker_folder }}/rf_pm_v{{ pkg_version_major }}.qs" \
+    "{{ geomarker_folder }}/rf_pm_v{{ pkg_version_major }}.qs2" \
     "{{ geomarker_folder }}/training_data_v{{ pkg_version_major }}.rds" && \
     echo "\n\n✅ Now publish the draft release after adding date coverage details and unchecking 'Set as the latest release' on github.com\n\n"

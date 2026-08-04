@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.0.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,54 +90,54 @@ are predictors required for the exposure assessment model</p>
 <span class="r-in"><span><span class="fu">assemble_predictors</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> checking that s2 are within the contiguous US</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[60ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> checking that s2 are within the contiguous US <span style="color: #B2B2B2;">[63ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding coordinates</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[367ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding coordinates <span style="color: #B2B2B2;">[397ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding elevation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[1.4s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding elevation <span style="color: #B2B2B2;">[1.7s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding HMS smoke data</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[1.7s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding HMS smoke data <span style="color: #B2B2B2;">[1.6s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding NARR</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[562ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding NARR <span style="color: #B2B2B2;">[678ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding gridMET</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[483ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding gridMET <span style="color: #B2B2B2;">[393ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding MERRA</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[1.2s]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding MERRA <span style="color: #B2B2B2;">[1s]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> adding time components</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[24ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> adding time components <span style="color: #B2B2B2;">[26ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rows: 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Columns: 23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ s2                <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span> 8841b39a7c46e25f, 8841b39a7c46e25f, 8841a45555555…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ date              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2023-05-18, 2023-11-06, 2023-06-22, 2023-08-15, 202…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ x                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 981664.4, 981664.4, 993445.3, 993445.3, 993445.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ y                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1850030, 1850030, 1833221, 1833221, 1833221</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ elevation_median  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 239, 239, 229, 229, 229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ elevation_sd      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18.88562, 18.88562, 14.62223, 14.62223, 14.62223</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ plume_smoke       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9, 2, 1, 2, 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ hpbl              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 654.3253, 536.9161, 775.3117, 1110.5875, 755.1304</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ temperature_max   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 296.8, 295.2, 293.6, 296.3, 299.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ temperature_min   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 281.7, 276.2, 289.5, 289.2, 285.1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ precipitation     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0, 0.0, 0.0, 0.6, 0.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ solar_radiation   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 320.6, 110.2, 120.8, 234.9, 153.6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ wind_speed        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.1, 5.2, 3.7, 5.0, 3.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ wind_direction    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 94, 209, 63, 284, 52</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ specific_humidity <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.00732, 0.00558, 0.01032, 0.01208, 0.01015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_dust        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.7716578, 0.8419505, 1.3394157, 1.1787193, 0.4911129</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_oc          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 6.839098, 2.653597, 2.519055, 2.797475, 2.400764</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_bc          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.5318720, 0.3922745, 0.3267147, 0.4414604, 0.4116064</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_ss          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9944661, 0.2441934, 0.3561678, 0.7222975, 0.1348545</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_so4         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.430319, 2.208039, 3.706336, 5.782006, 3.397560</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_pm25        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 13.480237, 7.169391, 9.639784, 13.093671, 8.112017</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ year              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2023, 2023, 2023, 2023, 2023</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ doy               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 138, 310, 173, 227, 273</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ s2                <span style="color: #949494; font-style: italic;">&lt;s2cell&gt;</span> 8841b39a7c46e25f<span style="color: #949494;">, </span>8841b39a7c46e25f<span style="color: #949494;">, </span>8841a45555555…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ date              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span> 2023-05-18<span style="color: #949494;">, </span>2023-11-06<span style="color: #949494;">, </span>2023-06-22<span style="color: #949494;">, </span>2023-08-15<span style="color: #949494;">, </span>202…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ x                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 981664.4<span style="color: #949494;">, </span>981664.4<span style="color: #949494;">, </span>993445.3<span style="color: #949494;">, </span>993445.3<span style="color: #949494;">, </span>993445.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ y                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1850030<span style="color: #949494;">, </span>1850030<span style="color: #949494;">, </span>1833221<span style="color: #949494;">, </span>1833221<span style="color: #949494;">, </span>1833221</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ elevation_median  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 239<span style="color: #949494;">, </span>239<span style="color: #949494;">, </span>229<span style="color: #949494;">, </span>229<span style="color: #949494;">, </span>229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ elevation_sd      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 18.88562<span style="color: #949494;">, </span>18.88562<span style="color: #949494;">, </span>14.62223<span style="color: #949494;">, </span>14.62223<span style="color: #949494;">, </span>14.62223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ plume_smoke       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 9<span style="color: #949494;">, </span>2<span style="color: #949494;">, </span>1<span style="color: #949494;">, </span>2<span style="color: #949494;">, </span>2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ hpbl              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 654.3253<span style="color: #949494;">, </span>536.9161<span style="color: #949494;">, </span>775.3117<span style="color: #949494;">, </span>1110.5875<span style="color: #949494;">, </span>755.1304</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ temperature_max   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 296.8<span style="color: #949494;">, </span>295.2<span style="color: #949494;">, </span>293.6<span style="color: #949494;">, </span>296.3<span style="color: #949494;">, </span>299.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ temperature_min   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 281.7<span style="color: #949494;">, </span>276.2<span style="color: #949494;">, </span>289.5<span style="color: #949494;">, </span>289.2<span style="color: #949494;">, </span>285.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ precipitation     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.0<span style="color: #949494;">, </span>0.0<span style="color: #949494;">, </span>0.0<span style="color: #949494;">, </span>0.6<span style="color: #949494;">, </span>0.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ solar_radiation   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 320.6<span style="color: #949494;">, </span>110.2<span style="color: #949494;">, </span>120.8<span style="color: #949494;">, </span>234.9<span style="color: #949494;">, </span>153.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ wind_speed        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3.1<span style="color: #949494;">, </span>5.2<span style="color: #949494;">, </span>3.7<span style="color: #949494;">, </span>5.0<span style="color: #949494;">, </span>3.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ wind_direction    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 94<span style="color: #949494;">, </span>209<span style="color: #949494;">, </span>63<span style="color: #949494;">, </span>284<span style="color: #949494;">, </span>52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ specific_humidity <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.00732<span style="color: #949494;">, </span>0.00558<span style="color: #949494;">, </span>0.01032<span style="color: #949494;">, </span>0.01208<span style="color: #949494;">, </span>0.01015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_dust        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 1.7716578<span style="color: #949494;">, </span>0.8419505<span style="color: #949494;">, </span>1.3394157<span style="color: #949494;">, </span>1.1787193<span style="color: #949494;">, </span>0.4911129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_oc          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 6.839098<span style="color: #949494;">, </span>2.653597<span style="color: #949494;">, </span>2.519055<span style="color: #949494;">, </span>2.797475<span style="color: #949494;">, </span>2.400764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_bc          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.5318720<span style="color: #949494;">, </span>0.3922745<span style="color: #949494;">, </span>0.3267147<span style="color: #949494;">, </span>0.4414604<span style="color: #949494;">, </span>0.4116064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_ss          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0.9944661<span style="color: #949494;">, </span>0.2441934<span style="color: #949494;">, </span>0.3561678<span style="color: #949494;">, </span>0.7222975<span style="color: #949494;">, </span>0.1348545</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_so4         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2.430319<span style="color: #949494;">, </span>2.208039<span style="color: #949494;">, </span>3.706336<span style="color: #949494;">, </span>5.782006<span style="color: #949494;">, </span>3.397560</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ merra_pm25        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 13.480237<span style="color: #949494;">, </span>7.169391<span style="color: #949494;">, </span>9.639784<span style="color: #949494;">, </span>13.093671<span style="color: #949494;">, </span>8.112017</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ year              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2023<span style="color: #949494;">, </span>2023<span style="color: #949494;">, </span>2023<span style="color: #949494;">, </span>2023<span style="color: #949494;">, </span>2023</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ doy               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 138<span style="color: #949494;">, </span>310<span style="color: #949494;">, </span>173<span style="color: #949494;">, </span>227<span style="color: #949494;">, </span>273</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

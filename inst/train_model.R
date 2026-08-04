@@ -21,7 +21,8 @@ if (!file.exists(train_file_output_path)) {
     glue::glue(
       "https://github.com/geomarker-io/appc/releases/download/rf_pm_v{maj}/training_data_v{maj}.rds"
     ),
-    train_file
+    train_file_output_path,
+    mode = "wb"
   )
 }
 
@@ -79,7 +80,7 @@ grf <-
 cli::cli_progress_step("saving GRF")
 file_output_path <- fs::path(
   tools::R_user_dir("appc", "data"),
-  glue::glue("rf_pm_v{packageVersion('appc')$major}.qs")
+  glue::glue("rf_pm_v{packageVersion('appc')$major}.qs2")
 )
 qs2::qs_save(grf, file_output_path)
 cli::cli_alert_info(

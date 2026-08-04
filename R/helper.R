@@ -106,7 +106,7 @@ check_s2_dates <- function(
   s2,
   dates = NULL,
   check_date_min = "2017-01-01",
-  check_date_max = "2025-10-31"
+  check_date_max = "2026-06-30"
 ) {
   if (!inherits(s2, "s2_cell")) {
     stop("x must be a s2_cell vector", call. = FALSE)

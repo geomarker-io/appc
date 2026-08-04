@@ -22,13 +22,13 @@
 #' @return a character string path to an AQS data RDS file
 #' @export
 #' @examples
-#' # on 2025-07-22, 2025 data goes until the end of March 2025
+#' # Data Mart data can be more current than the bulk AQS daily files.
 #' \dontrun{
-#' install_aqs("2025") |>
+#' install_aqs("2026") |>
 #'   readRDS()
 #' }
 install_aqs <- function(
-  year = as.character(2025:2017),
+  year = as.character(2026:2017),
   force_reinstall = FALSE
 ) {
   year <- rlang::arg_match(year)

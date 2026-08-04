@@ -4,7 +4,7 @@
 \alias{install_aqs}
 \title{Install daily PM2.5 averages}
 \usage{
-install_aqs(year = as.character(2025:2017), force_reinstall = FALSE)
+install_aqs(year = as.character(2026:2017), force_reinstall = FALSE)
 }
 \arguments{
 \item{year}{character; calendar year of data to install}
@@ -35,9 +35,9 @@ When a pollutant is measured by more than one device on the same day at the same
 s2 location, the average measurement is returned, ensuring unique measurements for each pollutant-location-day
 }
 \examples{
-# on 2025-07-22, 2025 data goes until the end of March 2025
+# Data Mart data can be more current than the bulk AQS daily files.
 \dontrun{
-install_aqs("2025") |>
+install_aqs("2026") |>
   readRDS()
 }
 }
