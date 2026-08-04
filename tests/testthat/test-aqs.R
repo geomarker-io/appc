@@ -5,7 +5,7 @@ skip_if(
 )
 
 test_that("get_daily_aqs() works", {
-  aqs_pm <- get_daily_aqs("pm25", "2025")
+  aqs_pm <- get_daily_aqs("pm25", "2026")
   expect_equal(names(aqs_pm), c("s2", "date", "pollutant", "conc"))
   expect_s3_class(aqs_pm, c("tbl_df", "tbl", "data.frame"))
 })

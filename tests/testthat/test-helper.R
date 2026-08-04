@@ -123,10 +123,19 @@ test_that("check_s2_dates() works", {
     s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
     list(
       as.Date(c("2017-06-22", "2023-08-15")),
-      as.Date(c("2023-05-18", "2023-11-06", "2026-01-07"))
+      as.Date(c("2023-05-18", "2023-11-06", "2026-07-01"))
     )
   ) |>
     expect_error("must be earlier than")
+
+  check_s2_dates(
+    s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),
+    list(
+      as.Date(c("2017-06-22", "2023-08-15")),
+      as.Date(c("2023-05-18", "2023-11-06", "2026-06-30"))
+    )
+  ) |>
+    expect_silent()
 
   check_s2_dates(
     s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")),

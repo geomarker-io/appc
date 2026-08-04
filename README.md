@@ -19,9 +19,9 @@ The goal of the appc package is to provide daily, high resolution, near
 real-time, model-based ambient air pollution exposure assessments. This
 is achieved by training a generalized random forest on several
 geomarkers to predict daily average EPA AQS concentrations from 2017
-until the near-present (currently October 2025) at exact locations
-across the contiguous United States (see
-`vignette("cv-model-performance")` for more details).
+until the near-present (currently June 2026) at exact locations across
+the contiguous United States (see `vignette("cv-model-performance")` for
+more details).
 
 The appc package contains functions for generating geomarker predictors
 and the ambient air pollution concentrations. Predictor geomarkers
@@ -58,46 +58,46 @@ appc::predict_pm25(
   dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
 #> ℹ (down)loading random forest model
-#> loaded rf_pm_v1 in 40s
-#> ✔ (down)loading random forest model [40.5s]
+#> loaded rf_pm_v2 in 13s
+#> ✔ (down)loading random forest model [13.2s]
 #> 
 #> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [83ms]
+#> ✔ checking that s2 are within the contiguous US [63ms]
 #> 
 #> ℹ adding coordinates
-#> ✔ adding coordinates [10.5s]
+#> ✔ adding coordinates [5.9s]
 #> 
 #> ℹ adding elevation
-#> ✔ adding elevation [1.7s]
+#> ✔ adding elevation [1.9s]
 #> 
 #> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [1.1s]
+#> ✔ adding HMS smoke data [1.2s]
 #> 
 #> ℹ adding NARR
-#> ✔ adding NARR [427ms]
+#> ✔ adding NARR [702ms]
 #> 
 #> ℹ adding gridMET
-#> ✔ adding gridMET [471ms]
+#> ✔ adding gridMET [427ms]
 #> 
 #> ℹ adding MERRA
-#> ✔ adding MERRA [673ms]
+#> ✔ adding MERRA [625ms]
 #> 
 #> ℹ adding time components
-#> ✔ adding time components [28ms]
+#> ✔ adding time components [30ms]
 #> 
 #> [[1]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  7.66   0.624
-#> 2 12.3    1.89 
+#> 1  7.32    1.22
+#> 2 11.5     2.22
 #> 
 #> [[2]]
 #> # A tibble: 2 × 2
 #>    pm25 pm25_se
 #>   <dbl>   <dbl>
-#> 1  12.5    2.09
-#> 2  12.0    1.30
+#> 1  12.1   1.91
+#> 2  12.2   0.972
 ```
 
 See more examples in `vignette("timeline-example")`.
@@ -174,8 +174,8 @@ and future values. To “refresh” geomarker for the current year, delete
 the installed file and reinstall the data; for example:
 
 ``` r
-file.remove(install_daymet_data("tmmx", "2025"))
-install_daymet_data("tmmx", "2025")
+file.remove(install_gridmet_data("tmmx", "2026"))
+install_gridmet_data("tmmx", "2026")
 ```
 
 ## Developing
@@ -191,9 +191,11 @@ generalized random forest model, install and use
 
 To update the MERRA-2 releases:
 
-- Delete any exisiting MERRA-2 data and re-install it using code based
-  on `inst/install_merra_from_source_on_cchmc_hpc.sh`
-- Create a “pre-release” (i.e., *not latest*) tagged and titled
-  `merra-{release_date}` (e.g., `merra-2025-01-02`)
+- On a machine with Earthdata credentials and sufficient temporary
+  storage, set `APPC_INSTALL_DATA_FROM_SOURCE=1`, remove only the MERRA
+  year files being refreshed, and run `install_merra_data()` for those
+  years. The 2026 refresh was built on Marco.
+- Create a release tagged and titled `merra-{release_date}` (e.g.,
+  `merra-2026-08-04`) and mark it as *not latest*
 - Update the default release tag used in `get_merra_data()` (and
   `install_merra_data()`)

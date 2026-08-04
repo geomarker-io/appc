@@ -34,10 +34,10 @@
 #' @examples
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-#'   "8841a45555555555" = as.Date(c("2023-06-22", "2025-10-31"))
+#'   "8841a45555555555" = as.Date(c("2023-06-22", "2026-06-30"))
 #' )
 #' get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
-get_merra_data <- function(x, dates, merra_release = "merra-2025-12-29") {
+get_merra_data <- function(x, dates, merra_release = "merra-2026-08-04") {
   check_s2_dates(x, dates)
   d_merra <-
     dates |>
@@ -86,8 +86,8 @@ get_merra_data <- function(x, dates, merra_release = "merra-2025-12-29") {
 #' @export
 #' @rdname get_merra_data
 install_merra_data <- function(
-  merra_year = as.character(2017:2025),
-  merra_release = "merra-2025-12-29"
+  merra_year = as.character(2017:2026),
+  merra_release = "merra-2026-08-04"
 ) {
   merra_year <- rlang::arg_match(merra_year)
   dest_file <- fs::path(
@@ -166,6 +166,7 @@ create_daily_merra_data <- function(merra_date) {
     )
   }
   tf <- tempfile(fileext = ".nc4")
+  on.exit(unlink(tf), add = TRUE)
   req_url <-
     fs::path(
       "https://goldsmr4.gesdisc.eosdis.nasa.gov/data/MERRA2",
@@ -190,7 +191,11 @@ create_daily_merra_data <- function(merra_date) {
     cookie = fs::path(tools::R_user_dir("appc", "cache"), ".urs_cookies")
   )
 
-  dir.create(tools::R_user_dir("appc", "cache"), showWarnings = FALSE)
+  dir.create(
+    tools::R_user_dir("appc", "cache"),
+    recursive = TRUE,
+    showWarnings = FALSE
+  )
 
   with(
     secure_netrc,

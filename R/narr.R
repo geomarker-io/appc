@@ -71,7 +71,7 @@ install_narr_data <- function(
     "uwnd.10m",
     "vwnd.10m"
   ),
-  narr_year = as.character(2016:2025),
+  narr_year = as.character(2016:2026),
   force_reinstall = FALSE
 ) {
   narr_var <- rlang::arg_match(narr_var)
@@ -80,7 +80,9 @@ install_narr_data <- function(
     tools::R_user_dir("appc", "data"),
     glue::glue("narr_{narr_var}_{narr_year}.nc")
   )
-  if (file.exists(dest_file) & !force_reinstall) return(dest_file)
+  if (file.exists(dest_file) & !force_reinstall) {
+    return(dest_file)
+  }
   message(glue::glue("downloading {narr_year} {narr_var}:"))
   glue::glue(
     "https://downloads.psl.noaa.gov",

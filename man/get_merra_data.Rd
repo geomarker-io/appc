@@ -6,11 +6,11 @@
 \alias{create_daily_merra_data}
 \title{Get MERRA-2 aerosol diagnostics data}
 \usage{
-get_merra_data(x, dates, merra_release = "merra-2025-12-29")
+get_merra_data(x, dates, merra_release = "merra-2026-08-04")
 
 install_merra_data(
-  merra_year = as.character(2017:2025),
-  merra_release = "merra-2025-12-29"
+  merra_year = as.character(2017:2026),
+  merra_release = "merra-2026-08-04"
 )
 
 create_daily_merra_data(merra_date)
@@ -67,7 +67,7 @@ and uses httr2 package to download eathdata files with curl
 \examples{
 d <- list(
   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-  "8841a45555555555" = as.Date(c("2023-06-22", "2025-10-31"))
+  "8841a45555555555" = as.Date(c("2023-06-22", "2026-06-30"))
 )
 get_merra_data(x = s2::as_s2_cell(names(d)), dates = d)
 }

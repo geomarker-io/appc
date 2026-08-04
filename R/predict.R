@@ -1,13 +1,15 @@
 .appc_cache <- new.env(parent = emptyenv())
 
-load_rf_pm_model <- function(model_version = "1") {
+load_rf_pm_model <- function(model_version = "2") {
   st <- Sys.time()
-  if (is.null(.appc_cache$model)) {
+  model_cache_key <- paste0("model_v", model_version)
+  if (!exists(model_cache_key, envir = .appc_cache, inherits = FALSE)) {
     grf_file <- fs::path(
       tools::R_user_dir("appc", "data"),
       glue::glue("rf_pm_v{model_version}.qs2")
     )
     if (!file.exists(grf_file)) {
+      fs::dir_create(fs::path_dir(grf_file))
       message("downloading rf_pm_v", model_version)
       utils::download.file(
         glue::glue(
@@ -25,8 +27,13 @@ load_rf_pm_model <- function(model_version = "1") {
         mode = "wb"
       )
     }
-    .appc_cache$model <- qs2::qs_read(grf_file)
+    assign(
+      model_cache_key,
+      qs2::qs_read(grf_file),
+      envir = .appc_cache
+    )
   }
+  model <- get(model_cache_key, envir = .appc_cache, inherits = FALSE)
   et <- Sys.time()
   message(
     "loaded rf_pm_v",
@@ -35,7 +42,7 @@ load_rf_pm_model <- function(model_version = "1") {
     as.integer(difftime(et, st, units = "secs")),
     "s"
   )
-  return(.appc_cache$model)
+  return(model)
 }
 
 #' Get daily PM2.5 model predictions

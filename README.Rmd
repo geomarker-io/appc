@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 ## About
 
 The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments.
-This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently October 2025) at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
+This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently June 2026) at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
 
 The appc package contains functions for generating geomarker predictors and the ambient air pollution concentrations.
 Predictor geomarkers include weather and atmospheric information, wildfire smoke plumes, elevation, and satellite-based aerosol diagnostics products.
@@ -105,8 +105,8 @@ To "refresh" geomarker for the current year, delete the installed file and reins
 the data; for example:
 
 ```r
-file.remove(install_daymet_data("tmmx", "2025"))
-install_daymet_data("tmmx", "2025")
+file.remove(install_gridmet_data("tmmx", "2026"))
+install_gridmet_data("tmmx", "2026")
 ```
 
 ## Developing
@@ -117,7 +117,6 @@ To create and release the AQS training data, train, and evaluate a generalized r
 
 To update the MERRA-2 releases:
 
-- Delete any exisiting MERRA-2 data and re-install it using code based on `inst/install_merra_from_source_on_cchmc_hpc.sh`
-- Create a "pre-release" (i.e., *not latest*) tagged and titled `merra-{release_date}` (e.g., `merra-2025-01-02`)
+- On a machine with Earthdata credentials and sufficient temporary storage, set `APPC_INSTALL_DATA_FROM_SOURCE=1`, remove only the MERRA year files being refreshed, and run `install_merra_data()` for those years. The 2026 refresh was built on Marco.
+- Create a release tagged and titled `merra-{release_date}` (e.g., `merra-2026-08-04`) and mark it as *not latest*
 - Update the default release tag used in `get_merra_data()`  (and `install_merra_data()`)
-

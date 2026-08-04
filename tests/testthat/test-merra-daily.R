@@ -1,4 +1,6 @@
-if (file.exists(".env")) dotenv::load_dot_env()
+if (file.exists(".env")) {
+  dotenv::load_dot_env()
+}
 earthdata_secrets <- Sys.getenv(
   c("EARTHDATA_USER", "EARTHDATA_PASSWORD"),
   unset = NA
@@ -15,6 +17,11 @@ skip_if(
 )
 
 test_that("getting daily merra from GES DISC works", {
+  temporary_merra_files_before <- list.files(
+    tempdir(),
+    pattern = "[.]nc4$",
+    full.names = TRUE
+  )
   # "normal" pattern
   # merra site uses 401 instead of 400 for september 2020 dates
   # merra site uses 401 instead of 400 for jun, jul, aug, sep 2021 dates
@@ -25,4 +32,10 @@ test_that("getting daily merra from GES DISC works", {
       create_daily_merra_data(merra_date = "2021-06-16")
     )
   expect_equal(sapply(out, nrow), c(4800, 4800, 4800))
+  temporary_merra_files_after <- list.files(
+    tempdir(),
+    pattern = "[.]nc4$",
+    full.names = TRUE
+  )
+  expect_setequal(temporary_merra_files_after, temporary_merra_files_before)
 })

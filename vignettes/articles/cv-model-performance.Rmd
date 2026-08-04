@@ -107,7 +107,7 @@ d$week <- as.numeric(format(d$date, "%U"))
 Leave-one-location-out (LOLO) accuracy is calculated by using out of bag predictions from the trained random forest with resample clustering by the location. 
 Accuracy is characterized using median absolute error (`mae`) and the Spearman's correlation coefficient (`rho`). 
 Accuracy metrics are calculated for each left out location and then summarized using the median accuracy statistic across all locations. 
-This most closely captures the performance in a real-world scenario where we are trying to predict air pollution between 2017 and 2025 in a place where it was not measured.
+This most closely captures the performance in a real-world scenario where we are trying to predict air pollution between 2017 and 2026 in a place where it was not measured.
 
 Each AQS monitor has a different number of measurements depending on its measurement frequency and when it was deployed. 
 To calculate LOLO model performance, we exclude any station or station-time grouping that has 4 or less observations. 
