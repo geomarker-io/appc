@@ -46,11 +46,6 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
-      - name: Rebuild qs2 against RcppParallel on macOS
-        if: runner.os == 'macOS'
-        shell: Rscript {0}
-        run: pak::pkg_install("cran::qs2?source&nocache")
-
       - uses: r-lib/actions/check-r-package@v2
         with:
           error-on: '"warning"'

@@ -7,12 +7,14 @@
 #' are predictors required for the exposure assessment model
 #' @export
 #' @examples
+#' \dontrun{
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15", "2023-09-30"))
 #' )
 #' assemble_predictors(x = s2::as_s2_cell(names(d)), dates = d) |>
 #'   tibble::glimpse()
+#' }
 assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   check_s2_dates(x, dates)
   d <- tibble::tibble(s2 = x, dates = dates)

@@ -10,11 +10,13 @@
 #' @references <https://www.ncei.noaa.gov/products/weather-climate-models/north-american-regional>
 #' @export
 #' @examples
+#' \dontrun{
 #' d <- list(
 #'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
 #'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 #' )
 #' get_narr_data(x = s2::as_s2_cell(names(d)), dates = d, narr_var = "air.2m")
+#' }
 get_narr_data <- function(
   x,
   dates,

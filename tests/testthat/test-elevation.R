@@ -1,3 +1,5 @@
+skip_if_not_integration()
+
 test_that("get_elevation_summary works", {
   get_elevation_summary(s2::as_s2_cell(c(
     "8841b399ced97c47",

@@ -42,11 +42,13 @@ and will return zero values.
 If files are available but no smoke plumes intersect, then a zero values is also returned.
 }
 \examples{
+\dontrun{
 d <- list(
   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2017-11-06")),
   "8841a45555555555" = as.Date(c("2017-06-22", "2023-08-15", "2024-12-30"))
 )
 get_hms_smoke_data(x = s2::as_s2_cell(names(d)), dates = d)
+}
 }
 \references{
 \url{https://www.ospo.noaa.gov/Products/land/hms.html#about}

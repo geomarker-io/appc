@@ -9,7 +9,9 @@
 #' @export
 #' @references <https://prism.oregonstate.edu/normals/>
 #' @examples
+#' \dontrun{
 #' get_elevation_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
+#' }
 get_elevation_summary <- function(x, fun = stats::median, buffer = 800) {
   check_s2_dates(x)
   check_buffer(buffer)
