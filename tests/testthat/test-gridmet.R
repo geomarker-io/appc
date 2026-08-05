@@ -1,3 +1,5 @@
+skip_if_not_integration()
+
 test_that("get_gridmet_data() works", {
   d <- list(
     "8841b39a7c46e25f" = as.Date(c("2022-05-18", "2022-11-06")),

@@ -41,7 +41,9 @@ Latitude and longitude are encoded as an s2 vector, column names are cleaned,
 and rows with missing values (including total emissions or emissions units) are excluded.
 }
 \examples{
+\dontrun{
 get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
+}
 }
 \references{
 \url{https://www.epa.gov/air-emissions-inventories/national-emissions-inventory-nei}

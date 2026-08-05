@@ -31,12 +31,14 @@ for \code{install_nlcd_frac_imperv_data()}, a character string path to NLCD rast
 NLCD data is from v1 of the \href{https://www.mrlc.gov/data/project/annual-nlcd}{Annual NLCD}
 }
 \examples{
+\dontrun{
 d <- list(
   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15"))
 )
 get_nlcd_frac_imperv(x = s2::as_s2_cell(names(d)), dates = d)
 get_nlcd_frac_imperv(x = s2::as_s2_cell(names(d)), dates = d, fun = mean, buffer = 1000)
+}
 }
 \references{
 https://www.usgs.gov/centers/eros/science/annual-nlcd-fractional-impervious-surface

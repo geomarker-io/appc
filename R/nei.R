@@ -12,7 +12,9 @@
 #' @details The full NEI is conducted every three years, with the latest release being 2020.
 #' @export
 #' @examples
+#' \dontrun{
 #' get_nei_point_summary(s2::as_s2_cell(c("8841b399ced97c47", "8841b38578834123")))
+#' }
 get_nei_point_summary <- function(
   x,
   year = c("2020", "2017"),

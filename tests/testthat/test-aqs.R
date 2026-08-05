@@ -1,3 +1,4 @@
+skip_if_not_integration()
 skip_if_offline()
 skip_if(
   is.null(curl::nslookup("aqs.epa.gov", error = FALSE)),

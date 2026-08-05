@@ -1,3 +1,5 @@
+skip_if_not_integration()
+
 test_that("get_nlcd_frac_imperv works", {
   skip_on_os("windows")
   d <- list(

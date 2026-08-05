@@ -1,3 +1,5 @@
+skip_if_not_integration()
+
 test_that("get_traffic_summary works", {
   get_traffic_summary(
     s2::as_s2_cell(c(

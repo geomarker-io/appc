@@ -14,9 +14,9 @@
 #' @references <https://data-usdot.opendata.arcgis.com/datasets/usdot::highway-performance-monitoring-system-hpms-2020/about>
 #' @export
 #' @examples
+#' \dontrun{
 #' get_traffic_summary(
 #'   s2::as_s2_cell(c("8841b6abd8207619", "8841b4f6affffffb", "8841b39f07f7d899")))
-#' \dontrun{
 #' # randomly sample 100 level 18 cells from s2 level-9: 8841b4
 #' # https://igorgatis.github.io/ws2/?cells=8841b4
 #' # use their centroids as the level 30 s2 cells
