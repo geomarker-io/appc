@@ -2,6 +2,13 @@
 title: "Case-Crossover Example"
 ---
 
+```{r artifact_gate, echo=FALSE, results='asis'}
+if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
+  cat("This example requires a locally built v3 model. Set APPC_BUILD_MODEL_ARTICLES=true to execute it.\n")
+  knitr::knit_exit()
+}
+```
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -40,8 +47,8 @@ For this example, we want to estimate the fine particulate matter on the days of
 dates_seq <- seq(min(d$case_date) - 31, max(d$case_date) + 31, by = 1)
 
 make_control_dates <- function(case_date) {
-  dates_seq[lubridate::year(dates_seq) == lubridate::year(case_date) & 
-              lubridate::month(dates_seq) == lubridate::month(case_date) & 
+  dates_seq[lubridate::year(dates_seq) == lubridate::year(case_date) &
+              lubridate::month(dates_seq) == lubridate::month(case_date) &
               lubridate::wday(dates_seq) == lubridate::wday(case_date) &
               dates_seq != case_date]
 }
@@ -65,8 +72,8 @@ d
 Then we can directly use the `s2` and `dates` columns to add temperature and humidity using the `get_narr_data()` function and PM2.5 using the  `predict_pm25()` function:
 
 ```{r}
-d <- d |> dplyr::mutate(temperature = get_narr_data(s2, dates, "air.2m"), 
-                        humidity = get_narr_data(s2, dates, "rhum.2m"))
+d <- d |> dplyr::mutate(temperature = geomarker::get_narr_data(geomarker::s2cd(s2, dates), "air.2m"),
+                        humidity = geomarker::get_narr_data(geomarker::s2cd(s2, dates), "rhum.2m"))
 
 d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates))
 

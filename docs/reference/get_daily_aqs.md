@@ -1,0 +1,55 @@
+# Get daily AQS concentrations
+
+Pre-generated daily summary files are downloaded from the EPA AQS
+website and filtered/harmonized as described in the Details.
+
+## Usage
+
+``` r
+get_daily_aqs(
+  pollutant = c("pm25", "ozone", "no2"),
+  year = as.character(2017:2026)
+)
+```
+
+## Arguments
+
+- pollutant:
+
+  one of "pm25", "ozone", or "no2"
+
+- year:
+
+  calendar year
+
+## Value
+
+data.frame/tibble of pollutant concentrations with site id, lat/lon, and
+date
+
+## Details
+
+For PM2.5 (FRM, non-FRM, and speciation), data is filtered to only
+observations with a sample duration of "24 HOURS". All pollutants
+measurements are removed if the observation percent for the sampling
+period is less than 75. When a pollutant is measured by more than one
+device on the same day at the same s2 location, the average measurement
+is returned, ensuring unique measurements for each
+pollutant-location-day
+
+Note: Historical measurements are subject to change and the EPA AQS
+website only stores the latest versions. Since this function always
+downloads the latest data from EPA AQS, that means that it will could
+different results depending on the date it was run. Similarly, the most
+recent year might not contain measurements for the entire calendar year.
+
+Get all the files on the page and the date they were last updated:
+`readr::read_csv("https://aqs.epa.gov/aqsweb/airdata/file_list.csv")`
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+get_daily_aqs("pm25", "2024")
+} # }
+```

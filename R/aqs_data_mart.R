@@ -50,8 +50,8 @@ aqs_data_mart_daily <- function(year) {
   the_req <-
     httr2::request("https://aqs.epa.gov/data/api/dailyData/byState") |>
     httr2::req_url_query(
-      email = aqs_creds$email,
-      key = aqs_creds$key,
+      email = aqs_creds$AQS_DATA_MART_API_EMAIL,
+      key = aqs_creds$AQS_DATA_MART_API_KEY,
       param = "88101",
       bdate = paste0(year, "0101"),
       edate = paste0(year, "1231")

@@ -12,8 +12,17 @@ message("using appc, version ", packageVersion("appc"))
 
 cli::cli_progress_step("creating AQS training data")
 
-model_start_date <- as.Date("2017-01-01")
-model_end_date <- as.Date("2026-06-30")
+spec <- appc:::model_spec()
+metadata <- appc:::training_metadata()
+train_file_output_path <- appc:::model_artifact_path("training")
+appc:::check_new_artifact(train_file_output_path)
+dir.create(
+  dirname(train_file_output_path),
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+model_start_date <- spec$coverage_start
+model_end_date <- spec$coverage_end
 
 d_aqs <- map(as.character(2017:2025), get_daily_aqs, pollutant = "pm25")
 d_aqs[["2026"]] <-
@@ -44,6 +53,7 @@ message(
 )
 
 # structure for pipeline and subset to contiguous US
+contiguous_us <- utils::getFromNamespace("contiguous_us", "appc")
 d <-
   d |>
   nest_by(s2) |>
@@ -63,36 +73,9 @@ cli::cli_progress_done()
 
 d_train <- assemble_predictors(x = d$s2, dates = d$dates)
 
-training_concentrations <- unlist(d$pm25)
-stopifnot(
-  "predictor rows do not align with AQS concentrations" = nrow(d_train) ==
-    length(training_concentrations)
-)
-d_train$conc <- training_concentrations
+d_train <- appc:::attach_training_outcome(d_train, d$s2, d$dates, d$pm25)
 
-required_predictors <-
-  c(
-    "x",
-    "y",
-    "doy",
-    "year",
-    "elevation_median",
-    "elevation_sd",
-    "plume_smoke",
-    "temperature_max",
-    "temperature_min",
-    "precipitation",
-    "solar_radiation",
-    "wind_speed",
-    "wind_direction",
-    "specific_humidity",
-    "hpbl",
-    "merra_dust",
-    "merra_oc",
-    "merra_bc",
-    "merra_ss",
-    "merra_so4"
-  )
+required_predictors <- spec$predictors
 
 stopifnot(
   "training data do not contain the required predictors" = all(
@@ -153,10 +136,7 @@ d_train |>
   print(n = Inf)
 
 cli::cli_progress_step("saving training data")
-train_file_output_path <- fs::path(
-  tools::R_user_dir("appc", "data"),
-  glue::glue("training_data_v{packageVersion('appc')$major}.rds")
-)
+attr(d_train, "appc_model_training") <- metadata
 saveRDS(d_train, train_file_output_path)
 cli::cli_alert_info(
   "saved {fs::file_info(train_file_output_path)$size} to {train_file_output_path}"

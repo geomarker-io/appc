@@ -1,9 +1,9 @@
 ^LICENSE\.md$
 justfile
 Dockerfile
-model
-rf_pm.rds
-training_data.rds
+^model$
+^rf_pm\.rds$
+^training_data\.rds$
 ^\.github$
 ^codecov\.yml$
 ^.env$
@@ -17,3 +17,5 @@ merra_cache
 vignettes/articles
 ^vignettes/articles$
 air.toml
+^inst/0_assemble_y\.R$
+^inst/train_model_with_geomarker\.R$

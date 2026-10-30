@@ -9,62 +9,39 @@ if (file.exists("./inst")) {
   library(appc)
 }
 
-train_file_output_path <-
-  fs::path(
-    tools::R_user_dir("appc", "data"),
-    glue::glue("training_data_v{packageVersion('appc')$major}.rds")
-  )
-
+spec <- appc:::model_spec()
+# Check the pinned training environment before reading data or fitting.
+invisible(appc:::training_metadata())
+train_file_output_path <- appc:::model_artifact_path("training")
+file_output_path <- appc:::model_artifact_path("model")
+appc:::check_new_artifact(file_output_path)
 if (!file.exists(train_file_output_path)) {
-  maj <- packageVersion("appc")$major
-  download.file(
-    glue::glue(
-      "https://github.com/geomarker-io/appc/releases/download/rf_pm_v{maj}/training_data_v{maj}.rds"
-    ),
-    train_file_output_path,
-    mode = "wb"
+  stop(
+    "No v3 training data are available. Run just make_training_data first.",
+    call. = FALSE
   )
 }
-
 d_train <- readRDS(train_file_output_path)
-
-
-pred_names <-
-  c(
-    "x",
-    "y",
-    "doy",
-    "year",
-    "elevation_median",
-    "elevation_sd",
-    "plume_smoke",
-    "temperature_max",
-    "temperature_min",
-    "precipitation",
-    "solar_radiation",
-    "wind_speed",
-    "wind_direction",
-    "specific_humidity",
-    ## "air.2m", "hpbl", "acpcp", "rhum.2m", "vis", "pres.sfc", "uwnd.10m", "vwnd.10m"
-    "hpbl",
-    ## "merra_pm25",
-    "merra_dust",
-    "merra_oc",
-    "merra_bc",
-    "merra_ss",
-    "merra_so4"
-    ## "frac_imperv"
-    ## "aadt_total_m", "aadt_truck_m",
-    ## "nei_point_id2w"
-  )
+metadata <- appc:::validate_training_metadata(d_train)
+pred_names <- spec$predictors
+stopifnot(
+  "training data do not contain the required predictors" = all(
+    pred_names %in% names(d_train)
+  ),
+  "training concentrations contain missing values" = !anyNA(d_train$conc)
+)
 
 cli::cli_progress_step("training GRF")
+num_threads <- parallel::detectCores()
+if (is.na(num_threads) || num_threads < 1L) {
+  num_threads <- 1L
+}
 grf <-
   regression_forest(
     X = select(d_train, all_of(pred_names)),
     Y = d_train$conc,
     seed = 224,
-    num.threads = parallel::detectCores(),
+    num.threads = num_threads,
     num.trees = 200,
     compute.oob.predictions = TRUE,
     honesty = FALSE,
@@ -78,10 +55,7 @@ grf <-
   )
 
 cli::cli_progress_step("saving GRF")
-file_output_path <- fs::path(
-  tools::R_user_dir("appc", "data"),
-  glue::glue("rf_pm_v{packageVersion('appc')$major}.rds")
-)
+attr(grf, "appc_model_training") <- metadata
 saveRDS(grf, file_output_path, compress = "gzip", version = 3)
 cli::cli_alert_info(
   "saved rf_pm rds file ({fs::file_info(file_output_path)$size}) to {file_output_path}"

@@ -1,129 +1,134 @@
-#' Assemble a tibble of required predictors for the exposure assessment model
+#' Assemble predictors for the PM2.5 model
 #'
-#' @param x a vector of s2 cell identifers (`s2_cell` object); currently required to be within the contiguous united states
-#' @param dates a list of date vectors for the predictions, must be the same length as `x`
-#' @param pollutant ignored now, but reserved for future sets of predictors specific to different pollutants
-#' @return a tibble with one row for each unique s2 location - date combination where columns
-#' are predictors required for the exposure assessment model
+#' Uses geomarker for environmental assessment and adds model-specific spatial
+#' and calendar terms. The same implementation is used for training and prediction.
+#' @param x a vector of level-30 `s2_cell` locations within the contiguous US
+#' @param dates a list of nonempty Date vectors, the same length as `x`
+#' @param pollutant reserved for future pollutant-specific predictors
+#' @return A tibble with one row per requested location-date, in input order.
+#'   Duplicate locations and dates are preserved.
 #' @export
 #' @examples
 #' \dontrun{
-#' d <- list(
-#'   "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-#'   "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15", "2023-09-30"))
+#' assemble_predictors(
+#'   s2::as_s2_cell("8841b39a7c46e25f"),
+#'   list(as.Date(c("2023-05-18", "2023-11-06")))
 #' )
-#' assemble_predictors(x = s2::as_s2_cell(names(d)), dates = d) |>
-#'   tibble::glimpse()
 #' }
 assemble_predictors <- function(x, dates, pollutant = c("pm25")) {
   check_s2_dates(x, dates)
-  d <- tibble::tibble(s2 = x, dates = dates)
-  cli::cli_progress_step("checking that s2 are within the contiguous US")
-  contig_us_flag <- s2::s2_intersects(
-    s2::s2_cell_center(d$s2),
-    s2::as_s2_geography(contiguous_us)
-  )
-  if (!all(contig_us_flag)) {
+  # geomarker declares terra as optional, but this model always needs its rasters.
+  loadNamespace("terra")
+  spec <- model_spec()
+  if (
+    !all(s2::s2_intersects(
+      s2::s2_cell_center(x),
+      s2::as_s2_geography(contiguous_us)
+    ))
+  ) {
     stop(
       "not all s2 locations are within the contiguous united states",
       call. = FALSE
     )
   }
 
-  cli::cli_progress_step("adding coordinates")
-  conus_coords <-
-    sf::st_as_sf(s2::s2_cell_center(d$s2)) |>
-    sf::st_transform(sf::st_crs(5072)) |>
-    sf::st_coordinates() |>
-    tibble::as_tibble()
-  d$x <- conus_coords$X
-  d$y <- conus_coords$Y
+  # geomarker requires sorted dates; restore the caller's row order at the end.
+  ordering <- lapply(dates, order)
+  sorted_dates <- Map(function(d, i) d[i], dates, ordering)
+  offsets <- cumsum(c(0L, utils::head(lengths(dates), -1L)))
+  input_rows <- Map(function(i, offset) i + offset, ordering, offsets)
+  locations <- geomarker::s2cd(x, sorted_dates)
+  d <- tibble::tibble(s2 = x, dates = sorted_dates, .input_row = input_rows)
+  coordinates <- sf::st_coordinates(sf::st_transform(
+    sf::st_as_sf(s2::s2_cell_center(x)),
+    spec$coordinate_crs
+  ))
+  d$x <- coordinates[, "X"]
+  d$y <- coordinates[, "Y"]
 
   cli::cli_progress_step("adding elevation")
-  d$elevation_median <- get_elevation_summary(
-    x = d$s2,
+  elevation_median <- geomarker::get_elevation_summary(
+    locations,
     fun = stats::median,
-    buffer = 1200
+    buffer = spec$elevation_buffer
   )
-  d$elevation_sd <- get_elevation_summary(
-    x = d$s2,
+  elevation_sd <- geomarker::get_elevation_summary(
+    locations,
     fun = stats::sd,
-    buffer = 1200
+    buffer = spec$elevation_buffer
   )
-  ## cli::cli_progress_step("adding AADT using level 14 s2 approximation (~ 260 m sq)")
-  ## d$traffic <- get_traffic_summary(d$s2, buffer = 1500, s2_approx_level = "14")
-  ## d$aadt_total_m <- purrr::map_dbl(d$traffic, "aadt_total_m")
-  ## d$aadt_truck_m <- purrr::map_dbl(d$traffic, "aadt_truck_m")
-  ## d$traffic <- NULL
+  if (
+    !is.numeric(elevation_median) ||
+      !is.numeric(elevation_sd) ||
+      length(elevation_median) != length(x) ||
+      length(elevation_sd) != length(x)
+  ) {
+    stop(
+      "geomarker elevation summaries must contain one numeric value per location.",
+      call. = FALSE
+    )
+  }
+  d$elevation_median <- elevation_median
+  d$elevation_sd <- elevation_sd
 
-  cli::cli_progress_step("adding HMS smoke data")
-  d$plume_smoke <- get_hms_smoke_data(x = d$s2, dates = d$dates)
-
-  cli::cli_progress_step("adding NARR")
-  d$hpbl <- get_narr_data("hpbl", x = d$s2, dates = d$dates)
-
-  cli::cli_progress_step("adding gridMET")
-  my_gridmet <- purrr::partial(get_gridmet_data, x = d$s2, dates = d$dates)
-  d$temperature_max <- my_gridmet("tmmx")
-  d$temperature_min <- my_gridmet("tmmn")
-  d$precipitation <- my_gridmet("pr")
-  d$solar_radiation <- my_gridmet("srad")
-  d$wind_speed <- my_gridmet("vs")
-  d$wind_direction <- my_gridmet("th")
-  d$specific_humidity <- my_gridmet("sph")
-
-  ## cli::cli_progress_step("adding NLCD")
-  ## d$frac_imperv <- get_nlcd_frac_imperv(d$s2, d$dates, fun = stats::median, buffer = 1200)
-
+  cli::cli_progress_step("adding HMS smoke, NARR, and gridMET")
+  d$plume_smoke <- geomarker::get_smoke_summary(
+    locations,
+    summary = spec$smoke_summary
+  )
+  d$hpbl <- geomarker::get_narr_data(locations, spec$narr_variable)
+  for (name in names(spec$gridmet)) {
+    d[[name]] <- geomarker::get_gridmet_data(locations, spec$gridmet[[name]])
+  }
   cli::cli_progress_step("adding MERRA")
-  d$merra <- get_merra_data(d$s2, d$dates)
-  d$merra_dust <- purrr::map(d$merra, "merra_dust")
-  d$merra_oc <- purrr::map(d$merra, "merra_oc")
-  d$merra_bc <- purrr::map(d$merra, "merra_bc")
-  d$merra_ss <- purrr::map(d$merra, "merra_ss")
-  d$merra_so4 <- purrr::map(d$merra, "merra_so4")
-  d$merra_pm25 <- purrr::map(d$merra, "merra_pm25")
-  d$merra <- NULL
+  merra <- geomarker::get_merra_data(locations)
+  if (
+    !is.list(merra) ||
+      length(merra) != length(x) ||
+      !all(vapply(
+        merra,
+        function(z) {
+          is.data.frame(z) &&
+            all(spec$merra_columns %in% names(z))
+        },
+        logical(1)
+      ))
+  ) {
+    stop(
+      "geomarker MERRA output does not have the expected schema.",
+      call. = FALSE
+    )
+  }
+  for (name in spec$merra_columns) {
+    d[[name]] <- lapply(merra, `[[`, name)
+  }
 
-  ## cli::cli_progress_step("adding NEI")
-  ## nei_years <- c("2017", "2020")
-  ## d$nei_point_id2w <-
-  ##   purrr::map(nei_years, \(x) get_nei_point_summary(d$s2, year = x, pollutant_code = "PM25-PRI", buffer = 2500)) |>
-  ##   stats::setNames(nei_years) |>
-  ##   purrr::list_transpose()
-  ## d$nei_point_id2w <- purrr::map2(d$dates, d$nei_point_id2w, \(x, y) y[get_closest_year(x = x, years = names(y[1]))])
-
-  cli::cli_progress_step("adding time components")
-  d <-
-    d |>
-    tidyr::unnest(
-      cols = c(
-        dates,
-        hpbl,
-        temperature_max,
-        temperature_min,
-        precipitation,
-        solar_radiation,
-        wind_speed,
-        wind_direction,
-        specific_humidity,
-        ## air.2m, acpcp, rhum.2m, vis, pres.sfc, uwnd.10m, vwnd.10m,
-        ## frac_imperv,
-        merra_pm25,
-        merra_dust,
-        merra_oc,
-        merra_bc,
-        merra_ss,
-        merra_so4,
-        ## urban_imperviousness,
-        ## nei_point_id2w,
-        plume_smoke
+  temporal <- c("plume_smoke", "hpbl", names(spec$gridmet), spec$merra_columns)
+  for (name in temporal) {
+    z <- d[[name]]
+    if (
+      !is.list(z) ||
+        length(z) != length(x) ||
+        !all(vapply(z, is.numeric, logical(1))) ||
+        !identical(unname(lengths(z)), unname(lengths(sorted_dates)))
+    ) {
+      stop(
+        "geomarker output for ",
+        name,
+        " must contain one numeric value per requested location-date.",
+        call. = FALSE
       )
-    ) |>
-    dplyr::rename(date = dates)
+    }
+  }
+  d <- tidyr::unnest(
+    d,
+    cols = dplyr::all_of(c("dates", ".input_row", temporal))
+  )
+  d <- dplyr::rename(d, date = dates)
+  d <- d[order(d$.input_row), ]
+  d$.input_row <- NULL
   d$year <- as.numeric(format(d$date, "%Y"))
   d$doy <- as.numeric(format(d$date, "%j"))
   cli::cli_progress_done()
-
-  return(d)
+  d
 }
