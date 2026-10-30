@@ -1,5 +1,7 @@
 # appc 2.99.0.9000
 
+- `predict_pm25()` now accepts geomarker `s2cd` objects directly, using their
+  stored dates and retaining the existing list-of-tibbles output.
 - Prepare model generation 3 for January 2017 through June 2026 using geomarker
   0.2.0, pinned to release commit 373820d0ab8082f856f7bf0f639f3128111d825a.
 - Share geomarker-backed predictor assembly between the committed training-data

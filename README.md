@@ -55,6 +55,16 @@ appc::predict_pm25(
 
 See more examples in `vignette("timeline-example")`.
 
+You can also pass a geomarker `s2cd` object directly. Its stored dates are used:
+
+```r
+locations <- geomarker::s2cd(
+  s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
+  dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date("2025-06-22"))
+)
+appc::predict_pm25(locations, keep_predictors = TRUE)
+```
+
 ## S2 Geometry
 
 The [S2Geometry](https://s2geometry.io/) library is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview).

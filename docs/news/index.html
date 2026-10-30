@@ -39,7 +39,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.99.0.9000" id="appc-29909000">appc 2.99.0.9000<a class="anchor" aria-label="anchor" href="#appc-29909000"></a></h2>
-<ul><li>Prepare model generation 3 for January 2017 through June 2026 using geomarker 0.2.0, pinned to release commit 373820d0ab8082f856f7bf0f639f3128111d825a.</li>
+<ul><li>
+<code><a href="../reference/predict_pm25.html">predict_pm25()</a></code> now accepts geomarker <code>s2cd</code> objects directly, using their stored dates and retaining the existing list-of-tibbles output.</li>
+<li>Prepare model generation 3 for January 2017 through June 2026 using geomarker 0.2.0, pinned to release commit 373820d0ab8082f856f7bf0f639f3128111d825a.</li>
 <li>Share geomarker-backed predictor assembly between the committed training-data script and prediction, preserving input location/date order and duplicates.</li>
 <li>Keep AQS outcome harmonization and the existing GRF training specification.</li>
 <li>Remove standalone environmental assessment and installation APIs; use geomarker for those functions. Elevation now comes from USGS 3DEP rather than the v2 PRISM source, so the v2 model cannot be reused with these inputs.</li>

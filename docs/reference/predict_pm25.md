@@ -6,18 +6,29 @@ Get daily PM2.5 model predictions
 
 ``` r
 predict_pm25(x, dates, keep_predictors = FALSE)
+
+# S3 method for class 's2cd'
+predict_pm25(x, dates = NULL, keep_predictors = FALSE)
+
+# Default S3 method
+predict_pm25(x, dates, keep_predictors = FALSE)
+
+# S3 method for class 's2_cell'
+predict_pm25(x, dates, keep_predictors = FALSE)
 ```
 
 ## Arguments
 
 - x:
 
-  a vector of s2 cell identifers (`s2_cell` object)
+  a vector of s2 cell identifiers (`s2_cell` object), or a
+  [`geomarker::s2cd()`](https://geomarker.io/geomarker/reference/s2cd.html)
+  object containing both locations and prediction dates
 
 - dates:
 
-  a list of date vectors for the predictions, must be the same length as
-  `x`
+  a list of date vectors for the predictions, the same length as `x`;
+  omit for `s2cd` objects because their stored dates are used
 
 - keep_predictors:
 
@@ -27,7 +38,7 @@ predict_pm25(x, dates, keep_predictors = FALSE)
 
 a list of tibbles the same length as `x`, each containing columns for
 the predicted (`pm25`) and its standard error (`pm25_se`); with one row
-per date in `dates`. These numerics are the concentrations of fine
+per requested date. These numerics are the concentrations of fine
 particulate matter, measured in micrograms per cubic meter. See
 `vignette("cv-model-performance")` for more details on the cross
 validated accuracy of the daily PM2.5 model predictions.
@@ -56,5 +67,9 @@ d <- list(
   "8841a45555555555" = as.Date(c("2023-06-21", "2023-08-25"))
 )
 predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
+
+# locations and dates can also be supplied together
+locations <- geomarker::s2cd(s2::as_s2_cell(names(d)), dates = d)
+predict_pm25(locations, keep_predictors = TRUE)
 } # }
 ```

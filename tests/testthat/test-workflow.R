@@ -75,6 +75,16 @@ test_that("the committed scripts build a small synthetic model used by predictio
     unlist(lapply(out, function(z) z$pm25), use.names = FALSE),
     as.numeric(direct$predictions)
   )
+  # The s2cd method must produce exactly the same results as explicit vectors.
+  sorted_dates <- lapply(request_dates, sort)
+  locations <- geomarker::s2cd(request_cells, sorted_dates)
+  expect_equal(
+    predict_pm25(locations, keep_predictors = TRUE),
+    predict_pm25(request_cells, sorted_dates, keep_predictors = TRUE)
+  )
+  plain <- predict_pm25(locations)
+  expect_identical(names(plain[[1]]), c("pm25", "pm25_se"))
+  expect_identical(unname(vapply(plain, nrow, integer(1))), c(3L, 1L, 2L))
 })
 
 test_that("missing v3 artifacts fail without downloading or using cached v2", {

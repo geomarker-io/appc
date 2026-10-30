@@ -2,21 +2,32 @@
 % Please edit documentation in R/predict.R
 \name{predict_pm25}
 \alias{predict_pm25}
+\alias{predict_pm25.s2cd}
+\alias{predict_pm25.default}
+\alias{predict_pm25.s2_cell}
 \title{Get daily PM2.5 model predictions}
 \usage{
 predict_pm25(x, dates, keep_predictors = FALSE)
+
+\method{predict_pm25}{s2cd}(x, dates = NULL, keep_predictors = FALSE)
+
+\method{predict_pm25}{default}(x, dates, keep_predictors = FALSE)
+
+\method{predict_pm25}{s2_cell}(x, dates, keep_predictors = FALSE)
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (\code{s2_cell} object)}
+\item{x}{a vector of s2 cell identifiers (\code{s2_cell} object), or a
+\code{\link[geomarker:s2cd]{geomarker::s2cd()}} object containing both locations and prediction dates}
 
-\item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
+\item{dates}{a list of date vectors for the predictions, the same length as
+\code{x}; omit for \code{s2cd} objects because their stored dates are used}
 
 \item{keep_predictors}{logical; return values for model predictors alongside PM2.5 estimates?}
 }
 \value{
 a list of tibbles the same length as \code{x}, each containing
 columns for the predicted (\code{pm25}) and its standard error (\code{pm25_se});
-with one row per date in \code{dates}. These numerics are the concentrations of fine
+with one row per requested date. These numerics are the concentrations of fine
 particulate matter, measured in micrograms per cubic meter. See \code{vignette("cv-model-performance")}
 for more details on the cross validated accuracy of the daily PM2.5 model predictions.
 }
@@ -43,5 +54,9 @@ d <- list(
   "8841a45555555555" = as.Date(c("2023-06-21", "2023-08-25"))
 )
 predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
+
+# locations and dates can also be supplied together
+locations <- geomarker::s2cd(s2::as_s2_cell(names(d)), dates = d)
+predict_pm25(locations, keep_predictors = TRUE)
 }
 }
