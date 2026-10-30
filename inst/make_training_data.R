@@ -26,7 +26,10 @@ model_end_date <- spec$coverage_end
 
 d_aqs <- map(as.character(2017:2025), get_daily_aqs, pollutant = "pm25")
 d_aqs[["2026"]] <-
-  install_aqs("2026", force_reinstall = TRUE) |>
+  install_aqs(
+    "2026",
+    force_reinstall = getOption("appc.refresh_aqs", TRUE)
+  ) |>
   readRDS()
 
 d <-

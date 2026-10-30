@@ -2,6 +2,9 @@
 
 ## appc 2.99.0.9000
 
+- Require terra 1.9.46 or newer for the compressed NetCDF extraction
+  fix, and allow completed AQS refreshes to be reused with
+  `options(appc.refresh_aqs = FALSE)`.
 - Retry transient EPA API failures and resume incomplete AQS refreshes
   from harmonized state checkpoints without replacing the last complete
   annual extract.

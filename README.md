@@ -90,6 +90,15 @@ The first script downloads and harmonizes AQS outcomes, calls the shared geomark
 The second reads that table and fits the existing GRF specification, saving `rf_pm_v3.rds`.
 These are large, manually invoked jobs. Neither is run by package checks.
 
+Use terra 1.9.46 or newer to avoid the [compressed NetCDF extraction slowdown](https://github.com/rspatial/terra/issues/2145) in earlier 1.9 versions.
+The training-data script normally refreshes current-year AQS outcomes.
+After a successful AQS refresh, you can reuse that annual cache when restarting predictor assembly:
+
+```r
+options(appc.refresh_aqs = FALSE)
+source("inst/make_training_data.R")
+```
+
 Training requires geomarker 0.2.0 from release commit `373820d0ab8082f856f7bf0f639f3128111d825a`.
 Install the exact dependency recorded in DESCRIPTION from the repository root:
 

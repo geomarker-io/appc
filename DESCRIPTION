@@ -28,7 +28,7 @@ Imports:
     rlang,
     s2,
     sf,
-    terra,
+    terra (>= 1.9.46),
     tibble,
     tidyr
 Suggests: 

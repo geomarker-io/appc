@@ -1,5 +1,6 @@
 test_that("the committed scripts build a small synthetic model used by prediction", {
   local_geomarker_sources()
+  withr::local_options(appc.refresh_aqs = NULL)
   withr::local_envvar(R_USER_DATA_DIR = tempfile("appc-v3-synthetic-"))
   rm(list = ls(.appc_cache), envir = .appc_cache)
   withr::defer(rm(list = ls(.appc_cache), envir = .appc_cache))
@@ -23,13 +24,15 @@ test_that("the committed scripts build a small synthetic model used by predictio
   for_year <- function(year) {
     observations[format(observations$date, "%Y") == year, ]
   }
+  refreshes <- logical()
   testthat::local_mocked_bindings(
     get_daily_aqs = function(pollutant, year) {
       stopifnot(pollutant == "pm25")
       for_year(year)
     },
     install_aqs = function(year, force_reinstall) {
-      stopifnot(year == "2026", force_reinstall)
+      stopifnot(year == "2026")
+      refreshes <<- c(refreshes, force_reinstall)
       path <- tempfile(fileext = ".rds")
       saveRDS(for_year(year), path)
       path
@@ -45,6 +48,19 @@ test_that("the committed scripts build a small synthetic model used by predictio
   d <- readRDS(model_artifact_path("training"))
   expect_silent(validate_training_metadata(d))
   expect_equal(nrow(d), 60)
+  # Restarting predictor assembly can reuse a successfully refreshed AQS cache.
+  unlink(model_artifact_path("training"))
+  withr::local_options(appc.refresh_aqs = FALSE)
+  invisible(capture.output(suppressMessages(sys.source(
+    system.file("make_training_data.R", package = "appc", mustWork = TRUE),
+    envir = work
+  ))))
+  expect_identical(refreshes, c(TRUE, FALSE))
+  resumed <- readRDS(model_artifact_path("training"))
+  expect_silent(validate_training_metadata(resumed))
+  for (column in names(d)) {
+    expect_identical(resumed[[column]], d[[column]])
+  }
   invisible(capture.output(suppressMessages(sys.source(
     system.file("train_model.R", package = "appc", mustWork = TRUE),
     envir = work

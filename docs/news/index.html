@@ -39,7 +39,8 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.99.0.9000" id="appc-29909000">appc 2.99.0.9000<a class="anchor" aria-label="anchor" href="#appc-29909000"></a></h2>
-<ul><li>Retry transient EPA API failures and resume incomplete AQS refreshes from harmonized state checkpoints without replacing the last complete annual extract.</li>
+<ul><li>Require terra 1.9.46 or newer for the compressed NetCDF extraction fix, and allow completed AQS refreshes to be reused with <code>options(appc.refresh_aqs = FALSE)</code>.</li>
+<li>Retry transient EPA API failures and resume incomplete AQS refreshes from harmonized state checkpoints without replacing the last complete annual extract.</li>
 <li>Include Idaho and North Dakota in AQS API refreshes for complete contiguous-US coverage.</li>
 <li>
 <code><a href="../reference/predict_pm25.html">predict_pm25()</a></code> now accepts geomarker <code>s2cd</code> objects directly, using their stored dates and retaining the existing list-of-tibbles output.</li>
