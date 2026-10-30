@@ -48,7 +48,88 @@
 <li>Record model generation separately from package version, preserve training provenance, and require matching metadata for local v3 model artifacts.</li>
 <li>Full v3 training and publication are still required. Documentation does not present v2 predictions or performance as results from v3.</li>
 </ul></div>
-  </main></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.1" id="appc-201">appc 2.0.1<a class="anchor" aria-label="anchor" href="#appc-201"></a></h2>
+<ul><li>Load the PM2.5 model from a portable RDS artifact (<a href="https://github.com/geomarker-io/appc/pull/119" class="external-link">#119</a>).</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v2.0.1" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.0" id="appc-200">appc 2.0.0<a class="anchor" aria-label="anchor" href="#appc-200"></a></h2>
+<ul><li>Release a new PM2.5 model and training data covering January 2017 through June 2026 (<a href="https://github.com/geomarker-io/appc/pull/118" class="external-link">#118</a>).</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v2.0.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.2" id="appc-102">appc 1.0.2<a class="anchor" aria-label="anchor" href="#appc-102"></a></h2>
+<ul><li>Switch model serialization from qs to qs2 (<a href="https://github.com/geomarker-io/appc/pull/117" class="external-link">#117</a>).</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v1.0.2" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.1" id="appc-101">appc 1.0.1<a class="anchor" aria-label="anchor" href="#appc-101"></a></h2>
+<ul><li>Add <code>keep_predictors</code> to <code><a href="../reference/predict_pm25.html">predict_pm25()</a></code> to optionally return predictors alongside predictions.</li>
+<li>Validate buffer arguments and improve the README and vignettes.</li>
+<li>Retain the existing model, data, and prediction values.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v1.0.1" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.0" id="appc-100">appc 1.0.0<a class="anchor" aria-label="anchor" href="#appc-100"></a></h2>
+<ul><li>Retrain the random forest with updated observations, replacing predictions across the entire January 2017 through October 2025 coverage period.</li>
+<li>Update Annual NLCD to include 2024 data, and update HMS smoke, NARR, and gridMET availability for 2025.</li>
+<li>Add traffic summaries by vehicle class and NEI point-source assessments.</li>
+<li>Add AQS Data Mart installation for more recent daily PM2.5 observations.</li>
+<li>Add <code>force_reinstall</code> for refreshing installed source data.</li>
+<li>Fix maximum-date validation, update gridMET download URLs, and use <code>EARTHDATA_USER</code> for NASA authentication.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v1.0.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.1" id="appc-061">appc 0.6.1<a class="anchor" aria-label="anchor" href="#appc-061"></a></h2>
+<ul><li>Fix downloading the latest model when rendering the model-performance vignette.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.6.1" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="appc-060">appc 0.6.0<a class="anchor" aria-label="anchor" href="#appc-060"></a></h2>
+<ul><li>Add <code><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range()</a></code> and <code><a href="../reference/latlon_to_s2_cell.html">latlon_to_s2_cell()</a></code>.</li>
+<li>Cache the loaded model in memory for repeated predictions within an R session.</li>
+<li>Associate model and training artifacts with the package major version, allowing minor and patch releases to reuse the same model.</li>
+<li>Add configurable minimum and maximum dates to internal input validation.</li>
+<li>Update the NLCD fractional-imperviousness download URL.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.6.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.1" id="appc-051">appc 0.5.1<a class="anchor" aria-label="anchor" href="#appc-051"></a></h2>
+<ul><li>Fix the NLCD fractional-imperviousness download URL (<a href="https://github.com/geomarker-io/appc/pull/90" class="external-link">#90</a>).</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.5.1" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="appc-050">appc 0.5.0<a class="anchor" aria-label="anchor" href="#appc-050"></a></h2>
+<ul><li>Extend supported prediction dates through the end of 2024; bulk AQS training observations were available through October 2024 at release time.</li>
+<li>Add the newer Annual NLCD product as an assessment function, without including it in the model.</li>
+<li>Distribute MERRA-2 data under dedicated data-release tags rather than package version tags.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.5.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="appc-040">appc 0.4.0<a class="anchor" aria-label="anchor" href="#appc-040"></a></h2>
+<ul><li>Incorporate available 2024 observations and update the trained model.</li>
+<li>Fix MERRA source installation using response URLs.</li>
+<li>Install smoke data from its original source on first use instead of distributing it as a package release asset.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.4.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="appc-030">appc 0.3.0<a class="anchor" aria-label="anchor" href="#appc-030"></a></h2>
+<ul><li>Add gridMET assessment functions and retrain the model using gridMET weather predictors in place of NARR variables, retaining NARR <code>hpbl</code>.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.3.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="appc-020">appc 0.2.0<a class="anchor" aria-label="anchor" href="#appc-020"></a></h2>
+<ul><li>Publish the first stable release with a finalized PM2.5 prediction model.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.2.0" class="external-link">Release notes</a></p>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="appc-010">appc 0.1.0<a class="anchor" aria-label="anchor" href="#appc-010"></a></h2>
+<ul><li>Publish the initial release for model development.</li>
+</ul><p><a href="https://github.com/geomarker-io/appc/releases/tag/v0.1.0" class="external-link">Release notes</a></p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
