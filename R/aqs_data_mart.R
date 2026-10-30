@@ -45,27 +45,8 @@ install_aqs <- function(
   return(dest_file)
 }
 
-check_aqs_data_mart_creds <- function() {
-  if (file.exists(".env")) {
-    dotenv::load_dot_env()
-    rlang::check_installed(
-      "dotenv",
-      "to read AQS Data Mart API credentials from the .env file"
-    )
-  }
-  aqs_email <- Sys.getenv("AQS_DATA_MART_API_EMAIL")
-  aqs_key <- Sys.getenv("AQS_DATA_MART_API_KEY")
-  stopifnot(
-    "environment variable AQS_DATA_MART_API_EMAIL must be set" = nzchar(
-      aqs_email
-    ),
-    "environment variable AQS_DATA_MART_API_KEY must be set" = nzchar(aqs_key)
-  )
-  return(list(email = aqs_email, key = aqs_key))
-}
-
 aqs_data_mart_daily <- function(year) {
-  aqs_creds <- check_aqs_data_mart_creds()
+  aqs_creds <- needenv::needenv(AQS_DATA_MART_API_EMAIL, AQS_DATA_MART_API_KEY)
   the_req <-
     httr2::request("https://aqs.epa.gov/data/api/dailyData/byState") |>
     httr2::req_url_query(
