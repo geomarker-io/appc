@@ -99,62 +99,9 @@
 <span><span class="fu">appc</span><span class="fu">::</span><span class="fu"><a href="reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span><span class="va">locations</span>, keep_predictors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="s2-geometry">S2 Geometry<a class="anchor" aria-label="anchor" href="#s2-geometry"></a>
+<h2 id="environmental-predictors">Environmental predictors<a class="anchor" aria-label="anchor" href="#environmental-predictors"></a>
 </h2>
-<p>The <a href="https://s2geometry.io/" class="external-link">S2Geometry</a> library is a <a href="https://s2geometry.io/devguide/s2cell_hierarchy.html" class="external-link">hierarchical</a> geospatial index that uses <a href="https://s2geometry.io/about/overview" class="external-link">spherical geometry</a>. Users familiar with latitude and longitude are probably accustomed to thinking of the Earth as a grid of (lat, lon) points and doing spatial calculations by projecting those points into planar coordinates. The S2Geometry library is faster and more portable, and usually just as accurate. S2 models earth as a sphere and represents locations as hierarchical cells on that sphere. At a high level, earth is projected onto the faces of a cube and those faces are recursively subdivided into smaller square cells, each with their own unique ID (often represented as a 64-bit integer or a hex string). Higher “levels” mean smaller cells (finer spatial resolution) and “geohash” usually refers to a s2 cell identifier in this context. the s2 geohash cell encodes both <em>location and resolution</em>.</p>
-<p>The appc package uses s2 cells via the <a href="https://r-spatial.github.io/s2/" class="external-link">s2</a> package to specify geospatial locations. In R, s2 cells can be <a href="https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples" class="external-link">created</a> using their character string representation, or by specifying latitude and longitude coordinates; e.g.:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_lnglat.html" class="external-link">s2_lnglat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">84.4126</span>, <span class="op">-</span><span class="fl">84.5036</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">39.1582</span>, <span class="fl">39.2875</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;s2_cell[2]&gt;</span></span>
-<span><span class="co">#&gt; [1] 8841ad122d9774a7 88404ebdac3ea7d1</span></span></code></pre></div>
-<p>By default, s2 cells are created as “leaf-level cells”, which is the highest level of resolution (30); these cells have areas of about 0.74 cm squared, and are best thought of as a point at this high resolution. Find more <a href="https://s2geometry.io/resources/s2cell_statistics" class="external-link">s2 cell statistics</a> in the S2Geometry documentation. Another useful resource is the <a href="https://igorgatis.github.io/ws2/" class="external-link">S2 Region Coverer Online Viewer</a>, which can generate combinations of s2 cells that cover arbitrary drawn map boundaries or map combinations of cell identifers.</p>
-</div>
-<div class="section level2">
-<h2 id="geomarker-assessment">Geomarker Assessment<a class="anchor" aria-label="anchor" href="#geomarker-assessment"></a>
-</h2>
-<p>Spatiotemporal geomarkers are used for predicting air pollution concentrations, but also serve as exposures or confounding exposures themselves. View information and options about each geomarker:</p>
-<table class="table">
-<colgroup>
-<col width="42%">
-<col width="57%">
-</colgroup>
-<thead><tr>
-<th>geomarker</th>
-<th>geomarker function</th>
-</tr></thead>
-<tbody>
-<tr>
-<td>🌦 weather &amp; atmospheric conditions</td>
-<td>
-<code>get_gridmet_data()</code>, <code>get_narr_data()</code>
-</td>
-</tr>
-<tr>
-<td>🛰 satellite-based aerosol diagnostics</td>
-<td><code>get_merra_data()</code></td>
-</tr>
-<tr>
-<td>🔥 wildfire smoke</td>
-<td><code>get_smoke_summary()</code></td>
-</tr>
-<tr>
-<td>🗻 elevation</td>
-<td><code>get_elevation_summary()</code></td>
-</tr>
-<tr>
-<td>🏙 land cover</td>
-<td><code>get_nlcd_fct_imp_summary()</code></td>
-</tr>
-<tr>
-<td>🚦 traffic</td>
-<td><code>get_traffic_summary()</code></td>
-</tr>
-<tr>
-<td>🏭 emissions</td>
-<td><code>get_nei_point_summary()</code></td>
-</tr>
-</tbody>
-</table>
+<p>APPC uses the <a href="https://geomarker.io/geomarker/" class="external-link">geomarker package</a> for environmental predictor assessment. See its documentation for S2 location/date inputs, available geomarkers, and source-data management.</p>
 </div>
 <div class="section level2">
 <h2 id="data-storage">Data storage<a class="anchor" aria-label="anchor" href="#data-storage"></a>
@@ -165,11 +112,11 @@
 <h2 id="developing">Developing<a class="anchor" aria-label="anchor" href="#developing"></a>
 </h2>
 <p>The committed workflow has two steps:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">just</span> make_training_data</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="ex">just</span> train_model</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">just</span> make_training_data</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="ex">just</span> train_model</span></code></pre></div>
 <p>The first script downloads and harmonizes AQS outcomes, calls the shared geomarker-backed predictor assembler, prints coverage/missingness summaries, and saves <code>training_data_v3.rds</code>. The second reads that table and fits the existing GRF specification, saving <code>rf_pm_v3.rds</code>. These are large, manually invoked jobs. Neither is run by package checks.</p>
 <p>Training requires geomarker 0.2.0 from release commit <code>373820d0ab8082f856f7bf0f639f3128111d825a</code>. Install the exact dependency recorded in DESCRIPTION from the repository root:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span></code></pre></div>
 <p>The minimum runtime dependency is geomarker 0.2.0. The exact version, release tag, source SHA, feature settings, and coverage are recorded in <code>inst/model-v3-spec.dcf</code>. Training checks the installed version and source SHA; a development version number alone does not identify the code. Artifacts preserve this specification, session information, and geomarker’s source manifests. Retain the assembled training artifact to reproduce fitting after upstream AQS or weather revisions. Use a dedicated <code>R_USER_DATA_DIR</code> for an official build so existing local monthly MERRA overrides are not picked up unintentionally. No automatic NASA source refresh is performed.</p>
 <p>Existing artifact files are protected against overwriting. Move an existing v3 artifact aside before rebuilding. Local v3 predictions require metadata and predictor names matching the model specification. Remote v3 model downloads remain disabled until a release artifact and checksum are registered.</p>
