@@ -1,5 +1,9 @@
 # appc 2.99.0.9000
 
+- Retry transient EPA API failures and resume incomplete AQS refreshes from
+  harmonized state checkpoints without replacing the last complete annual extract.
+- Include Idaho and North Dakota in AQS API refreshes for complete contiguous-US
+  coverage.
 - `predict_pm25()` now accepts geomarker `s2cd` objects directly, using their
   stored dates and retaining the existing list-of-tibbles output.
 - Prepare model generation 3 for January 2017 through June 2026 using geomarker
