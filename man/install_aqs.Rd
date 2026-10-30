@@ -33,6 +33,12 @@ All pollutants measurements are removed if the observation percent
 for the sampling period is less than 75 or were indicated to be invalid.
 When a pollutant is measured by more than one device on the same day at the same
 s2 location, the average measurement is returned, ensuring unique measurements for each pollutant-location-day
+
+Interrupted refreshes retain harmonized state extracts in an
+\verb{aqs_<year>_partial} directory under the appc data directory. Retrying the
+refresh reuses completed states. These temporary checkpoints are removed
+after the complete annual extract is saved successfully. Requests retry
+interrupted connections and transient server errors for up to four attempts.
 }
 \examples{
 # Data Mart data can be more current than the bulk AQS daily files.
