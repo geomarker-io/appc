@@ -1,0 +1,18 @@
+Model-Version: 3
+Coverage-Start: 2017-01-01
+Coverage-End: 2026-06-30
+Geomarker-Version: 0.2.0
+Geomarker-Tag: v0.2.0
+Geomarker-SHA: 373820d0ab8082f856f7bf0f639f3128111d825a
+Coordinate-CRS: 5072
+Elevation-Buffer-Meters: 1200
+Smoke-Summary: sum
+GridMET-Predictors: temperature_max temperature_min precipitation
+    solar_radiation wind_speed wind_direction specific_humidity
+GridMET-Variables: tmmx tmmn pr srad vs th sph
+NARR-Variable: hpbl
+MERRA-Columns: merra_dust merra_oc merra_bc merra_ss merra_so4 merra_pm25
+Predictors: x y doy year elevation_median elevation_sd plume_smoke
+    temperature_max temperature_min precipitation solar_radiation
+    wind_speed wind_direction specific_humidity hpbl merra_dust merra_oc
+    merra_bc merra_ss merra_so4

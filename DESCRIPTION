@@ -1,14 +1,17 @@
 Package: appc
 Title: Air Pollution Predictor Commons
-Version: 2.0.1
+Version: 2.99.0.9000
 Authors@R: c(
     person("Cole", "Brokamp", , "cole@colebrokamp.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0289-3151")),
     person("Erika", "Manning", role = "aut"),
     person("Qing", "Duan", role = "aut")
 	   )
-URL: https://github.com/geomarker-io/appc, http://geomarker.io/appc/
-Description: Functions for geomarker assessment for s2 locations and dates. These are used to train and predict daily ambient air pollution concentrations across the contiguous US January 2017 - June 2026.
+URL: https://github.com/geomarker-io/appc, https://geomarker.io/appc/
+Description: Collects and harmonizes ambient air pollution measurements and
+    develops models for daily concentrations at exact locations across the
+    contiguous US. Predictor assessment is provided by the 'geomarker' package.
+    Model generation 3 covers January 2017 through June 2026.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -16,35 +19,34 @@ Imports:
     cli,
     dplyr,
     fs,
+    geomarker (>= 0.2.0),
     glue,
     grf,
     httr2,
+    needenv,
     purrr,
     rlang,
     s2,
     sf,
     terra,
     tibble,
-    tidyr,
-    withr
+    tidyr
 Suggests: 
     curl,
-    dotenv,
     ggplot2,
     hexbin,
     knitr,
     lubridate,
-    lwgeom,
-    mappp,
     readr,
     rmarkdown,
     scales,
     testthat (>= 3.0.0),
-    tidync,
     tigris,
-    viridis
+    viridis,
+    withr
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.2.0)
+Remotes: geomarker-io/geomarker@373820d0ab8082f856f7bf0f639f3128111d825a
 Config/roxygen2/version: 8.0.0

@@ -2,31 +2,30 @@
 % Please edit documentation in R/assemble.R
 \name{assemble_predictors}
 \alias{assemble_predictors}
-\title{Assemble a tibble of required predictors for the exposure assessment model}
+\title{Assemble predictors for the PM2.5 model}
 \usage{
 assemble_predictors(x, dates, pollutant = c("pm25"))
 }
 \arguments{
-\item{x}{a vector of s2 cell identifers (\code{s2_cell} object); currently required to be within the contiguous united states}
+\item{x}{a vector of level-30 \code{s2_cell} locations within the contiguous US}
 
-\item{dates}{a list of date vectors for the predictions, must be the same length as \code{x}}
+\item{dates}{a list of nonempty Date vectors, the same length as \code{x}}
 
-\item{pollutant}{ignored now, but reserved for future sets of predictors specific to different pollutants}
+\item{pollutant}{reserved for future pollutant-specific predictors}
 }
 \value{
-a tibble with one row for each unique s2 location - date combination where columns
-are predictors required for the exposure assessment model
+A tibble with one row per requested location-date, in input order.
+Duplicate locations and dates are preserved.
 }
 \description{
-Assemble a tibble of required predictors for the exposure assessment model
+Uses geomarker for environmental assessment and adds model-specific spatial
+and calendar terms. The same implementation is used for training and prediction.
 }
 \examples{
 \dontrun{
-d <- list(
-  "8841b39a7c46e25f" = as.Date(c("2023-05-18", "2023-11-06")),
-  "8841a45555555555" = as.Date(c("2023-06-22", "2023-08-15", "2023-09-30"))
+assemble_predictors(
+  s2::as_s2_cell("8841b39a7c46e25f"),
+  list(as.Date(c("2023-05-18", "2023-11-06")))
 )
-assemble_predictors(x = s2::as_s2_cell(names(d)), dates = d) |>
-  tibble::glimpse()
 }
 }

@@ -2,6 +2,16 @@
 title: "CV Model Performance"
 ---
 
+This report evaluates model generation 3.
+Published v2 results are retained with [APPC v2.0.1](https://github.com/geomarker-io/appc/blob/v2.0.1/docs/articles/cv-model-performance.html).
+
+```{r artifact_gate, echo=FALSE, results='asis'}
+if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
+  cat("Build the v3 training data and model, then set APPC_BUILD_MODEL_ARTICLES=true to render this report.\n")
+  knitr::knit_exit()
+}
+```
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
@@ -29,14 +39,12 @@ the_theme <-
 ```
 
 ```{r load_model_and_predictions}
-grf <- appc:::load_rf_pm_model(model_version = packageVersion('appc')$major)
-
-train_file <- fs::path(tools::R_user_dir("appc", "data"), glue::glue("training_data_v{packageVersion('appc')$major}.rds"))
-if(!file.exists(train_file)) {
-  maj <- packageVersion("appc")$major
-  download.file(glue::glue("https://github.com/geomarker-io/appc/releases/download/rf_pm_v{maj}/training_data_v{maj}.rds"), train_file)
-}
+spec <- appc:::model_spec()
+grf <- appc:::load_rf_pm_model(spec$model_version)
+train_file <- appc:::model_artifact_path("training")
+if (!file.exists(train_file)) stop("Run just make_training_data first.")
 d_train <- readRDS(train_file)
+appc:::validate_training_metadata(d_train)
 ```
 
 ## Training Data

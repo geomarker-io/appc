@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
+  <title id="title">appc hex badge</title>
+  <desc id="desc">Atmospheric and geomarker inputs converge through reproducible local processing onto a PM2.5 prediction and confidence interval at one exact location above a daily timeline.</desc>
+
+  <defs>
+    <style>
+      .outline {
+        fill: none;
+        stroke: #396175;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    </style>
+    <clipPath id="badge-art-clip">
+      <path d="M512 55 905 282v456L512 965 119 738V282Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- badge field: geometry and colors match the addr package badge -->
+  <path fill="#f6edde" d="M512 984.5c-.73 0-1.47-.19-2.13-.57L104.36 749.81a4.25 4.25 0 0 1-2.13-3.68V277.89c0-1.52.81-2.92 2.13-3.68L509.87 40.07a4.26 4.26 0 0 1 4.26 0l405.51 234.12a4.25 4.25 0 0 1 2.13 3.68v468.24c0 1.52-.81 2.92-2.13 3.68L514.13 983.93c-.66.38-1.39.57-2.13.57Z"/>
+  <path fill="#396175" d="m512 43.76 405.51 234.12v468.24L512 980.24 106.49 746.12V277.88L512 43.76m0-8.51c-1.47 0-2.94.38-4.25 1.14L102.24 270.51a8.5 8.5 0 0 0-4.25 7.36v468.24a8.5 8.5 0 0 0 4.25 7.36l405.51 234.12a8.52 8.52 0 0 0 8.5 0l405.51-234.12a8.5 8.5 0 0 0 4.25-7.36V277.87a8.5 8.5 0 0 0-4.25-7.36L516.25 36.39a8.5 8.5 0 0 0-4.25-1.14Z"/>
+
+  <g clip-path="url(#badge-art-clip)">
+    <!-- atmospheric currents, safely inset from the badge edge -->
+    <circle cx="716" cy="194" r="40" fill="#eacec5"/>
+    <path class="outline" stroke-width="8" d="M278 211c45-32 98-33 148-3 55 33 110 37 165 1 52-34 108-33 163 2"/>
+    <path class="outline" stroke="#8cb4c3" stroke-width="12" d="M190 281c66-36 130-34 192 2 63 36 131 36 196-2 65-37 137-37 216 2"/>
+    <path class="outline" stroke="#cbd6d5" stroke-width="12" d="M215 350c56-31 114-31 173 1 65 35 131 35 196-1 60-32 124-31 195 2"/>
+
+    <!-- suspended particulate matter -->
+    <g stroke="#396175" stroke-width="4">
+      <circle cx="310" cy="190" r="9" fill="#e49865"/>
+      <circle cx="383" cy="238" r="7" fill="#eacec5"/>
+      <circle cx="463" cy="266" r="11" fill="#cbd6d5"/>
+      <circle cx="558" cy="216" r="8" fill="#e49865"/>
+      <circle cx="645" cy="296" r="10" fill="#8cb4c3"/>
+      <circle cx="727" cy="248" r="7" fill="#e49865"/>
+      <circle cx="303" cy="330" r="8" fill="#8cb4c3"/>
+      <circle cx="520" cy="342" r="10" fill="#eacec5"/>
+      <circle cx="706" cy="357" r="9" fill="#cbd6d5"/>
+    </g>
+
+    <!-- multiple geomarker inputs converge through a model -->
+    <g fill="none" stroke-linecap="round">
+      <path d="M328 404c34 49 87 83 146 104" stroke="#8cb4c3" stroke-width="8" stroke-dasharray="16 15"/>
+      <path d="M512 400v83" stroke="#e49865" stroke-width="8" stroke-dasharray="16 15"/>
+      <path d="M696 404c-34 49-87 83-146 104" stroke="#eacec5" stroke-width="8" stroke-dasharray="16 15"/>
+    </g>
+    <g stroke="#396175" stroke-width="5">
+      <circle cx="328" cy="404" r="13" fill="#8cb4c3"/>
+      <circle cx="512" cy="400" r="13" fill="#e49865"/>
+      <circle cx="696" cy="404" r="13" fill="#eacec5"/>
+    </g>
+
+    <!-- local processing, with repeat arrows for reproducibility -->
+    <rect x="456" y="482" width="112" height="82" rx="14" fill="#cbd6d5" stroke="#396175" stroke-width="8"/>
+    <g class="outline" stroke-width="5">
+      <path d="M487 521a28 28 0 0 1 49-12"/>
+      <path d="m536 496v13h-13"/>
+      <path d="M537 532a28 28 0 0 1-49 12"/>
+      <path d="m488 557v-13h13"/>
+    </g>
+    <circle cx="512" cy="526" r="6" fill="#e49865"/>
+    <path class="outline" stroke-width="7" d="M512 565v13m-29 0h58"/>
+
+    <!-- model output at one precise, continuous-space location -->
+    <path d="M512 590v10" fill="none" stroke="#e49865" stroke-width="8" stroke-linecap="round"/>
+    <path class="outline" stroke-width="8" d="M225 672c92-64 181-64 287-21 103 42 199 34 287-29"/>
+    <path d="M252 702c91-39 178-34 268-4 88 30 170 25 250-13" fill="none" stroke="#8cb4c3" stroke-width="7" stroke-linecap="round"/>
+
+    <!-- confidence interval around the exact-location PM2.5 prediction -->
+    <g stroke="#396175" stroke-width="5" stroke-linecap="round">
+      <line x1="512" y1="610" x2="512" y2="692"/>
+      <line x1="489" y1="610" x2="535" y2="610"/>
+      <line x1="489" y1="692" x2="535" y2="692"/>
+    </g>
+    <circle cx="512" cy="651" r="23" fill="#396175"/>
+    <circle cx="512" cy="651" r="13" fill="#f6edde"/>
+    <circle cx="512" cy="651" r="5" fill="#e49865"/>
+
+    <!-- daily timeline -->
+    <line x1="250" y1="752" x2="774" y2="752" stroke="#396175" stroke-width="6" stroke-linecap="round"/>
+    <g stroke="#396175" stroke-width="5" stroke-linecap="round">
+      <line x1="286" y1="738" x2="286" y2="766"/>
+      <line x1="350" y1="742" x2="350" y2="762"/>
+      <line x1="414" y1="738" x2="414" y2="766"/>
+      <line x1="478" y1="742" x2="478" y2="762"/>
+      <line x1="542" y1="738" x2="542" y2="766"/>
+      <line x1="606" y1="742" x2="606" y2="762"/>
+      <line x1="670" y1="738" x2="670" y2="766"/>
+      <line x1="734" y1="742" x2="734" y2="762"/>
+    </g>
+    <circle cx="606" cy="752" r="13" fill="#e49865" stroke="#396175" stroke-width="5"/>
+
+    <!-- package wordmark -->
+    <text x="512" y="879" fill="#396175" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="84" font-weight="300" letter-spacing="2" text-anchor="middle">appc</text>
+  </g>
+</svg>

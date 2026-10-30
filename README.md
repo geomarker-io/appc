@@ -1,129 +1,73 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
+
 
 # Air Pollution Prediction Commons <img src="man/figures/logo.svg" align="right" height="139" alt="appc logo" />
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/geomarker-io/appc/actions/workflows/R-CMD-check.yaml)
 [![r-universe](https://geomarker-io.r-universe.dev/badges/appc)](https://geomarker-io.r-universe.dev/appc)
-[![Lifecycle:
-stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 ## About
 
-The goal of the appc package is to provide daily, high resolution, near
-real-time, model-based ambient air pollution exposure assessments. This
-is achieved by training a generalized random forest on several
-geomarkers to predict daily average EPA AQS concentrations from 2017
-until the near-present (currently June 2026) at exact locations across
-the contiguous United States (see `vignette("cv-model-performance")` for
-more details).
+The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments.
+This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently June 2026) at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
 
-The appc package contains functions for generating geomarker predictors
-and the ambient air pollution concentrations. Predictor geomarkers
-include weather and atmospheric information, wildfire smoke plumes,
-elevation, and satellite-based aerosol diagnostics products. Source
-files included with the package train and evaluate models that can be
-updated with any release to use more recent AQS measurements and/or
-geomarker predictors.
+APPC collects and harmonizes EPA AQS outcomes and handles model development, evaluation, and prediction.
+The [geomarker package](https://geomarker.io/geomarker/) supplies the environmental predictors.
+
+This development version prepares model generation 3 using geomarker **0.2.0**, with coverage from January 1, 2017 through June 30, 2026.
+Build the v3 training data and model before running predictions from this branch.
+The published v2 model and its performance results belong to [APPC v2.0.1](https://github.com/geomarker-io/appc/tree/v2.0.1).
 
 ## Installing
 
 Install the latest stable release of appc from R-universe with:
 
-``` r
+```r
 install.packages("appc", repos = c("https://geomarker-io.r-universe.dev", "https://cloud.r-project.org"))
 ```
 
 Install the latest, under-development version of appc from GitHub with:
 
-``` r
+```r
 # install.packages("remotes")
 remotes::install_github("geomarker-io/appc")
 ```
 
 ## Example
 
-In R, create model-based predictions of ambient air pollution
-concentrations at exact locations on specific dates using the
-`predict_pm25()` function:
+In R, create model-based predictions of ambient air pollution concentrations at exact locations on specific dates using the `predict_pm25()` function:
+
 
 ``` r
 appc::predict_pm25(
   x = s2::as_s2_cell(c("8841b39a7c46e25f", "8841a45555555555")),
   dates = list(as.Date(c("2025-05-18", "2025-06-10")), as.Date(c("2025-06-22", "2025-09-20")))
 )
-#> ℹ (down)loading random forest model
-#> loaded rf_pm_v2 in 17s
-#> ✔ (down)loading random forest model [18s]
-#> 
-#> ℹ checking that s2 are within the contiguous US
-#> ✔ checking that s2 are within the contiguous US [57ms]
-#> 
-#> ℹ adding coordinates
-#> ✔ adding coordinates [40ms]
-#> 
-#> ℹ adding elevation
-#> ✔ adding elevation [188ms]
-#> 
-#> ℹ adding HMS smoke data
-#> ✔ adding HMS smoke data [1s]
-#> 
-#> ℹ adding NARR
-#> ✔ adding NARR [519ms]
-#> 
-#> ℹ adding gridMET
-#> ✔ adding gridMET [409ms]
-#> 
-#> ℹ adding MERRA
-#> ✔ adding MERRA [1.4s]
-#> 
-#> ℹ adding time components
-#> ✔ adding time components [18ms]
-#> 
-#> [[1]]
-#> # A tibble: 2 × 2
-#>    pm25 pm25_se
-#>   <dbl>   <dbl>
-#> 1  7.32    1.22
-#> 2 11.5     2.22
-#> 
-#> [[2]]
-#> # A tibble: 2 × 2
-#>    pm25 pm25_se
-#>   <dbl>   <dbl>
-#> 1  12.1    1.91
-#> 2  12.2    1.05
 ```
 
 See more examples in `vignette("timeline-example")`.
 
 ## S2 Geometry
 
-The [S2Geometry](https://s2geometry.io/) library is a
-[hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html)
-geospatial index that uses [spherical
-geometry](https://s2geometry.io/about/overview). Users familiar with
-latitude and longitude are probably accustomed to thinking of the Earth
-as a grid of (lat, lon) points and doing spatial calculations by
-projecting those points into planar coordinates. The S2Geometry library
-is faster and more portable, and usually just as accurate. S2 models
-earth as a sphere and represents locations as hierarchical cells on that
-sphere. At a high level, earth is projected onto the faces of a cube and
-those faces are recursively subdivided into smaller square cells, each
-with their own unique ID (often represented as a 64-bit integer or a hex
-string). Higher “levels” mean smaller cells (finer spatial resolution)
-and “geohash” usually refers to a s2 cell identifier in this context.
+The [S2Geometry](https://s2geometry.io/) library is a [hierarchical](https://s2geometry.io/devguide/s2cell_hierarchy.html) geospatial index that uses [spherical geometry](https://s2geometry.io/about/overview).
+Users familiar with latitude and longitude are probably accustomed to thinking of the Earth as a grid of (lat, lon) points and doing spatial calculations by projecting those points into planar coordinates.
+The S2Geometry library is faster and more portable, and usually just as accurate.
+S2 models earth as a sphere and represents locations as hierarchical cells on that sphere.
+At a high level, earth is projected onto the faces of a cube and those faces are recursively subdivided into smaller square cells, each with their own unique ID (often represented as a 64-bit integer or a hex string).
+Higher "levels" mean smaller cells (finer spatial resolution) and "geohash" usually refers to a s2 cell identifier in this context.
 the s2 geohash cell encodes both *location and resolution*.
 
-The appc package uses s2 cells via the
-[s2](https://r-spatial.github.io/s2/) package to specify geospatial
-locations. In R, s2 cells can be
-[created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples)
-using their character string representation, or by specifying latitude
-and longitude coordinates; e.g.:
+The appc package uses s2 cells via the [s2](https://r-spatial.github.io/s2/) package to specify geospatial locations.
+In R, s2 cells can be [created](https://r-spatial.github.io/s2/reference/s2_cell.html#ref-examples) using their character string representation, or by specifying latitude and longitude coordinates; e.g.:
+
 
 ``` r
 s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
@@ -131,69 +75,64 @@ s2::s2_lnglat(c(-84.4126, -84.5036), c(39.1582, 39.2875)) |> s2::as_s2_cell()
 #> [1] 8841ad122d9774a7 88404ebdac3ea7d1
 ```
 
-By default, s2 cells are created as “leaf-level cells”, which is the
-highest level of resolution (30); these cells have areas of about 0.74
-cm squared, and are best thought of as a point at this high resolution.
-Find more [s2 cell
-statistics](https://s2geometry.io/resources/s2cell_statistics) in the
-S2Geometry documentation. Another useful resource is the [S2 Region
-Coverer Online Viewer](https://igorgatis.github.io/ws2/), which can
-generate combinations of s2 cells that cover arbitrary drawn map
-boundaries or map combinations of cell identifers.
+By default, s2 cells are created as "leaf-level cells", which is the highest level of resolution (30); these cells have areas of about 0.74 cm squared, and are best thought of as a point at this high resolution.
+Find more [s2 cell statistics](https://s2geometry.io/resources/s2cell_statistics) in the S2Geometry documentation.
+Another useful resource is the [S2 Region Coverer Online Viewer](https://igorgatis.github.io/ws2/), which can generate combinations of s2 cells that cover arbitrary drawn map boundaries or map combinations of cell identifers.
 
 ## Geomarker Assessment
 
-Spatiotemporal geomarkers are used for predicting air pollution
-concentrations, but also serve as exposures or confounding exposures
-themselves. View information and options about each geomarker:
+Spatiotemporal geomarkers are used for predicting air pollution concentrations, but also serve as exposures or confounding exposures themselves. View information and options about each geomarker:
 
-| geomarker | appc function |
-|----|----|
+| geomarker | geomarker function |
+|-----------|---------------|
 | 🌦 weather & atmospheric conditions | `get_gridmet_data()`, `get_narr_data()` |
 | 🛰 satellite-based aerosol diagnostics | `get_merra_data()` |
-| 🔥 wildfire smoke | `get_hms_smoke_data()` |
+| 🔥 wildfire smoke | `get_smoke_summary()` |
 | 🗻 elevation | `get_elevation_summary()` |
-| 🏙 land cover | `get_nlcd_frac_imperv()` |
+| 🏙 land cover | `get_nlcd_fct_imp_summary()` |
 | 🚦 traffic | `get_traffic_summary()` |
 | 🏭 emissions | `get_nei_point_summary()` |
 
-## Installing Geomarker Data Sources
+## Data storage
 
-Installed geomarker data sources and the grf model are hosted as release
-assets on GitHub and are downloaded locally to the package-specific R
-user data directory (i.e., `tools::R_user_dir("appc", "data")`). These
-files are cached across all of an R user’s sessions and projects.
-(Specify an alternative download location by setting the
-`R_USER_DATA_DIR` environment variable; see `?tools::R_user_dir`.)
-
-Note that although geomarker data are usually installed *per year*, data
-for the current year will always contain missing values for very recent
-and future values. To “refresh” geomarker for the current year, delete
-the installed file and reinstall the data; for example:
-
-``` r
-file.remove(install_gridmet_data("tmmx", "2026"))
-install_gridmet_data("tmmx", "2026")
-```
+Environmental downloads and assessment are managed by geomarker under its own R user data directory.
+See [geomarker's data and offline-operation documentation](https://geomarker.io/geomarker/) for cache and source-refresh options.
+APPC retains AQS outcomes, assembled training data, and fitted models under `tools::R_user_dir("appc", "data")`.
+Set `R_USER_DATA_DIR` to choose a different root for both packages.
 
 ## Developing
 
-> Please note that the appc project is released with a [Contributor Code
-> of Conduct](http://geomarker.io/appc/CODE_OF_CONDUCT.html). By
-> contributing to this project, you agree to abide by its terms.
+The committed workflow has two steps:
 
-To create and release the AQS training data, train, and evaluate a
-generalized random forest model, install and use
-[`just`](https://just.systems/man/en/) to execute recipes in the
-`justfile`.
+```sh
+just make_training_data
+just train_model
+```
 
-To update the MERRA-2 releases:
+The first script downloads and harmonizes AQS outcomes, calls the shared geomarker-backed predictor assembler, prints coverage/missingness summaries, and saves `training_data_v3.rds`.
+The second reads that table and fits the existing GRF specification, saving `rf_pm_v3.rds`.
+These are large, manually invoked jobs. Neither is run by package checks.
 
-- On a machine with Earthdata credentials and sufficient temporary
-  storage, set `APPC_INSTALL_DATA_FROM_SOURCE=1`, remove only the MERRA
-  year files being refreshed, and run `install_merra_data()` for those
-  years. The 2026 refresh was built on Marco.
-- Create a release tagged and titled `merra-{release_date}` (e.g.,
-  `merra-2026-08-04`) and mark it as *not latest*
-- Update the default release tag used in `get_merra_data()` (and
-  `install_merra_data()`)
+Training requires geomarker 0.2.0 from release commit `373820d0ab8082f856f7bf0f639f3128111d825a`.
+Install the exact dependency recorded in DESCRIPTION from the repository root:
+
+```r
+pak::pak(".")
+```
+
+The minimum runtime dependency is geomarker 0.2.0.
+The exact version, release tag, source SHA, feature settings, and coverage are recorded in `inst/model-v3-spec.dcf`.
+Training checks the installed version and source SHA; a development version number alone does not identify the code.
+Artifacts preserve this specification, session information, and geomarker's source manifests.
+Retain the assembled training artifact to reproduce fitting after upstream AQS or weather revisions.
+Use a dedicated `R_USER_DATA_DIR` for an official build so existing local monthly MERRA overrides are not picked up unintentionally.
+No automatic NASA source refresh is performed.
+
+Existing artifact files are protected against overwriting.
+Move an existing v3 artifact aside before rebuilding.
+Local v3 predictions require metadata and predictor names matching the model specification.
+Remote v3 model downloads remain disabled until a release artifact and checksum are registered.
+
+After building the artifacts, set `APPC_BUILD_MODEL_ARTICLES=true` to execute model-dependent articles and run `just render_model_dash`.
+Otherwise, article rendering displays a preparation notice without accessing model data.
+The existing v2 performance report remains available with the [v2 release](https://github.com/geomarker-io/appc/blob/v2.0.1/docs/articles/cv-model-performance.html).

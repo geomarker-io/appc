@@ -12,6 +12,11 @@
 
 utils::globalVariables(c(
   "s2",
+  "dates",
+  "date",
+  ".input_row",
+  "AQS_DATA_MART_API_EMAIL",
+  "AQS_DATA_MART_API_KEY",
   "dist_to_point",
   "NAME",
   "Sample Duration",
@@ -77,44 +82,22 @@ utils::globalVariables(c(
   "validity_indicator"
 ))
 
-#' Get the closest years to a vector of dates
-#'
-#' The time between a date and year is calculated using July 1st of the year.
-#' @param x a date vector
-#' @param years vector of characters (or numerics) representing years to choose from
-#' @return a character vector of the closest year in `years` for each date in `x`
-#' @export
-#' @examples
-#' get_closest_year(x = as.Date(c("2021-05-15", "2022-09-01")), years = c("2020", "2022"))
-get_closest_year <- function(x, years = as.character(1800:2400)) {
-  years <- rlang::arg_match(years, multiple = TRUE)
-  if (!inherits(x, "Date")) {
-    stop("x must be a date vector", call. = FALSE)
-  }
-  year_midpoints <-
-    years |>
-    as.character() |>
-    paste0("-07-01")
-  which_year <- sapply(x, \(.) which.min(abs(difftime(., year_midpoints))))
-  the_closest_years <-
-    years[which_year] |>
-    as.character()
-  return(the_closest_years)
-}
-
 check_s2_dates <- function(
   s2,
   dates = NULL,
-  check_date_min = "2017-01-01",
-  check_date_max = "2026-06-30"
+  check_date_min = model_spec()$coverage_start,
+  check_date_max = model_spec()$coverage_end
 ) {
   if (!inherits(s2, "s2_cell")) {
     stop("x must be a s2_cell vector", call. = FALSE)
   }
+  if (length(s2) == 0L) {
+    stop("x must contain at least one location", call. = FALSE)
+  }
   if (any(is.na(s2))) {
     stop("s2 must not contain any missing values", call. = FALSE)
   }
-  if (!any(s2::s2_cell_level(s2) == 30L)) {
+  if (!all(s2::s2_cell_is_valid(s2)) || !all(s2::s2_cell_level(s2) == 30L)) {
     stop("all s2 cell levels must be 30", call. = FALSE)
   }
   if (!is.null(dates)) {
@@ -127,6 +110,12 @@ check_s2_dates <- function(
     if (!all(sapply(dates, \(.) inherits(., "Date")))) {
       stop("everything in the dates list must be `Date` objects", call. = FALSE)
     }
+    if (any(lengths(dates) == 0L) || any(vapply(dates, anyNA, logical(1)))) {
+      stop(
+        "dates must be nonempty and must not contain missing values",
+        call. = FALSE
+      )
+    }
     if (!is.null(check_date_min)) {
       if (!all(lapply(dates, min) >= as.Date(check_date_min))) {
         stop("all dates must be later than `check_date_min`", call. = FALSE)
@@ -137,18 +126,6 @@ check_s2_dates <- function(
         stop("all dates must be earlier than `check_date_max", call. = FALSE)
       }
     }
-  }
-}
-
-check_buffer <- function(buffer) {
-  if (!inherits(buffer, "numeric")) {
-    stop("buffer must be an integer", call. = FALSE)
-  }
-  if (length(buffer) != 1) {
-    stop("buffer must be an integer of length 1", call. = FALSE)
-  }
-  if (buffer < 0) {
-    stop("buffer must be a positive integer", call. = FALSE)
   }
 }
 
@@ -179,11 +156,4 @@ ui_confirm <- function() {
     stop("aborted", call. = FALSE)
   }
   return(invisible(TRUE))
-}
-
-install_source_preference <- function() {
-  any(
-    getOption("appc_install_data_from_source", "") != "",
-    Sys.getenv("APPC_INSTALL_DATA_FROM_SOURCE", "") != ""
-  )
 }

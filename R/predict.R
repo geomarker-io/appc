@@ -29,6 +29,14 @@ rf_pm_model_checksum_matches <- function(path, checksums) {
 }
 
 download_rf_pm_model <- function(path, model_version, checksums) {
+  if (is.null(checksums)) {
+    stop(
+      "No published model/checksum is registered for model v",
+      model_version,
+      ". Run just make_training_data and just train_model to build it locally.",
+      call. = FALSE
+    )
+  }
   fs::dir_create(fs::path_dir(path))
   download_path <- tempfile(
     pattern = paste0(fs::path_file(path), "-"),
@@ -71,7 +79,7 @@ download_rf_pm_model <- function(path, model_version, checksums) {
   invisible(path)
 }
 
-load_rf_pm_model <- function(model_version = "2") {
+load_rf_pm_model <- function(model_version = model_spec()$model_version) {
   st <- Sys.time()
   model_cache_key <- paste0("model_v", model_version)
   if (!exists(model_cache_key, envir = .appc_cache, inherits = FALSE)) {
@@ -95,11 +103,20 @@ load_rf_pm_model <- function(model_version = "2") {
     if (!file.exists(grf_file)) {
       download_rf_pm_model(grf_file, model_version, checksums)
     }
-    assign(
-      model_cache_key,
-      readRDS(grf_file),
-      envir = .appc_cache
-    )
+    model <- readRDS(grf_file)
+    if (identical(model_version, model_spec()$model_version)) {
+      validate_training_metadata(model)
+      if (
+        !inherits(model, "regression_forest") ||
+          !identical(names(model$X.orig), model_spec()$predictors)
+      ) {
+        stop(
+          "Local model does not match the v3 predictor schema.",
+          call. = FALSE
+        )
+      }
+    }
+    assign(model_cache_key, model, envir = .appc_cache)
   }
   model <- get(model_cache_key, envir = .appc_cache, inherits = FALSE)
   et <- Sys.time()
