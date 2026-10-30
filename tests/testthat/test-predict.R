@@ -42,6 +42,35 @@ test_that("model artifacts are checksum verified", {
   expect_true(rf_pm_model_checksum_matches(model_file, NULL))
 })
 
+test_that("s2cd dispatch uses stored locations and dates and forwards options", {
+  cells <- test_locations()
+  dates <- lapply(test_dates(), sort)
+  locations <- geomarker::s2cd(cells, dates)
+  testthat::local_mocked_bindings(
+    predict_pm25.s2_cell = function(x, dates, keep_predictors) {
+      list(cells = x, dates = dates, keep_predictors = keep_predictors)
+    }
+  )
+  out <- predict_pm25(locations)
+  expect_identical(out$cells, cells)
+  expect_equal(out$dates, dates)
+  expect_false(out$keep_predictors)
+  expect_true(predict_pm25(locations, keep_predictors = TRUE)$keep_predictors)
+  expect_equal(predict_pm25(locations, dates = NULL), out)
+})
+
+test_that("s2cd inputs reject conflicting dates before model loading", {
+  locations <- geomarker::s2cd(test_locations(), lapply(test_dates(), sort))
+  expect_error(predict_pm25(locations, dates = test_dates()), "separate dates")
+})
+
+test_that("unsupported prediction inputs fail with a clear type error", {
+  expect_error(
+    predict_pm25("8841b39a7c46e25f", test_dates()[1]),
+    "s2_cell vector or a geomarker s2cd"
+  )
+})
+
 test_that("predict_pm25() works", {
   skip_if_not_integration()
   d <- list(

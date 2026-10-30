@@ -44,7 +44,16 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">predict_pm25</span><span class="op">(</span><span class="va">x</span>, <span class="va">dates</span>, keep_predictors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">predict_pm25</span><span class="op">(</span><span class="va">x</span>, <span class="va">dates</span>, keep_predictors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 's2cd'</span></span>
+<span><span class="fu">predict_pm25</span><span class="op">(</span><span class="va">x</span>, dates <span class="op">=</span> <span class="cn">NULL</span>, keep_predictors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Default S3 method</span></span>
+<span><span class="fu">predict_pm25</span><span class="op">(</span><span class="va">x</span>, <span class="va">dates</span>, keep_predictors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for class 's2_cell'</span></span>
+<span><span class="fu">predict_pm25</span><span class="op">(</span><span class="va">x</span>, <span class="va">dates</span>, keep_predictors <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -52,11 +61,13 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>a vector of s2 cell identifers (<code>s2_cell</code> object)</p></dd>
+<dd><p>a vector of s2 cell identifiers (<code>s2_cell</code> object), or a
+<code><a href="https://geomarker.io/geomarker/reference/s2cd.html" class="external-link">geomarker::s2cd()</a></code> object containing both locations and prediction dates</p></dd>
 
 
 <dt id="arg-dates">dates<a class="anchor" aria-label="anchor" href="#arg-dates"></a></dt>
-<dd><p>a list of date vectors for the predictions, must be the same length as <code>x</code></p></dd>
+<dd><p>a list of date vectors for the predictions, the same length as
+<code>x</code>; omit for <code>s2cd</code> objects because their stored dates are used</p></dd>
 
 
 <dt id="arg-keep-predictors">keep_predictors<a class="anchor" aria-label="anchor" href="#arg-keep-predictors"></a></dt>
@@ -67,7 +78,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>a list of tibbles the same length as <code>x</code>, each containing
 columns for the predicted (<code>pm25</code>) and its standard error (<code>pm25_se</code>);
-with one row per date in <code>dates</code>. These numerics are the concentrations of fine
+with one row per requested date. These numerics are the concentrations of fine
 particulate matter, measured in micrograms per cubic meter. See <code>vignette("cv-model-performance")</code>
 for more details on the cross validated accuracy of the daily PM2.5 model predictions.</p>
     </div>
@@ -94,6 +105,10 @@ will not require the overhead of loading the model file for a new prediction.</p
 <span>  <span class="st">"8841a45555555555"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2023-06-21"</span>, <span class="st">"2023-08-25"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">predict_pm25</span><span class="op">(</span>x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># locations and dates can also be supplied together</span></span>
+<span><span class="va">locations</span> <span class="op">&lt;-</span> <span class="fu">geomarker</span><span class="fu">::</span><span class="fu"><a href="https://geomarker.io/geomarker/reference/s2cd.html" class="external-link">s2cd</a></span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>, dates <span class="op">=</span> <span class="va">d</span><span class="op">)</span></span>
+<span><span class="fu">predict_pm25</span><span class="op">(</span><span class="va">locations</span>, keep_predictors <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span> <span class="co"># }</span></span></code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

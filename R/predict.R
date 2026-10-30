@@ -132,12 +132,14 @@ load_rf_pm_model <- function(model_version = model_spec()$model_version) {
 
 #' Get daily PM2.5 model predictions
 #'
-#' @param x a vector of s2 cell identifers (`s2_cell` object)
-#' @param dates a list of date vectors for the predictions, must be the same length as `x`
+#' @param x a vector of s2 cell identifiers (`s2_cell` object), or a
+#'   [geomarker::s2cd()] object containing both locations and prediction dates
+#' @param dates a list of date vectors for the predictions, the same length as
+#'   `x`; omit for `s2cd` objects because their stored dates are used
 #' @param keep_predictors logical; return values for model predictors alongside PM2.5 estimates?
 #' @return a list of tibbles the same length as `x`, each containing
 #' columns for the predicted (`pm25`) and its standard error (`pm25_se`);
-#' with one row per date in `dates`. These numerics are the concentrations of fine
+#' with one row per requested date. These numerics are the concentrations of fine
 #' particulate matter, measured in micrograms per cubic meter. See `vignette("cv-model-performance")`
 #' for more details on the cross validated accuracy of the daily PM2.5 model predictions.
 #' @details
@@ -160,8 +162,40 @@ load_rf_pm_model <- function(model_version = model_spec()$model_version) {
 #'   "8841a45555555555" = as.Date(c("2023-06-21", "2023-08-25"))
 #' )
 #' predict_pm25(x = s2::as_s2_cell(names(d)), dates = d)
+#'
+#' # locations and dates can also be supplied together
+#' locations <- geomarker::s2cd(s2::as_s2_cell(names(d)), dates = d)
+#' predict_pm25(locations, keep_predictors = TRUE)
 #' }
 predict_pm25 <- function(x, dates, keep_predictors = FALSE) {
+  UseMethod("predict_pm25")
+}
+
+#' @rdname predict_pm25
+#' @export
+predict_pm25.s2cd <- function(x, dates = NULL, keep_predictors = FALSE) {
+  if (!is.null(dates)) {
+    stop(
+      "Do not supply separate dates for an s2cd object; its stored dates are used.",
+      call. = FALSE
+    )
+  }
+  predict_pm25.s2_cell(
+    x = s2::as_s2_cell(x),
+    dates = geomarker::s2cd_dates(x),
+    keep_predictors = keep_predictors
+  )
+}
+
+#' @rdname predict_pm25
+#' @export
+predict_pm25.default <- function(x, dates, keep_predictors = FALSE) {
+  stop("x must be an s2_cell vector or a geomarker s2cd object.", call. = FALSE)
+}
+
+#' @rdname predict_pm25
+#' @export
+predict_pm25.s2_cell <- function(x, dates, keep_predictors = FALSE) {
   check_s2_dates(x, dates)
   cli::cli_progress_step("(down)loading random forest model")
   grf <- load_rf_pm_model()
