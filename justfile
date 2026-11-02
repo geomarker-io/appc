@@ -18,7 +18,7 @@ train_model:
 
 # render model performance dashboard
 render_model_dash:
-    R -e "rmarkdown::render('./vignettes/articles/cv-model-performance.Rmd', knit_root_dir = getwd())"
+    APPC_BUILD_MODEL_ARTICLES=true R -e "rmarkdown::render('./vignettes/articles/cv-model-performance.Rmd', knit_root_dir = getwd())"
     open vignettes/articles/cv-model-performance.html
 
 # draft release rf_pm model file on github under the model generation
