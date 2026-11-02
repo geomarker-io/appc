@@ -56,7 +56,7 @@ pm_main <- quantile(d_train$conc, c(0.025, 0.975))
 Training data consisted of `r prettyNum(nrow(d_train), ",")` daily average PM$_{2.5}$ concentrations from `r prettyNum(n_distinct(d_train$s2), ",")` EPA AQS monitors on `r prettyNum(n_distinct(d_train$date), ",")` days between `r min(d_train$date)` and `r max(d_train$date)`.
 
 Overall, the median measured PM$_{2.5}$ was `r median(d_train$conc)` $\mu g/ m^3$
-and 99.5% of all measurements were between `r pm_main[1]` and `r pm_main[2]` $\mu g/ m^3$:
+and 95% of all measurements were between `r pm_main[1]` and `r pm_main[2]` $\mu g/ m^3$:
 
 ```{r pm25_histogram}
 d_train|>
@@ -273,7 +273,7 @@ d |>
         legend.direction = "horizontal",
         legend.title = element_text(size = 11, family = "sans"),
         legend.text = element_text(size = 11),
-        legend.box = "hortizontal",
+        legend.box = "horizontal",
         legend.key.height = unit(4, "mm"),
         legend.key.width = unit(9, "mm"),
         strip.text.x = element_text(size = 11, face = "bold", vjust = 1),
