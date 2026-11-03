@@ -1,4 +1,4 @@
-# Model generation is independent of the pre-release package version.
+# Model generation is independent of the package version.
 model_spec <- function() {
   d <- read.dcf(system.file(
     "model-v3-spec.dcf",

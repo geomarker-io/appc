@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,18 +38,19 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.99.0.9000" id="appc-29909000">appc 2.99.0.9000<a class="anchor" aria-label="anchor" href="#appc-29909000"></a></h2>
+<h2 class="pkg-version" data-toc-text="3.0.0" id="appc-300">appc 3.0.0<a class="anchor" aria-label="anchor" href="#appc-300"></a></h2>
 <ul><li>Require terra 1.9.46 or newer for the compressed NetCDF extraction fix, and allow completed AQS refreshes to be reused with <code>options(appc.refresh_aqs = FALSE)</code>.</li>
 <li>Retry transient EPA API failures and resume incomplete AQS refreshes from harmonized state checkpoints without replacing the last complete annual extract.</li>
 <li>Include Idaho and North Dakota in AQS API refreshes for complete contiguous-US coverage.</li>
 <li>
 <code><a href="../reference/predict_pm25.html">predict_pm25()</a></code> now accepts geomarker <code>s2cd</code> objects directly, using their stored dates and retaining the existing list-of-tibbles output.</li>
-<li>Prepare model generation 3 for January 2017 through June 2026 using geomarker 0.2.0, pinned to release commit 373820d0ab8082f856f7bf0f639f3128111d825a.</li>
+<li>Release model generation 3 for January 2017 through June 2026 using geomarker 0.2.0, pinned to release commit 373820d0ab8082f856f7bf0f639f3128111d825a.</li>
 <li>Share geomarker-backed predictor assembly between the committed training-data script and prediction, preserving input location/date order and duplicates.</li>
 <li>Keep AQS outcome harmonization and the existing GRF training specification.</li>
 <li>Remove standalone environmental assessment and installation APIs; use geomarker for those functions. Elevation now comes from USGS 3DEP rather than the v2 PRISM source, so the v2 model cannot be reused with these inputs.</li>
 <li>Record model generation separately from package version, preserve training provenance, and require matching metadata for local v3 model artifacts.</li>
-<li>Full v3 training and publication are still required. Documentation does not present v2 predictions or performance as results from v3.</li>
+<li>Distribute the trained forest and its 618,918-row training dataset together under <code>rf_pm_v3</code>, with checksums and the exact model/data provenance.</li>
+<li>Retain the January 2017 through June 2026 date range used by v2. Daily LOLO median absolute error is 1.20 micrograms per cubic meter and median Spearman correlation is 0.84, matching the reported v2 values. Median coverage of the reported 95% intervals is 69% (v2: 70%). Refreshed EPA outcomes add 7,346 observations and three locations relative to v2, so the evaluation rows differ.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.1" id="appc-201">appc 2.0.1<a class="anchor" aria-label="anchor" href="#appc-201"></a></h2>

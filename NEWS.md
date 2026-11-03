@@ -1,4 +1,4 @@
-# appc 2.99.0.9000
+# appc 3.0.0
 
 - Require terra 1.9.46 or newer for the compressed NetCDF extraction fix, and
   allow completed AQS refreshes to be reused with `options(appc.refresh_aqs = FALSE)`.
@@ -8,7 +8,7 @@
   coverage.
 - `predict_pm25()` now accepts geomarker `s2cd` objects directly, using their
   stored dates and retaining the existing list-of-tibbles output.
-- Prepare model generation 3 for January 2017 through June 2026 using geomarker
+- Release model generation 3 for January 2017 through June 2026 using geomarker
   0.2.0, pinned to release commit 373820d0ab8082f856f7bf0f639f3128111d825a.
 - Share geomarker-backed predictor assembly between the committed training-data
   script and prediction, preserving input location/date order and duplicates.
@@ -18,8 +18,13 @@
   the v2 PRISM source, so the v2 model cannot be reused with these inputs.
 - Record model generation separately from package version, preserve training
   provenance, and require matching metadata for local v3 model artifacts.
-- Full v3 training and publication are still required. Documentation does not
-  present v2 predictions or performance as results from v3.
+- Distribute the trained forest and its 618,918-row training dataset together
+  under `rf_pm_v3`, with checksums and the exact model/data provenance.
+- Retain the January 2017 through June 2026 date range used by v2. Daily LOLO
+  median absolute error is 1.20 micrograms per cubic meter and median Spearman
+  correlation is 0.84, matching the reported v2 values. Median coverage of the
+  reported 95% intervals is 69% (v2: 70%). Refreshed EPA outcomes add 7,346
+  observations and three locations relative to v2, so the evaluation rows differ.
 
 # appc 2.0.1
 

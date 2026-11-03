@@ -4,6 +4,10 @@
   "2" = c(
     sha256 = "f0a772b99544c441ff4034f9d2a334b88466413d977e57a8bb96bac3df8f5197",
     md5 = "921f0300bcdec0eed151d14f03a6f727"
+  ),
+  "3" = c(
+    sha256 = "8b34a8b866bb97baccc99734290c7911a0e0c7d1af3a59facb66ee128300cd29",
+    md5 = "1a047c6f2dd08a342f04a614f417dcf9"
   )
 )
 
@@ -140,7 +144,8 @@ load_rf_pm_model <- function(model_version = model_spec()$model_version) {
 #' @return a list of tibbles the same length as `x`, each containing
 #' columns for the predicted (`pm25`) and its standard error (`pm25_se`);
 #' with one row per requested date. These numerics are the concentrations of fine
-#' particulate matter, measured in micrograms per cubic meter. See `vignette("cv-model-performance")`
+#' particulate matter, measured in micrograms per cubic meter. See the
+#' [model-performance report](https://geomarker.io/appc/articles/cv-model-performance.html)
 #' for more details on the cross validated accuracy of the daily PM2.5 model predictions.
 #' @details
 #' Internally, loading the model file is cached, so repeated calls in the same R session

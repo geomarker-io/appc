@@ -7,7 +7,7 @@ Published v2 results are retained with [APPC v2.0.1](https://github.com/geomarke
 
 ```{r artifact_gate, echo=FALSE, results='asis'}
 if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
-  cat("Build the v3 training data and model, then set APPC_BUILD_MODEL_ARTICLES=true to render this report.\n")
+  cat("Set APPC_BUILD_MODEL_ARTICLES=true to render the v3 evaluation using the model and training dataset from the rf_pm_v3 release.\n")
   knitr::knit_exit()
 }
 ```
@@ -44,8 +44,12 @@ grf <- appc:::load_rf_pm_model(spec$model_version)
 train_file <- appc:::model_artifact_path("training")
 if (!file.exists(train_file)) stop("Run just make_training_data first.")
 d_train <- readRDS(train_file)
-appc:::validate_training_metadata(d_train)
+metadata <- appc:::validate_training_metadata(d_train)
 ```
+
+The [model generation 3 release](https://github.com/geomarker-io/appc/releases/tag/rf_pm_v3) pairs this forest with its training dataset, checksums, and model specification.
+The environmental predictors were generated with geomarker **`r metadata$geomarker$version`**, from release commit **`r metadata$geomarker$sha`**.
+APPC collects and harmonizes the EPA AQS outcomes.
 
 ## Training Data
 
@@ -54,6 +58,10 @@ pm_main <- quantile(d_train$conc, c(0.025, 0.975))
 ```
 
 Training data consisted of `r prettyNum(nrow(d_train), ",")` daily average PM$_{2.5}$ concentrations from `r prettyNum(n_distinct(d_train$s2), ",")` EPA AQS monitors on `r prettyNum(n_distinct(d_train$date), ",")` days between `r min(d_train$date)` and `r max(d_train$date)`.
+
+V2 covered the same dates using 611,572 observations at 783 locations.
+V3 uses refreshed EPA outcomes, including Idaho and North Dakota in the 2026 API refresh.
+The comparison therefore describes performance over the same period using slightly different evaluation records.
 
 Overall, the median measured PM$_{2.5}$ was `r median(d_train$conc)` $\mu g/ m^3$
 and 95% of all measurements were between `r pm_main[1]` and `r pm_main[2]` $\mu g/ m^3$:

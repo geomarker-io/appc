@@ -1,4 +1,64 @@
 # Timeline Example
 
-This example requires a locally built v3 model. Set
-APPC_BUILD_MODEL_ARTICLES=true to execute it.
+``` r
+
+library(appc)
+library(dplyr, warn.conflicts = FALSE)
+```
+
+This example details how to use the appc package to add air pollution
+exposure estimates for exact locations and time periods defined by
+geocoded coordinates and a “key” date. For this example workflow, we
+will simulate 20 random locations in Wayne County, Michigan and dates of
+birth during 2023, but in actuality this can be any set of geocoded
+`lat` and `lon` columns with corresponding dates.
+
+``` r
+
+d <-
+  tigris::counties("MI", year = 2021, progress_bar = FALSE) |>
+  suppressWarnings() |>
+  filter(GEOID == 26163) |>
+  sf::st_sample(20) |>
+  sf::st_coordinates() |>
+  tibble::as_tibble() |>
+  rename(lat = Y, lon = X) |>
+  mutate(dob = sample(seq(as.Date("2023-01-01"), as.Date("2023-12-31"), by = 1), size = 20))
+
+d
+```
+
+For this example, we want to estimate fine particulate matter from birth
+through 90 days after birth. Using the dob column as the start date, we
+will define an end date in our example data and also define the s2 cell
+identifers based on the latitude and longitude coordinates.
+
+``` r
+
+d <- d |>
+    mutate(d, dob_plus_90 = dob + 90,
+           s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat)))
+
+head(d)
+```
+
+Next, use the newly created columns to call the
+[`predict_pm25_date_range()`](https://geomarker.io/appc/reference/predict_pm25_date_range.md)
+function, which is a simpler implementation of predict_pm25 that takes
+vectors of start and end dates instead of lists of date vectors for each
+s2 cell location:
+
+``` r
+
+dplyr::mutate(d, pm25 = predict_pm25_date_range(s2, dob, dob_plus_90))
+```
+
+If interested in average exposures (and their uncertainties) from start
+date to end date (instead of daily exposures), we can extract those
+directly:
+
+``` r
+
+d_pm25 <- with(d, predict_pm25_date_range(s2, dob, dob_plus_90, average = TRUE))
+bind_cols(d, bind_rows(d_pm25))
+```

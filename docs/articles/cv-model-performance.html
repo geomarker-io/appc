@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -69,9 +69,266 @@
 <p>This report evaluates model generation 3. Published v2 results are
 retained with <a href="https://github.com/geomarker-io/appc/blob/v2.0.1/docs/articles/cv-model-performance.html" class="external-link">APPC
 v2.0.1</a>.</p>
-<p>Build the v3 training data and model, then set
-APPC_BUILD_MODEL_ARTICLES=true to render this report.</p>
-  </main>
+<p>The <a href="https://github.com/geomarker-io/appc/releases/tag/rf_pm_v3" class="external-link">model
+generation 3 release</a> pairs this forest with its training dataset,
+checksums, and model specification. The environmental predictors were
+generated with geomarker <strong>0.2.0</strong>, from release commit
+<strong>373820d0ab8082f856f7bf0f639f3128111d825a</strong>. APPC collects
+and harmonizes the EPA AQS outcomes.</p>
+<div class="section level2">
+<h2 id="training-data">Training Data<a class="anchor" aria-label="anchor" href="#training-data"></a>
+</h2>
+<p>Training data consisted of 618,918 daily average
+PM<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>2.5</mn></msub><annotation encoding="application/x-tex">_{2.5}</annotation></semantics></math>
+concentrations from 786 EPA AQS monitors on 3,468 days between
+2017-01-01 and 2026-06-30.</p>
+<p>V2 covered the same dates using 611,572 observations at 783
+locations. V3 uses refreshed EPA outcomes, including Idaho and North
+Dakota in the 2026 API refresh. The comparison therefore describes
+performance over the same period using slightly different evaluation
+records.</p>
+<p>Overall, the median measured
+PM<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi></mi><mn>2.5</mn></msub><annotation encoding="application/x-tex">_{2.5}</annotation></semantics></math>
+was 6.9
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>g</mi><mi>/</mi><msup><mi>m</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\mu g/ m^3</annotation></semantics></math>
+and 95% of all measurements were between 1.8 and 21.6
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>μ</mi><mi>g</mi><mi>/</mi><msup><mi>m</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">\mu g/ m^3</annotation></semantics></math>:</p>
+<p><img src="cv-model-performance_files/figure-html/pm25_histogram-1.png" class="r-plt" alt="" width="700"></p>
+</div>
+<div class="section level2">
+<h2 id="model-training">Model Training<a class="anchor" aria-label="anchor" href="#model-training"></a>
+</h2>
+<p>The EPA AQS monitor concentrations were used to train a generalized
+regression forest with 200 trees, a subsample fraction of 0.5, a minimum
+node size of 5, and an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mrow><mi>t</mi><mi>r</mi><mi>y</mi></mrow></msub><annotation encoding="application/x-tex">m_{try}</annotation></semantics></math>
+value of 20.</p>
+<p>Model predictors listed in the table below are ordered according to
+their importance. Here, the variable importance is calculated as an
+exponentially-weighted sum of how many times each feature was selected
+within the first 6 splits of each tree in the forest.</p>
+<table class="table">
+<colgroup>
+<col width="6%">
+<col width="93%">
+</colgroup>
+<thead><tr class="header">
+<th align="right">importance</th>
+<th align="left">predictor</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.76</td>
+<td align="left">merra_oc</td>
+</tr>
+<tr class="even">
+<td align="right">0.08</td>
+<td align="left">merra_bc</td>
+</tr>
+<tr class="odd">
+<td align="right">0.05</td>
+<td align="left">hpbl</td>
+</tr>
+<tr class="even">
+<td align="right">0.03</td>
+<td align="left">plume_smoke</td>
+</tr>
+<tr class="odd">
+<td align="right">0.02</td>
+<td align="left">x, temperature_max</td>
+</tr>
+<tr class="even">
+<td align="right">0.01</td>
+<td align="left">wind_speed, merra_so4</td>
+</tr>
+<tr class="odd">
+<td align="right">0.00</td>
+<td align="left">y, doy, year, elevation_median, elevation_sd,
+temperature_min, precipitation, solar_radiation, wind_direction,
+specific_humidity, merra_dust, merra_ss</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="leave-one-location-out-lolo-cross-validated-model-performance">Leave One Location Out (LOLO) Cross Validated Model Performance<a class="anchor" aria-label="anchor" href="#leave-one-location-out-lolo-cross-validated-model-performance"></a>
+</h2>
+<p>Leave-one-location-out (LOLO) accuracy is calculated by using out of
+bag predictions from the trained random forest with resample clustering
+by the location. Accuracy is characterized using median absolute error
+(<code>mae</code>) and the Spearman’s correlation coefficient
+(<code>rho</code>). Accuracy metrics are calculated for each left out
+location and then summarized using the median accuracy statistic across
+all locations. This most closely captures the performance in a
+real-world scenario where we are trying to predict air pollution between
+2017 and 2026 in a place where it was not measured.</p>
+<p>Each AQS monitor has a different number of measurements depending on
+its measurement frequency and when it was deployed. To calculate LOLO
+model performance, we exclude any station or station-time grouping that
+has 4 or less observations. In the tables below, <code>median_n</code>
+represents the median number of observations used in each station
+grouping to calculate the overall median accuracy metrics.
+<code>ci_coverage</code> is the percentage of the time that the 95% CI
+interval of the predicted concentration contained the measured
+concentration.</p>
+<div class="section level3">
+<h3 id="daily">Daily<a class="anchor" aria-label="anchor" href="#daily"></a>
+</h3>
+<table class="table">
+<thead><tr class="header">
+<th align="right">mae</th>
+<th align="right">rho</th>
+<th align="left">ci_coverage</th>
+<th align="right">median_n</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">1.2</td>
+<td align="right">0.84</td>
+<td align="left">69%</td>
+<td align="right">649</td>
+</tr></tbody>
+</table>
+<div class="section level4">
+<h4 id="actual-pm2-5-concentrations-vs-lolo-daily-predictions">Actual PM2.5 Concentrations vs LOLO Daily Predictions<a class="anchor" aria-label="anchor" href="#actual-pm2-5-concentrations-vs-lolo-daily-predictions"></a>
+</h4>
+<p><img src="cv-model-performance_files/figure-html/daily%20pred%20vs%20actual%20plot-1.png" class="r-plt" alt="" width="700"></p>
+</div>
+<div class="section level4">
+<h4 id="daily-prediction-accuracies-per-calendar-year">Daily Prediction Accuracies per Calendar Year<a class="anchor" aria-label="anchor" href="#daily-prediction-accuracies-per-calendar-year"></a>
+</h4>
+<table class="table">
+<thead><tr class="header">
+<th align="right">year</th>
+<th align="right">mae</th>
+<th align="right">rho</th>
+<th align="left">ci_coverage</th>
+<th align="right">median_n</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">2017</td>
+<td align="right">1.15</td>
+<td align="right">0.86</td>
+<td align="left">70%</td>
+<td align="right">117</td>
+</tr>
+<tr class="even">
+<td align="right">2018</td>
+<td align="right">1.14</td>
+<td align="right">0.86</td>
+<td align="left">71%</td>
+<td align="right">117</td>
+</tr>
+<tr class="odd">
+<td align="right">2019</td>
+<td align="right">1.20</td>
+<td align="right">0.85</td>
+<td align="left">69%</td>
+<td align="right">116</td>
+</tr>
+<tr class="even">
+<td align="right">2020</td>
+<td align="right">1.20</td>
+<td align="right">0.83</td>
+<td align="left">70%</td>
+<td align="right">115</td>
+</tr>
+<tr class="odd">
+<td align="right">2021</td>
+<td align="right">1.20</td>
+<td align="right">0.85</td>
+<td align="left">70%</td>
+<td align="right">116</td>
+</tr>
+<tr class="even">
+<td align="right">2022</td>
+<td align="right">1.20</td>
+<td align="right">0.83</td>
+<td align="left">69%</td>
+<td align="right">117</td>
+</tr>
+<tr class="odd">
+<td align="right">2023</td>
+<td align="right">1.30</td>
+<td align="right">0.85</td>
+<td align="left">70%</td>
+<td align="right">116</td>
+</tr>
+<tr class="even">
+<td align="right">2024</td>
+<td align="right">1.20</td>
+<td align="right">0.83</td>
+<td align="left">69%</td>
+<td align="right">117</td>
+</tr>
+<tr class="odd">
+<td align="right">2025</td>
+<td align="right">1.20</td>
+<td align="right">0.86</td>
+<td align="left">69%</td>
+<td align="right">118</td>
+</tr>
+<tr class="even">
+<td align="right">2026</td>
+<td align="right">1.20</td>
+<td align="right">0.83</td>
+<td align="left">70%</td>
+<td align="right">57</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section level3">
+<h3 id="monthly">Monthly<a class="anchor" aria-label="anchor" href="#monthly"></a>
+</h3>
+<p>Exclude stations with 4 or less total monthly observations.</p>
+<table class="table">
+<thead><tr class="header">
+<th align="right">mae</th>
+<th align="right">rho</th>
+<th align="left">ci_coverage</th>
+<th align="right">median_n</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">0.71</td>
+<td align="right">0.88</td>
+<td align="left">96%</td>
+<td align="right">78</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="annual">Annual<a class="anchor" aria-label="anchor" href="#annual"></a>
+</h3>
+<p>Exclude stations with 4 or less total annual observations.</p>
+<table class="table">
+<thead><tr class="header">
+<th align="right">mae</th>
+<th align="right">rho</th>
+<th align="left">ci_coverage</th>
+<th align="right">median_n</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">0.58</td>
+<td align="right">0.85</td>
+<td align="left">100%</td>
+<td align="right">10</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="median-lolo-accuracy-per-spatial-aggregation-period">Median LOLO Accuracy Per Spatial Aggregation Period<a class="anchor" aria-label="anchor" href="#median-lolo-accuracy-per-spatial-aggregation-period"></a>
+</h3>
+<p>Station-specific estimates of crossvalidated MAE and Rho were
+spatially aggregated to level 5 s2 cells and summarized. The visualized
+result is a rough approximation of how model performance may differ in
+different parts of the country:</p>
+<p><img src="cv-model-performance_files/figure-html/spatial%20variation%20in%20accuracies-1.png" class="r-plt" alt="" width="700"></p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

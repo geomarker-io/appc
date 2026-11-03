@@ -24,14 +24,20 @@ knitr::opts_chunk$set(
 ## About
 
 The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments.
-This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently June 2026) at exact locations across the contiguous United States (see `vignette("cv-model-performance")` for more details).
+This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently June 2026) at exact locations across the contiguous United States (see the [model-performance report](https://geomarker.io/appc/articles/cv-model-performance.html) for more details).
 
 APPC collects and harmonizes EPA AQS outcomes and handles model development, evaluation, and prediction.
 The [geomarker package](https://geomarker.io/geomarker/) supplies the environmental predictors.
 
-This development version prepares model generation 3 using geomarker **0.2.0**, with coverage from January 1, 2017 through June 30, 2026.
-Build the v3 training data and model before running predictions from this branch.
-The published v2 model and its performance results belong to [APPC v2.0.1](https://github.com/geomarker-io/appc/tree/v2.0.1).
+Model generation 3 uses geomarker **0.2.0**, with coverage from January 1, 2017 through June 30, 2026.
+It was trained on **618,918 daily observations at 786 EPA AQS locations**.
+Daily leave-one-location-out cross-validation gives a median absolute error of **1.20 micrograms per cubic meter** and median Spearman correlation of **0.84**.
+See the [model-performance report](https://geomarker.io/appc/articles/cv-model-performance.html) for the full evaluation, including interval coverage.
+
+The trained model, training dataset, checksums, and provenance are paired in the [model generation 3 release](https://github.com/geomarker-io/appc/releases/tag/rf_pm_v3).
+`predict_pm25()` downloads and verifies the model on first use; the model/data release must be published for that download to be available.
+The [v2 release and evaluation](https://github.com/geomarker-io/appc/tree/v2.0.1) cover the same dates.
+Aggregate cross-validation performance is similar, with slightly different observations from refreshed EPA data.
 
 ## Installing
 
@@ -60,7 +66,7 @@ appc::predict_pm25(
 )
 ```
 
-See more examples in `vignette("timeline-example")`.
+See more examples in the [timeline example](https://geomarker.io/appc/articles/timeline-example.html).
 
 You can also pass a geomarker `s2cd` object directly. Its stored dates are used:
 
@@ -123,9 +129,10 @@ No automatic NASA source refresh is performed.
 
 Existing artifact files are protected against overwriting.
 Move an existing v3 artifact aside before rebuilding.
-Local v3 predictions require metadata and predictor names matching the model specification.
-Remote v3 model downloads remain disabled until a release artifact and checksum are registered.
+V3 models require metadata and predictor names matching the model specification.
+The distributed model is verified against its registered release checksum.
 
-After building the artifacts, set `APPC_BUILD_MODEL_ARTICLES=true` to execute model-dependent articles and run `just render_model_dash`.
-Otherwise, article rendering displays a preparation notice without accessing model data.
+Run `just render_model_dash` to evaluate the model.
+Set `APPC_BUILD_MODEL_ARTICLES=true` when rebuilding model-dependent pkgdown articles.
+Ordinary package checks skip these large jobs.
 The existing v2 performance report remains available with the [v2 release](https://github.com/geomarker-io/appc/blob/v2.0.1/docs/articles/cv-model-performance.html).
