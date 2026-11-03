@@ -1,5 +1,7 @@
 test_that("the committed scripts build a small synthetic model used by prediction", {
   local_geomarker_sources()
+  # Synthetic forests exercise the workflow independently of release binaries.
+  testthat::local_mocked_bindings(.rf_pm_model_checksums = list())
   withr::local_options(appc.refresh_aqs = NULL)
   withr::local_envvar(R_USER_DATA_DIR = tempfile("appc-v3-synthetic-"))
   rm(list = ls(.appc_cache), envir = .appc_cache)
@@ -103,7 +105,7 @@ test_that("the committed scripts build a small synthetic model used by predictio
   expect_identical(unname(vapply(plain, nrow, integer(1))), c(3L, 1L, 2L))
 })
 
-test_that("missing v3 artifacts fail without downloading or using cached v2", {
+test_that("unregistered models fail without downloading or using cached v2", {
   withr::local_envvar(R_USER_DATA_DIR = tempfile("appc-no-v3-"))
   rm(list = ls(.appc_cache), envir = .appc_cache)
   withr::defer(rm(list = ls(.appc_cache), envir = .appc_cache))
@@ -113,12 +115,49 @@ test_that("missing v3 artifacts fail without downloading or using cached v2", {
     file.path(dirname(model_artifact_path()), "rf_pm_v2.rds")
   )
   expect_error(
-    predict_pm25(test_locations()[1], test_dates()[1]),
+    load_rf_pm_model("unregistered"),
     "build it locally"
   )
 })
 
+test_that("a missing v3 model requests the registered artifact without using v2", {
+  withr::local_envvar(R_USER_DATA_DIR = tempfile("appc-download-v3-"))
+  rm(list = ls(.appc_cache), envir = .appc_cache)
+  withr::defer(rm(list = ls(.appc_cache), envir = .appc_cache))
+  dir.create(dirname(model_artifact_path()), recursive = TRUE)
+  v2 <- file.path(dirname(model_artifact_path()), "rf_pm_v2.rds")
+  saveRDS("cached v2", v2)
+  model <- structure(
+    list(
+      X.orig = as.data.frame(stats::setNames(
+        rep(list(1), length(model_spec()$predictors)),
+        model_spec()$predictors
+      ))
+    ),
+    appc_model_training = training_metadata(),
+    class = "regression_forest"
+  )
+  requested <- NULL
+  testthat::local_mocked_bindings(
+    download_rf_pm_model = function(path, model_version, checksums) {
+      requested <<- list(
+        path = path,
+        version = model_version,
+        checksums = checksums
+      )
+      saveRDS(model, path)
+      invisible(path)
+    }
+  )
+  expect_identical(load_rf_pm_model(), model)
+  expect_identical(requested$version, "3")
+  expect_identical(requested$checksums, .rf_pm_model_checksums[["3"]])
+  expect_identical(basename(requested$path), "rf_pm_v3.rds")
+  expect_identical(readRDS(v2), "cached v2")
+})
+
 test_that("local artifacts with incompatible metadata or schemas are rejected", {
+  testthat::local_mocked_bindings(.rf_pm_model_checksums = list())
   withr::local_envvar(R_USER_DATA_DIR = tempfile("appc-bad-v3-"))
   rm(list = ls(.appc_cache), envir = .appc_cache)
   withr::defer(rm(list = ls(.appc_cache), envir = .appc_cache))

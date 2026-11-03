@@ -39,9 +39,11 @@ predict_pm25(x, dates, keep_predictors = FALSE)
 a list of tibbles the same length as `x`, each containing columns for
 the predicted (`pm25`) and its standard error (`pm25_se`); with one row
 per requested date. These numerics are the concentrations of fine
-particulate matter, measured in micrograms per cubic meter. See
-`vignette("cv-model-performance")` for more details on the cross
-validated accuracy of the daily PM2.5 model predictions.
+particulate matter, measured in micrograms per cubic meter. See the
+[model-performance
+report](https://geomarker.io/appc/articles/cv-model-performance.html)
+for more details on the cross validated accuracy of the daily PM2.5
+model predictions.
 
 ## Details
 

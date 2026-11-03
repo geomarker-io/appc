@@ -1,4 +1,80 @@
 # Case-Crossover Example
 
-This example requires a locally built v3 model. Set
-APPC_BUILD_MODEL_ARTICLES=true to execute it.
+``` r
+
+library(appc)
+library(dplyr, warn.conflicts = FALSE)
+```
+
+This example details how to use the appc package to add air pollution
+exposure estimates for exact locations and dates defined by geocoded
+coordinates and a case date. For this example workflow, we will simulate
+20 random locations in Wayne County, Michigan and case dates in 2022,
+but in actuality this can be any set of geocoded `lat` and `lon` columns
+with corresponding dates.
+
+``` r
+
+d <-
+  tigris::counties("MI", year = 2021, progress_bar = FALSE) |>
+  suppressWarnings() |>
+  filter(GEOID == 26163) |>
+  sf::st_sample(20) |>
+  sf::st_coordinates() |>
+  tibble::as_tibble() |>
+  rename(lat = Y, lon = X) |>
+  mutate(case_date = sample(seq(as.Date("2022-01-01"), as.Date("2022-12-31"), by = 1), size = 20)) |>
+  mutate(id = 1:20) |>
+  relocate(id)
+
+d
+```
+
+For this example, we want to estimate the fine particulate matter on the
+days of the case, as well as control dates. Here, we define these
+control dates using time stratification on year, month, and day-of-week,
+and use the `purrr` package to create a list-col of dates for each
+location in our example data:
+
+``` r
+
+dates_seq <- seq(min(d$case_date) - 31, max(d$case_date) + 31, by = 1)
+
+make_control_dates <- function(case_date) {
+  dates_seq[lubridate::year(dates_seq) == lubridate::year(case_date) &
+              lubridate::month(dates_seq) == lubridate::month(case_date) &
+              lubridate::wday(dates_seq) == lubridate::wday(case_date) &
+              dates_seq != case_date]
+}
+
+d <- d |>
+  rowwise() |>
+  mutate(dates = purrr::map(case_date, make_control_dates)) |>
+  ungroup()
+
+d
+```
+
+Next, we will use the `lon` and `lat` columns to create the s2 geohash:
+
+``` r
+
+d <- d |> dplyr::mutate(s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat)))
+
+d
+```
+
+Then we can directly use the `s2` and `dates` columns to add temperature
+and humidity using the `get_narr_data()` function and PM2.5 using the
+[`predict_pm25()`](https://geomarker.io/appc/reference/predict_pm25.md)
+function:
+
+``` r
+
+d <- d |> dplyr::mutate(temperature = geomarker::get_narr_data(geomarker::s2cd(s2, dates), "air.2m"),
+                        humidity = geomarker::get_narr_data(geomarker::s2cd(s2, dates), "rhum.2m"))
+
+d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates))
+
+d
+```

@@ -9,8 +9,7 @@ vignette: >
 
 ```{r artifact_gate, echo=FALSE, results='asis'}
 if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
-  cat("This example requires a locally built v3 model. Set APPC_BUILD_MODEL_ARTICLES=true to execute it.\n")
-  knitr::knit_exit()
+  knitr::opts_chunk$set(eval = FALSE)
 }
 ```
 
@@ -26,7 +25,7 @@ library(appc)
 library(dplyr, warn.conflicts = FALSE)
 ```
 
-This example details how to use the appc package to add air pollution exposure estimates for exact locations and time periods defined by geocoded coordinates and a "key" date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and dates of birth during 2022, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
+This example details how to use the appc package to add air pollution exposure estimates for exact locations and time periods defined by geocoded coordinates and a "key" date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and dates of birth during 2023, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
 
 ```{r}
 #| warnings: false
@@ -44,7 +43,7 @@ d <-
 d
 ```
 
-For this example, we want to estimate the average fine particulate matter from 90 days prior to birth until the date of birth. Using the dob column as the start date, we will define an end date in our example data and also define the s2 cell identifers based on the latitude and longitude coordinates.
+For this example, we want to estimate fine particulate matter from birth through 90 days after birth. Using the dob column as the start date, we will define an end date in our example data and also define the s2 cell identifers based on the latitude and longitude coordinates.
 
 ```{r}
 d <- d |>

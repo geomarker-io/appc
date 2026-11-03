@@ -4,8 +4,7 @@ title: "Case-Crossover Example"
 
 ```{r artifact_gate, echo=FALSE, results='asis'}
 if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
-  cat("This example requires a locally built v3 model. Set APPC_BUILD_MODEL_ARTICLES=true to execute it.\n")
-  knitr::knit_exit()
+  knitr::opts_chunk$set(eval = FALSE)
 }
 ```
 

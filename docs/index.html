@@ -23,7 +23,7 @@
 
     <a class="navbar-brand me-2" href="index.html">appc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">2.99.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">3.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,9 +65,10 @@
 <div class="section level2">
 <h2 id="about">About<a class="anchor" aria-label="anchor" href="#about"></a>
 </h2>
-<p>The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently June 2026) at exact locations across the contiguous United States (see <code>vignette("cv-model-performance")</code> for more details).</p>
+<p>The goal of the appc package is to provide daily, high resolution, near real-time, model-based ambient air pollution exposure assessments. This is achieved by training a generalized random forest on several geomarkers to predict daily average EPA AQS concentrations from 2017 until the near-present (currently June 2026) at exact locations across the contiguous United States (see the <a href="https://geomarker.io/appc/articles/cv-model-performance.html">model-performance report</a> for more details).</p>
 <p>APPC collects and harmonizes EPA AQS outcomes and handles model development, evaluation, and prediction. The <a href="https://geomarker.io/geomarker/" class="external-link">geomarker package</a> supplies the environmental predictors.</p>
-<p>This development version prepares model generation 3 using geomarker <strong>0.2.0</strong>, with coverage from January 1, 2017 through June 30, 2026. Build the v3 training data and model before running predictions from this branch. The published v2 model and its performance results belong to <a href="https://github.com/geomarker-io/appc/tree/v2.0.1" class="external-link">APPC v2.0.1</a>.</p>
+<p>Model generation 3 uses geomarker <strong>0.2.0</strong>, with coverage from January 1, 2017 through June 30, 2026. It was trained on <strong>618,918 daily observations at 786 EPA AQS locations</strong>. Daily leave-one-location-out cross-validation gives a median absolute error of <strong>1.20 micrograms per cubic meter</strong> and median Spearman correlation of <strong>0.84</strong>. See the <a href="https://geomarker.io/appc/articles/cv-model-performance.html">model-performance report</a> for the full evaluation, including interval coverage.</p>
+<p>The trained model, training dataset, checksums, and provenance are paired in the <a href="https://github.com/geomarker-io/appc/releases/tag/rf_pm_v3" class="external-link">model generation 3 release</a>. <code><a href="reference/predict_pm25.html">predict_pm25()</a></code> downloads and verifies the model on first use; the model/data release must be published for that download to be available. The <a href="https://github.com/geomarker-io/appc/tree/v2.0.1" class="external-link">v2 release and evaluation</a> cover the same dates. Aggregate cross-validation performance is similar, with slightly different observations from refreshed EPA data.</p>
 </div>
 <div class="section level2">
 <h2 id="installing">Installing<a class="anchor" aria-label="anchor" href="#installing"></a>
@@ -89,7 +90,7 @@
 <span>  x <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"8841b39a7c46e25f"</span>, <span class="st">"8841a45555555555"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  dates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2025-05-18"</span>, <span class="st">"2025-06-10"</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2025-06-22"</span>, <span class="st">"2025-09-20"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>See more examples in <code>vignette("timeline-example")</code>.</p>
+<p>See more examples in the <a href="https://geomarker.io/appc/articles/timeline-example.html">timeline example</a>.</p>
 <p>You can also pass a geomarker <code>s2cd</code> object directly. Its stored dates are used:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">locations</span> <span class="op">&lt;-</span> <span class="fu">geomarker</span><span class="fu">::</span><span class="fu"><a href="https://geomarker.io/geomarker/reference/s2cd.html" class="external-link">s2cd</a></span><span class="op">(</span></span>
@@ -123,8 +124,8 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"."</span><span class="op">)</span></span></code></pre></div>
 <p>The minimum runtime dependency is geomarker 0.2.0. The exact version, release tag, source SHA, feature settings, and coverage are recorded in <code>inst/model-v3-spec.dcf</code>. Training checks the installed version and source SHA; a development version number alone does not identify the code. Artifacts preserve this specification, session information, and geomarker’s source manifests. Retain the assembled training artifact to reproduce fitting after upstream AQS or weather revisions. Use a dedicated <code>R_USER_DATA_DIR</code> for an official build so existing local monthly MERRA overrides are not picked up unintentionally. No automatic NASA source refresh is performed.</p>
-<p>Existing artifact files are protected against overwriting. Move an existing v3 artifact aside before rebuilding. Local v3 predictions require metadata and predictor names matching the model specification. Remote v3 model downloads remain disabled until a release artifact and checksum are registered.</p>
-<p>After building the artifacts, set <code>APPC_BUILD_MODEL_ARTICLES=true</code> to execute model-dependent articles and run <code>just render_model_dash</code>. Otherwise, article rendering displays a preparation notice without accessing model data. The existing v2 performance report remains available with the <a href="https://github.com/geomarker-io/appc/blob/v2.0.1/docs/articles/cv-model-performance.html" class="external-link">v2 release</a>.</p>
+<p>Existing artifact files are protected against overwriting. Move an existing v3 artifact aside before rebuilding. V3 models require metadata and predictor names matching the model specification. The distributed model is verified against its registered release checksum.</p>
+<p>Run <code>just render_model_dash</code> to evaluate the model. Set <code>APPC_BUILD_MODEL_ARTICLES=true</code> when rebuilding model-dependent pkgdown articles. Ordinary package checks skip these large jobs. The existing v2 performance report remains available with the <a href="https://github.com/geomarker-io/appc/blob/v2.0.1/docs/articles/cv-model-performance.html" class="external-link">v2 release</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

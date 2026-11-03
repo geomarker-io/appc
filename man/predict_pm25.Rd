@@ -28,7 +28,8 @@ predict_pm25(x, dates, keep_predictors = FALSE)
 a list of tibbles the same length as \code{x}, each containing
 columns for the predicted (\code{pm25}) and its standard error (\code{pm25_se});
 with one row per requested date. These numerics are the concentrations of fine
-particulate matter, measured in micrograms per cubic meter. See \code{vignette("cv-model-performance")}
+particulate matter, measured in micrograms per cubic meter. See the
+\href{https://geomarker.io/appc/articles/cv-model-performance.html}{model-performance report}
 for more details on the cross validated accuracy of the daily PM2.5 model predictions.
 }
 \description{
