@@ -88,12 +88,34 @@ but in actuality this can be any set of geocoded <code>lat</code> and
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html" class="external-link">relocate</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span></span></code></pre></div>
-<p>For this example, we want to estimate the fine particulate matter on
-the days of the case, as well as control dates. Here, we define these
-control dates using time stratification on year, month, and day-of-week,
-and use the <code>purrr</code> package to create a list-col of dates for
-each location in our example data:</p>
+<span><span class="va">d</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 4</span></span>
+<span><span class="co">#&gt;       id   lon   lat case_date </span></span>
+<span><span class="co">#&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;    </span></span>
+<span><span class="co">#&gt;  1     1 -83.5  42.3 2022-10-31</span></span>
+<span><span class="co">#&gt;  2     2 -82.9  42.4 2022-11-27</span></span>
+<span><span class="co">#&gt;  3     3 -83.4  42.1 2022-10-18</span></span>
+<span><span class="co">#&gt;  4     4 -83.2  42.2 2022-05-10</span></span>
+<span><span class="co">#&gt;  5     5 -83.2  42.3 2022-12-09</span></span>
+<span><span class="co">#&gt;  6     6 -83.3  42.3 2022-05-11</span></span>
+<span><span class="co">#&gt;  7     7 -82.9  42.4 2022-10-21</span></span>
+<span><span class="co">#&gt;  8     8 -83.3  42.2 2022-08-22</span></span>
+<span><span class="co">#&gt;  9     9 -83.2  42.2 2022-03-06</span></span>
+<span><span class="co">#&gt; 10    10 -83.4  42.2 2022-08-19</span></span>
+<span><span class="co">#&gt; 11    11 -83.2  42.1 2022-05-30</span></span>
+<span><span class="co">#&gt; 12    12 -83.5  42.3 2022-05-27</span></span>
+<span><span class="co">#&gt; 13    13 -83.2  42.2 2022-09-15</span></span>
+<span><span class="co">#&gt; 14    14 -83.3  42.1 2022-11-16</span></span>
+<span><span class="co">#&gt; 15    15 -83.4  42.2 2022-02-09</span></span>
+<span><span class="co">#&gt; 16    16 -83.5  42.3 2022-07-12</span></span>
+<span><span class="co">#&gt; 17    17 -83.5  42.4 2022-06-05</span></span>
+<span><span class="co">#&gt; 18    18 -83.4  42.3 2022-01-12</span></span>
+<span><span class="co">#&gt; 19    19 -83.3  42.3 2022-10-24</span></span>
+<span><span class="co">#&gt; 20    20 -83.2  42.2 2022-02-11</span></span></code></pre></div>
+<p>For each case, we estimate fine particulate matter on the case date
+and on control dates in the same year and month that fall on the same
+day of the week. The date list for each location includes the case date
+and its controls.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dates_seq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">case_date</span><span class="op">)</span> <span class="op">-</span> <span class="fl">31</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">d</span><span class="op">$</span><span class="va">case_date</span><span class="op">)</span> <span class="op">+</span> <span class="fl">31</span>, by <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
@@ -105,17 +127,61 @@ each location in our example data:</p>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>dates <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">case_date</span>, <span class="va">make_control_dates</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>dates <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="va">case_date</span>, \<span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">date</span>, <span class="fu">make_control_dates</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span></span></code></pre></div>
+<span><span class="va">d</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 5</span></span>
+<span><span class="co">#&gt;       id   lon   lat case_date  dates     </span></span>
+<span><span class="co">#&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;list&gt;    </span></span>
+<span><span class="co">#&gt;  1     1 -83.5  42.3 2022-10-31 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt;  2     2 -82.9  42.4 2022-11-27 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt;  3     3 -83.4  42.1 2022-10-18 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt;  4     4 -83.2  42.2 2022-05-10 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt;  5     5 -83.2  42.3 2022-12-09 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt;  6     6 -83.3  42.3 2022-05-11 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt;  7     7 -82.9  42.4 2022-10-21 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt;  8     8 -83.3  42.2 2022-08-22 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt;  9     9 -83.2  42.2 2022-03-06 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 10    10 -83.4  42.2 2022-08-19 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 11    11 -83.2  42.1 2022-05-30 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt; 12    12 -83.5  42.3 2022-05-27 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 13    13 -83.2  42.2 2022-09-15 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt; 14    14 -83.3  42.1 2022-11-16 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt; 15    15 -83.4  42.2 2022-02-09 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 16    16 -83.5  42.3 2022-07-12 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 17    17 -83.5  42.4 2022-06-05 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 18    18 -83.4  42.3 2022-01-12 &lt;date [4]&gt;</span></span>
+<span><span class="co">#&gt; 19    19 -83.3  42.3 2022-10-24 &lt;date [5]&gt;</span></span>
+<span><span class="co">#&gt; 20    20 -83.2  42.2 2022-02-11 &lt;date [4]&gt;</span></span></code></pre></div>
 <p>Next, we will use the <code>lon</code> and <code>lat</code> columns
 to create the s2 geohash:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>s2 <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_geog_point.html" class="external-link">s2_geog_point</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span></span></code></pre></div>
+<span><span class="va">d</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 6</span></span>
+<span><span class="co">#&gt;       id   lon   lat case_date  dates      s2              </span></span>
+<span><span class="co">#&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;list&gt;     &lt;s2cell&gt;        </span></span>
+<span><span class="co">#&gt;  1     1 -83.5  42.3 2022-10-31 &lt;date [5]&gt; 883b539fde6f468f</span></span>
+<span><span class="co">#&gt;  2     2 -82.9  42.4 2022-11-27 &lt;date [4]&gt; 882529be4afb184b</span></span>
+<span><span class="co">#&gt;  3     3 -83.4  42.1 2022-10-18 &lt;date [4]&gt; 883b5cadcae041d3</span></span>
+<span><span class="co">#&gt;  4     4 -83.2  42.2 2022-05-10 &lt;date [5]&gt; 883b36dae69ea671</span></span>
+<span><span class="co">#&gt;  5     5 -83.2  42.3 2022-12-09 &lt;date [5]&gt; 883b339ae99f458f</span></span>
+<span><span class="co">#&gt;  6     6 -83.3  42.3 2022-05-11 &lt;date [4]&gt; 883b4b9750a4f19d</span></span>
+<span><span class="co">#&gt;  7     7 -82.9  42.4 2022-10-21 &lt;date [4]&gt; 8824d53e3f2addd3</span></span>
+<span><span class="co">#&gt;  8     8 -83.3  42.2 2022-08-22 &lt;date [5]&gt; 883b462c96efefa9</span></span>
+<span><span class="co">#&gt;  9     9 -83.2  42.2 2022-03-06 &lt;date [4]&gt; 883b37c7f61125bf</span></span>
+<span><span class="co">#&gt; 10    10 -83.4  42.2 2022-08-19 &lt;date [4]&gt; 883b44e161d94b5d</span></span>
+<span><span class="co">#&gt; 11    11 -83.2  42.1 2022-05-30 &lt;date [5]&gt; 883b3f38bc72bc79</span></span>
+<span><span class="co">#&gt; 12    12 -83.5  42.3 2022-05-27 &lt;date [4]&gt; 883b5129692a69f7</span></span>
+<span><span class="co">#&gt; 13    13 -83.2  42.2 2022-09-15 &lt;date [5]&gt; 883b362d7f446e2d</span></span>
+<span><span class="co">#&gt; 14    14 -83.3  42.1 2022-11-16 &lt;date [5]&gt; 883b41493a95f44f</span></span>
+<span><span class="co">#&gt; 15    15 -83.4  42.2 2022-02-09 &lt;date [4]&gt; 883b451132452249</span></span>
+<span><span class="co">#&gt; 16    16 -83.5  42.3 2022-07-12 &lt;date [4]&gt; 883b56ca718e3a5b</span></span>
+<span><span class="co">#&gt; 17    17 -83.5  42.4 2022-06-05 &lt;date [4]&gt; 8824abeaf2f4640b</span></span>
+<span><span class="co">#&gt; 18    18 -83.4  42.3 2022-01-12 &lt;date [4]&gt; 883b4ef3cd3ded53</span></span>
+<span><span class="co">#&gt; 19    19 -83.3  42.3 2022-10-24 &lt;date [5]&gt; 883b496b4a4bf401</span></span>
+<span><span class="co">#&gt; 20    20 -83.2  42.2 2022-02-11 &lt;date [4]&gt; 883b3733a728db21</span></span></code></pre></div>
 <p>Then we can directly use the <code>s2</code> and <code>dates</code>
 columns to add temperature and humidity using the
 <code>get_narr_data()</code> function and PM2.5 using the
@@ -126,7 +192,20 @@ columns to add temperature and humidity using the
 <span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pm25 <span class="op">=</span> <span class="fu"><a href="../reference/predict_pm25.html">predict_pm25</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dates</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span></span></code></pre></div>
+<span><span class="va">d</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">case_date</span>, <span class="va">dates</span>, <span class="va">pm25</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">dates</span>, <span class="va">pm25</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>is_case_date <span class="op">=</span> <span class="va">dates</span> <span class="op">==</span> <span class="va">case_date</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 6</span></span>
+<span><span class="co">#&gt;      id case_date  dates       pm25 pm25_se is_case_date</span></span>
+<span><span class="co">#&gt;   &lt;int&gt; &lt;date&gt;     &lt;date&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;lgl&gt;       </span></span>
+<span><span class="co">#&gt; 1     1 2022-10-31 2022-10-03  6.09   1.29  FALSE       </span></span>
+<span><span class="co">#&gt; 2     1 2022-10-31 2022-10-10  7.52   0.847 FALSE       </span></span>
+<span><span class="co">#&gt; 3     1 2022-10-31 2022-10-17  2.83   0.333 FALSE       </span></span>
+<span><span class="co">#&gt; 4     1 2022-10-31 2022-10-24 11.3    0.781 FALSE       </span></span>
+<span><span class="co">#&gt; 5     1 2022-10-31 2022-10-31 11.0    1.62  TRUE        </span></span>
+<span><span class="co">#&gt; 6     2 2022-11-27 2022-11-06  5.14   0.962 FALSE</span></span></code></pre></div>
   </main>
 </div>
 

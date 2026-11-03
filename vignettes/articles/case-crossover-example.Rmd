@@ -11,7 +11,8 @@ if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE
 )
 ```
 
@@ -23,8 +24,7 @@ library(dplyr, warn.conflicts = FALSE)
 This example details how to use the appc package to add air pollution exposure estimates for exact locations and dates defined by geocoded coordinates and a case date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and case dates in 2022, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
 
 ```{r}
-#| warnings: false
-#| messages: false
+#| warning: false
 d <-
   tigris::counties("MI", year = 2021, progress_bar = FALSE) |>
   suppressWarnings() |>
@@ -40,7 +40,7 @@ d <-
 d
 ```
 
-For this example, we want to estimate the fine particulate matter on the days of the case, as well as control dates. Here, we define these control dates using time stratification on year, month, and day-of-week, and use the `purrr` package to create a list-col of dates for each location in our example data:
+For each case, we estimate fine particulate matter on the case date and on control dates in the same year and month that fall on the same day of the week. The date list for each location includes the case date and its controls.
 
 ```{r}
 dates_seq <- seq(min(d$case_date) - 31, max(d$case_date) + 31, by = 1)
@@ -53,9 +53,7 @@ make_control_dates <- function(case_date) {
 }
 
 d <- d |>
-  rowwise() |>
-  mutate(dates = purrr::map(case_date, make_control_dates)) |>
-  ungroup()
+  mutate(dates = purrr::map(case_date, \(date) sort(c(date, make_control_dates(date)))))
 
 d
 ```
@@ -76,5 +74,9 @@ d <- d |> dplyr::mutate(temperature = geomarker::get_narr_data(geomarker::s2cd(s
 
 d <- d |> dplyr::mutate(pm25 = predict_pm25(s2, dates))
 
-d
+d |>
+  select(id, case_date, dates, pm25) |>
+  tidyr::unnest(c(dates, pm25)) |>
+  mutate(is_case_date = dates == case_date) |>
+  head()
 ```

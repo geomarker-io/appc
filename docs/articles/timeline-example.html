@@ -87,29 +87,119 @@ dates.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span>lat <span class="op">=</span> <span class="va">Y</span>, lon <span class="op">=</span> <span class="va">X</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>dob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2023-01-01"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2023-12-31"</span><span class="op">)</span>, by <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">d</span></span></code></pre></div>
+<span><span class="va">d</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 3</span></span>
+<span><span class="co">#&gt;      lon   lat dob       </span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;    </span></span>
+<span><span class="co">#&gt;  1 -83.5  42.3 2023-10-31</span></span>
+<span><span class="co">#&gt;  2 -82.9  42.4 2023-11-27</span></span>
+<span><span class="co">#&gt;  3 -83.4  42.1 2023-10-18</span></span>
+<span><span class="co">#&gt;  4 -83.2  42.2 2023-05-10</span></span>
+<span><span class="co">#&gt;  5 -83.2  42.3 2023-12-09</span></span>
+<span><span class="co">#&gt;  6 -83.3  42.3 2023-05-11</span></span>
+<span><span class="co">#&gt;  7 -82.9  42.4 2023-10-21</span></span>
+<span><span class="co">#&gt;  8 -83.3  42.2 2023-08-22</span></span>
+<span><span class="co">#&gt;  9 -83.2  42.2 2023-03-06</span></span>
+<span><span class="co">#&gt; 10 -83.4  42.2 2023-08-19</span></span>
+<span><span class="co">#&gt; 11 -83.2  42.1 2023-05-30</span></span>
+<span><span class="co">#&gt; 12 -83.5  42.3 2023-05-27</span></span>
+<span><span class="co">#&gt; 13 -83.2  42.2 2023-09-15</span></span>
+<span><span class="co">#&gt; 14 -83.3  42.1 2023-11-16</span></span>
+<span><span class="co">#&gt; 15 -83.4  42.2 2023-02-09</span></span>
+<span><span class="co">#&gt; 16 -83.5  42.3 2023-07-12</span></span>
+<span><span class="co">#&gt; 17 -83.5  42.4 2023-06-05</span></span>
+<span><span class="co">#&gt; 18 -83.4  42.3 2023-01-12</span></span>
+<span><span class="co">#&gt; 19 -83.3  42.3 2023-10-24</span></span>
+<span><span class="co">#&gt; 20 -83.2  42.2 2023-02-11</span></span></code></pre></div>
 <p>For this example, we want to estimate fine particulate matter from
 birth through 90 days after birth. Using the dob column as the start
 date, we will define an end date in our example data and also define the
 s2 cell identifers based on the latitude and longitude coordinates.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="va">d</span> <span class="op">|&gt;</span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d</span>, dob_plus_90 <span class="op">=</span> <span class="va">dob</span> <span class="op">+</span> <span class="fl">90</span>,</span>
-<span>           s2 <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_geog_point.html" class="external-link">s2_geog_point</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    dob_plus_90 <span class="op">=</span> <span class="va">dob</span> <span class="op">+</span> <span class="fl">90</span>,</span>
+<span>    s2 <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_cell.html" class="external-link">as_s2_cell</a></span><span class="op">(</span><span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_geog_point.html" class="external-link">s2_geog_point</a></span><span class="op">(</span><span class="va">lon</span>, <span class="va">lat</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 5</span></span>
+<span><span class="co">#&gt;     lon   lat dob        dob_plus_90 s2              </span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;date&gt;      &lt;s2cell&gt;        </span></span>
+<span><span class="co">#&gt; 1 -83.5  42.3 2023-10-31 2024-01-29  883b539fde6f468f</span></span>
+<span><span class="co">#&gt; 2 -82.9  42.4 2023-11-27 2024-02-25  882529be4afb184b</span></span>
+<span><span class="co">#&gt; 3 -83.4  42.1 2023-10-18 2024-01-16  883b5cadcae041d3</span></span>
+<span><span class="co">#&gt; 4 -83.2  42.2 2023-05-10 2023-08-08  883b36dae69ea671</span></span>
+<span><span class="co">#&gt; 5 -83.2  42.3 2023-12-09 2024-03-08  883b339ae99f458f</span></span>
+<span><span class="co">#&gt; 6 -83.3  42.3 2023-05-11 2023-08-09  883b4b9750a4f19d</span></span></code></pre></div>
 <p>Next, use the newly created columns to call the
 <code><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range()</a></code> function, which is a simpler
 implementation of predict_pm25 that takes vectors of start and end dates
 instead of lists of date vectors for each s2 cell location:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d</span>, pm25 <span class="op">=</span> <span class="fu"><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dob</span>, <span class="va">dob_plus_90</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">d</span>, pm25 <span class="op">=</span> <span class="fu"><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dob</span>, <span class="va">dob_plus_90</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: There were 2 warnings in `dplyr::mutate()`.</span></span>
+<span><span class="co">#&gt; The first warning was:</span></span>
+<span><span class="co">#&gt; ℹ In argument: `pm25 = predict_pm25_date_range(s2, dob, dob_plus_90)`.</span></span>
+<span><span class="co">#&gt; Caused by warning in `st_is_longlat()`:</span></span>
+<span><span class="co">#&gt; ! bounding box has potentially an invalid value range for longlat data</span></span>
+<span><span class="co">#&gt; ℹ Run `dplyr::last_dplyr_warnings()` to see the 1 remaining warning.</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 6</span></span>
+<span><span class="co">#&gt;      lon   lat dob        dob_plus_90 s2               pm25             </span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;date&gt;      &lt;s2cell&gt;         &lt;list&gt;           </span></span>
+<span><span class="co">#&gt;  1 -83.5  42.3 2023-10-31 2024-01-29  883b539fde6f468f &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  2 -82.9  42.4 2023-11-27 2024-02-25  882529be4afb184b &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  3 -83.4  42.1 2023-10-18 2024-01-16  883b5cadcae041d3 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  4 -83.2  42.2 2023-05-10 2023-08-08  883b36dae69ea671 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  5 -83.2  42.3 2023-12-09 2024-03-08  883b339ae99f458f &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  6 -83.3  42.3 2023-05-11 2023-08-09  883b4b9750a4f19d &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  7 -82.9  42.4 2023-10-21 2024-01-19  8824d53e3f2addd3 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  8 -83.3  42.2 2023-08-22 2023-11-20  883b462c96efefa9 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt;  9 -83.2  42.2 2023-03-06 2023-06-04  883b37c7f61125bf &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 10 -83.4  42.2 2023-08-19 2023-11-17  883b44e161d94b5d &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 11 -83.2  42.1 2023-05-30 2023-08-28  883b3f38bc72bc79 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 12 -83.5  42.3 2023-05-27 2023-08-25  883b5129692a69f7 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 13 -83.2  42.2 2023-09-15 2023-12-14  883b362d7f446e2d &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 14 -83.3  42.1 2023-11-16 2024-02-14  883b41493a95f44f &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 15 -83.4  42.2 2023-02-09 2023-05-10  883b451132452249 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 16 -83.5  42.3 2023-07-12 2023-10-10  883b56ca718e3a5b &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 17 -83.5  42.4 2023-06-05 2023-09-03  8824abeaf2f4640b &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 18 -83.4  42.3 2023-01-12 2023-04-12  883b4ef3cd3ded53 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 19 -83.3  42.3 2023-10-24 2024-01-22  883b496b4a4bf401 &lt;tibble [91 × 2]&gt;</span></span>
+<span><span class="co">#&gt; 20 -83.2  42.2 2023-02-11 2023-05-12  883b3733a728db21 &lt;tibble [91 × 2]&gt;</span></span></code></pre></div>
 <p>If interested in average exposures (and their uncertainties) from
 start date to end date (instead of daily exposures), we can extract
 those directly:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">d_pm25</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">d</span>, <span class="fu"><a href="../reference/predict_pm25_date_range.html">predict_pm25_date_range</a></span><span class="op">(</span><span class="va">s2</span>, <span class="va">dob</span>, <span class="va">dob_plus_90</span>, average <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">d</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">d_pm25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning in st_is_longlat(x): bounding box has potentially an invalid value</span></span>
+<span><span class="co">#&gt; range for longlat data</span></span>
+<span><span class="co">#&gt; Warning in st_is_longlat(x): bounding box has potentially an invalid value</span></span>
+<span><span class="co">#&gt; range for longlat data</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">d</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">d_pm25</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 20 × 7</span></span>
+<span><span class="co">#&gt;      lon   lat dob        dob_plus_90 s2                pm25 pm25_se</span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;date&gt;     &lt;date&gt;      &lt;s2cell&gt;         &lt;dbl&gt;   &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt;  1 -83.5  42.3 2023-10-31 2024-01-29  883b539fde6f468f  9.19   0.153</span></span>
+<span><span class="co">#&gt;  2 -82.9  42.4 2023-11-27 2024-02-25  882529be4afb184b  9.32   0.165</span></span>
+<span><span class="co">#&gt;  3 -83.4  42.1 2023-10-18 2024-01-16  883b5cadcae041d3  8.31   0.155</span></span>
+<span><span class="co">#&gt;  4 -83.2  42.2 2023-05-10 2023-08-08  883b36dae69ea671 15.2    0.516</span></span>
+<span><span class="co">#&gt;  5 -83.2  42.3 2023-12-09 2024-03-08  883b339ae99f458f  9.42   0.156</span></span>
+<span><span class="co">#&gt;  6 -83.3  42.3 2023-05-11 2023-08-09  883b4b9750a4f19d 14.6    0.337</span></span>
+<span><span class="co">#&gt;  7 -82.9  42.4 2023-10-21 2024-01-19  8824d53e3f2addd3  8.57   0.163</span></span>
+<span><span class="co">#&gt;  8 -83.3  42.2 2023-08-22 2023-11-20  883b462c96efefa9  7.09   0.113</span></span>
+<span><span class="co">#&gt;  9 -83.2  42.2 2023-03-06 2023-06-04  883b37c7f61125bf  8.22   0.136</span></span>
+<span><span class="co">#&gt; 10 -83.4  42.2 2023-08-19 2023-11-17  883b44e161d94b5d  7.20   0.116</span></span>
+<span><span class="co">#&gt; 11 -83.2  42.1 2023-05-30 2023-08-28  883b3f38bc72bc79 15.0    0.501</span></span>
+<span><span class="co">#&gt; 12 -83.5  42.3 2023-05-27 2023-08-25  883b5129692a69f7 14.6    0.336</span></span>
+<span><span class="co">#&gt; 13 -83.2  42.2 2023-09-15 2023-12-14  883b362d7f446e2d  7.22   0.133</span></span>
+<span><span class="co">#&gt; 14 -83.3  42.1 2023-11-16 2024-02-14  883b41493a95f44f  9.23   0.153</span></span>
+<span><span class="co">#&gt; 15 -83.4  42.2 2023-02-09 2023-05-10  883b451132452249  7.31   0.119</span></span>
+<span><span class="co">#&gt; 16 -83.5  42.3 2023-07-12 2023-10-10  883b56ca718e3a5b  9.75   0.176</span></span>
+<span><span class="co">#&gt; 17 -83.5  42.4 2023-06-05 2023-09-03  8824abeaf2f4640b 14.1    0.365</span></span>
+<span><span class="co">#&gt; 18 -83.4  42.3 2023-01-12 2023-04-12  883b4ef3cd3ded53  7.73   0.135</span></span>
+<span><span class="co">#&gt; 19 -83.3  42.3 2023-10-24 2024-01-22  883b496b4a4bf401  8.70   0.149</span></span>
+<span><span class="co">#&gt; 20 -83.2  42.2 2023-02-11 2023-05-12  883b3733a728db21  7.71   0.141</span></span></code></pre></div>
   </main>
 </div>
 

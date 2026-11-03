@@ -16,7 +16,8 @@ if (Sys.getenv("APPC_BUILD_MODEL_ARTICLES") != "true") {
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE
 )
 ```
 
@@ -28,8 +29,7 @@ library(dplyr, warn.conflicts = FALSE)
 This example details how to use the appc package to add air pollution exposure estimates for exact locations and time periods defined by geocoded coordinates and a "key" date. For this example workflow, we will simulate 20 random locations in Wayne County, Michigan and dates of birth during 2023, but in actuality this can be any set of geocoded `lat` and `lon` columns with corresponding dates.
 
 ```{r}
-#| warnings: false
-#| messages: false
+#| warning: false
 d <-
   tigris::counties("MI", year = 2021, progress_bar = FALSE) |>
   suppressWarnings() |>
@@ -47,8 +47,10 @@ For this example, we want to estimate fine particulate matter from birth through
 
 ```{r}
 d <- d |>
-	mutate(d, dob_plus_90 = dob + 90,
-	       s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat)))
+  mutate(
+    dob_plus_90 = dob + 90,
+    s2 = s2::as_s2_cell(s2::s2_geog_point(lon, lat))
+  )
 
 head(d)
 ```
